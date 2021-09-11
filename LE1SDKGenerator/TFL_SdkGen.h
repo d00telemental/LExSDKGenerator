@@ -79,7 +79,7 @@ using namespace std;
 #define SDK_GEN_CREDITS			"uNrEaL, Tamimego, SystemFiles, R00T88, _silencer, the1domo, K@N@VEL"
 #define SDK_GEN_FORUMS			"www.uc-forum.com, www.gamedeception.net"
 #define SDK_GEN_STHANKS			"HOOAH07, lowHertz"
-#define SDK_BASE_DIR			LE_BASE_OUTPUT LE_SHORTHAND
+#define SDK_BASE_DIR			LE_BASE_OUTPUT
 #define SDK_BUFF_SIZE			256			
 #define SDK_COL1				50
 #define SDK_COL2				50

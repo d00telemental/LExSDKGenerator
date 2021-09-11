@@ -69,6 +69,52 @@ struct FName\n\
 	{\n\
 		return Offset == A.Offset && Chunk == A.Chunk && Number == A.Number;\n\
 	}\n\
+\n\
+	static bool TryFind(char* lookup, signed long instance, FName* outName)\n\
+	{\n\
+		auto gBioNamePools = SDKInitializer::Instance()->GetBioNamePools();\n\
+		for (FNameEntry** namePool = reinterpret_cast<FNameEntry**>(gBioNamePools);\n\
+				*namePool != nullptr;\n\
+				namePool++)\n\
+		{\n\
+			for (FNameEntry* nameEntry = *namePool;\n\
+					nameEntry->Index.Length != 0;\n\
+					nameEntry = reinterpret_cast<FNameEntry*>(reinterpret_cast<BYTE*>(nameEntry) + sizeof FNameEntry + nameEntry->Index.Length))\n\
+			{\n\
+				if (!strcmp(lookup, nameEntry->AnsiName))\n\
+				{\n\
+					FName name{};\n\
+					name.Offset = (DWORD)((unsigned long long)nameEntry - (unsigned long long)*namePool);\n\
+					name.Chunk = (DWORD)((unsigned long long)namePool - (unsigned long long)gBioNamePools);\n\
+					name.Number = instance;\n\
+					*outName = name;\n\
+					return true;\n\
+				}\n\
+			}\n\
+		}\n\
+		outName = nullptr;\n\
+		return false;\n\
+	}\n\
+\n\
+	FName() : Offset{ 0 }, Chunk{ 0 }, Number{ 0 } { }\n\
+\n\
+	FName(char* lookup, signed long instance = 0)\n\
+		: Offset{ 0 }, Chunk{ 0 }, Number{ instance }\n\
+	{\n\
+		if (!TryFind(lookup, instance, this))\n\
+		{ \n\
+			if (IsDebuggerPresent()) DebugBreak();\n\n\
+			if (!strcmp(lookup, \"None\")) \n\
+			{\n\
+				MessageBoxW(nullptr, L\"FName lookup contstructor failed for 'None'!\", L\"LE1 SDK ERROR\", MB_OK | MB_ICONERROR);\n\
+				exit(-1);\n\
+			}\n\
+			else \n\
+			{\n\
+				*this = FName{ \"None\", instance };\n\
+			}\n\
+		} \n\
+	}\n\
 };\n\
 \n\
 struct FString : public TArray<wchar_t>  { \n\

@@ -2304,12 +2304,12 @@ void ProcessPackages()
 
 void Init_Core()
 {
-	auto moduleBase = Common::GetModuleBaseAddress(L"MassEffect1.exe");
+	auto moduleBase = Common::GetModuleBaseAddress(LEx_MODULE_NAME);
 
-	GBioNamePools = &*(FNameEntry**)(moduleBase + 0x16A2090);
+	GBioNamePools = &*(FNameEntry**)(moduleBase + LEx_NAME_POOLS);
 	fprintf(pLog, "GBioNamePools: 0x%p\n", GBioNamePools);
 	
-	GObjects = &*(TArray<UObject*>*)(moduleBase + 0x1770670);
+	GObjects = &*(TArray<UObject*>*)(moduleBase + LEx_OBJOBJECTS);
 	fprintf(pLog, "GObjects: 0x%p\n", GObjects);
 
 	fprintf(pLog, "\n");
