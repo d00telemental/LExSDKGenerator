@@ -6,14 +6,21 @@
 #include <string>
 
 
-//typedef unsigned char        BYTE;
-//typedef signed short         short;
-//typedef unsigned short       unsigned short;
-//typedef signed long          signed long;
-//typedef unsigned long        DWORD;
-//typedef signed long long     long long;
-//typedef unsigned long long   unsigned long long;
-//typedef wchar_t              wchar;
+// IL and SdkGen settings.
+// ========================================
+
+/**
+ * Index of LE game, starting with 1.
+ * Launcher not supported for obvious reasons.
+ */
+#define LE_GAME_INDEX	1
+
+/**
+ * Base directory for SDK generation output.
+ * Used as a base, an LE1/LE2/LE3 directory
+ * will be created in this path.
+ */
+#define LE_BASE_OUTPUT  "D:\\Projects\\LExSDK\\"
 
 
 namespace Common

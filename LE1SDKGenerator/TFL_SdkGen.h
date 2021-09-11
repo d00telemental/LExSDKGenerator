@@ -1,6 +1,6 @@
 /*
 #############################################################################################
-# TheFeckless UE3 SDK Generator v1.4_Beta-Rev.51										
+# TheFeckless UE3 SDK Generator v1.4_Beta-Rev.53-MELE
 # ========================================================================================= #
 # File: TFL_SdkGen.h																		
 # ========================================================================================= #
@@ -36,14 +36,37 @@ using namespace std;
 
 /*
 # ========================================================================================= #
-# Game Specific Includes (UE3 Basic Core)													
+# Game Specific Includes
 # ========================================================================================= #
 */
 
-// Mass Effect 1 (Legendary Edition)
+#if LE_GAME_INDEX == 1
+
 #include "UE3BasicCore\LE1\GameDefines.h"
 #include "UE3BasicCore\LE1\ObjectFunctions.h"
 #include "UE3BasicCore\LE1\PiecesOfCode.h"
+#define LE_SHORTHAND        "LE1"
+
+#elif LE_GAME_INDEX == 2
+
+#include "UE3BasicCore\LE2\GameDefines.h"
+#include "UE3BasicCore\LE2\ObjectFunctions.h"
+#include "UE3BasicCore\LE2\PiecesOfCode.h"
+#define LE_SHORTHAND        "LE2"
+
+#elif LE_GAME_INDEX == 3
+
+#include "UE3BasicCore\LE3\GameDefines.h"
+#include "UE3BasicCore\LE3\ObjectFunctions.h"
+#include "UE3BasicCore\LE3\PiecesOfCode.h"
+#define LE_SHORTHAND        "LE3"
+
+#else
+
+#error LE_GAME_INDEX not set for TFL_SdkGen!
+
+#endif
+
 
 /*
 # ========================================================================================= #
@@ -52,15 +75,15 @@ using namespace std;
 */
 
 // Generator
-#define SDK_GEN_VER				"v1.4_Beta-Rev.51"
+#define SDK_GEN_VER				"v1.4_Beta-Rev.53-MELE"
 #define SDK_GEN_CREDITS			"uNrEaL, Tamimego, SystemFiles, R00T88, _silencer, the1domo, K@N@VEL"
 #define SDK_GEN_FORUMS			"www.uc-forum.com, www.gamedeception.net"
 #define SDK_GEN_STHANKS			"HOOAH07, lowHertz"
-#define SDK_BASE_DIR			"D:\\Projects\\LE1_SDK_Tem\\Gen1\\Out"
+#define SDK_BASE_DIR			LE_BASE_OUTPUT LE_SHORTHAND
 #define SDK_BUFF_SIZE			256			
 #define SDK_COL1				50
 #define SDK_COL2				50
-#define SDK_NO_STR				true
+#define SDK_NO_STR				false
 
 /*
 # ========================================================================================= #

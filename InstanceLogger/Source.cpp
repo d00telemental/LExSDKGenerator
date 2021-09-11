@@ -4,13 +4,6 @@
 #include "../Common.h"
 
 
-/**
- * Index of LE game, starting with 1.
- * Launcher not supported for obvious reasons.
- */
-#define LE_GAME_INDEX	1
-
-
 #pragma region SFXName stuff
 
 #pragma pack(4)
@@ -115,6 +108,10 @@ struct UObject
 
 #elif LE_GAME_INDEX == 3
 
+#else
+
+#error LE_GAME_INDEX not set for UObject!
+
 #endif
 
 	__forceinline
@@ -163,6 +160,10 @@ void ObjectDump()
 #define LEx_MODULE_NAME		L"MassEffect3.exe"
 #define LEx_NAME_POOLS		0x0000000
 #define LEx_OBJOBJECTS		0x0000000
+
+#else
+
+#error LE_GAME_INDEX not set for InstanceLogger!
 
 #endif
 
