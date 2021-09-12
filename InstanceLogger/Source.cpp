@@ -151,7 +151,7 @@ void ObjectDump()
 		auto obj = UObject::GObjObjects->Data[i];
 		if (obj)
 		{
-			writeln(L"Object[%06d] %#p %d.%d_%d (%S)", i, obj, obj->Name.Chunk, obj->Name.Offset, obj->Name.Number, obj->GetName());
+			//writeln(L"Object[%06d] %#p %d.%d_%d (%S)", i, obj, obj->Name.Chunk, obj->Name.Offset, obj->Name.Number, obj->GetName());
 			fwriteln(logFile, L"Object[%06d] %-50S 0x%p", i, obj->GetName(), obj);
 		}
 		else

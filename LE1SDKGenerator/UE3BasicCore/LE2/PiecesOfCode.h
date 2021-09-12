@@ -304,36 +304,35 @@ bool UObject::IsA ( UClass* pClass ) \n\
 
 
 #define CLASS_PROPERTIES_UFIELD "\
-	class UField*		SuperField;					// 0x0060 (0x08) - NOT AUTO-GENERATED PROPERTY \n\
-	class UField*		Next;						// 0x0068 (0x08) - NOT AUTO-GENERATED PROPERTY \n"
+	class UField*					SuperField;							// 0x0060 (0x08) - NOT AUTO-GENERATED PROPERTY \n\
+	class UField*					Next;								// 0x0068 (0x08) - NOT AUTO-GENERATED PROPERTY \n"
 
 
 
 #define CLASS_PROPERTIES_USTRUCT "\
-	class UField*		Children;					// 0x0070 (0x08) - NOT AUTO-GENERATED PROPERTY \n\
-	int					PropertySize;				// 0x0078 (0x04) - NOT AUTO-GENERATED PROPERTY \n\
-	struct TArray<BYTE> Script;						// 0x007C (0x10) - NOT AUTO-GENERATED PROPERTY \n\
-	int					MinAlignment;				// 0x008C (0x04) - NOT AUTO-GENERATED PROPERTY \n\
-	void*				Unknown90;					// 0x0090 (0x08) - NOT AUTO-GENERATED PROPERTY \n\
-	void*				Unknown98;					// 0x0098 (0x08) - NOT AUTO-GENERATED PROPERTY \n\
-	void*				UnknownA0;					// 0x00A0 (0x08) - NOT AUTO-GENERATED PROPERTY \n\
-	void*				UnknownA8;					// 0x00A8 (0x08) - NOT AUTO-GENERATED PROPERTY \n\
-	void*				UnknownB0;					// 0x00B0 (0x08) - NOT AUTO-GENERATED PROPERTY \n\
-	void*				UnknownB8;					// 0x00B8 (0x08) - NOT AUTO-GENERATED PROPERTY \n\
-	void*				UnknownC0;					// 0x00C0 (0x08) - NOT AUTO-GENERATED PROPERTY \n"
+	class UField*					Children;							// 0x0070 (0x08) \n\
+	int								PropertySize;						// 0x0078 (0x04) \n\
+	struct TArray<BYTE>				Script;								// 0x007C (0x10) \n\
+	int								MinAlignment;						// 0x008C (0x04) \n\
+	void*							RefLink;							// 0x0090 (0x08) \n\
+	void*							PropertyLink;						// 0x0098 (0x08) \n\
+	void*							ConfigLink;							// 0x00A0 (0x08) \n\
+	void*							ConstructorLink;					// 0x00A8 (0x08) \n\
+	void*							ComponentPropertyLink;				// 0x00B0 (0x08) \n\
+	void*							TransientPropertyLink;				// 0x00B8 (0x08) \n\
+	struct TArray<class UObject>	ScriptObjectReferences;				// 0x00C0 (0x10) \n"
 
 
 
 #define CLASS_PROPERTIES_UFUNCTION "\
-	DWORD				FunctionFlags;				// 0x00D8 (0x04) - NOT AUTO-GEN \n\
-	short				iNative;					// 0x00DC (0x02) - NOT AUTO-GEN \n\
-	short				RepOffset;					// 0x00DE (0x02) - NOT AUTO-GEN \n\
-	struct FName		FriendlyName;				// 0x00E0 (0x08) - NOT AUTO-GEN \n\
-	BYTE				OperPrecedence;				// 0x00E8 (0x01) - NOT AUTO-GEN \n\
-	BYTE				NumParms;					// 0x00E9 (0x01) - NOT AUTO-GEN \n\
-	unsigned short		ParmsSize;					// 0x00EA (0x02) - NOT AUTO-GEN \n\
-	short				ReturnValueOffset;			// 0x00EC (0x02) - NOT AUTO-GEN \n\
-	char				PaddingEE[2];				// 0x00EE (0x02) - NOT AUTO-GEN \n\
-	void*				FirstPropertyToInit;		// 0x00F0 (0x08) - NOT AUTO-GEN \n\
-	void*				Func;						// 0x00F8 (0x08) - NOT AUTO-GEN \n"
-
+	DWORD							FunctionFlags;						// 0x00D0 (0x04) \n\
+	short							iNative;							// 0x00D4 (0x02) \n\
+	short							RepOffset;							// 0x00D6 (0x02) \n\
+	struct FName					FriendlyName;						// 0x00D8 (0x08) \n\
+	BYTE							OperPrecedence;						// 0x00E0 (0x01) \n\
+	BYTE							NumParms;							// 0x00E1 (0x01) \n\
+	unsigned short					ParmsSize;							// 0x00E2 (0x02) \n\
+	short							ReturnValueOffset;					// 0x00E4 (0x02) \n\
+	char							PaddingEE[2];						// 0x00E6 (0x02) \n\
+	void*							FirstPropertyToInit;				// 0x00E8 (0x08) \n\
+	void*							Func;								// 0x00F0 (0x08) \n"

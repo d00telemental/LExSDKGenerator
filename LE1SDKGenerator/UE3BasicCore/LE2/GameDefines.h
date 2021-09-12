@@ -337,22 +337,21 @@ public:
 			};
 		};
 
-		// (0x0070 - 0x00D8)
+		// (0x0070 - 0x00D0)
 		class UStruct : public UField
 		{
 		public:
 			class UField*					Children;							// 0x0070 (0x08)
-			int								PropertySize;						// 0x0078 (0x04)	-- 78
+			int								PropertySize;						// 0x0078 (0x04)
 			struct TArray<BYTE>				Script;								// 0x007C (0x10)
 			int								MinAlignment;						// 0x008C (0x04)
-			void*							Unknown90;							// 0x0090 (0x08)
-			void*							Unknown98;							// 0x0098 (0x08)
-			void*							UnknownA0;							// 0x00A0 (0x08)
-			void*							UnknownA8;							// 0x00A8 (0x08)
-			void*							UnknownB0;							// 0x00B0 (0x08)
-			void*							UnknownB8;							// 0x00B8 (0x08)
-			void*							UnknownC0;							// 0x00C0 (0x08)
-			struct TArray<class UObject>	ScriptObjectReferences;				// 0x00C8 (0x10)
+			void*							RefLink;							// 0x0090 (0x08)
+			void*							PropertyLink;						// 0x0098 (0x08)
+			void*							ConfigLink;							// 0x00A0 (0x08)
+			void*							ConstructorLink;					// 0x00A8 (0x08)
+			void*							ComponentPropertyLink;				// 0x00B0 (0x08)
+			void*							TransientPropertyLink;				// 0x00B8 (0x08)
+			struct TArray<class UObject>	ScriptObjectReferences;				// 0x00C0 (0x10)
 
 		private:
 			static UClass* pClassPointer;
@@ -367,12 +366,12 @@ public:
 			};
 		};
 
-			// (0x00D8 - 0x00EC)
+			// (0x00D0 - 0x00E4)
 			class UScriptStruct : public UStruct
 			{
 			public:
-				struct FString		DefaultStructPropText[0x10];				// 0x00D8 (0x10)
-				int					StructFlags;                                // 0x00E8 (0x04)
+				struct FString		DefaultStructPropText;						// 0x00D0 (0x10)
+				int					StructFlags;                                // 0x00E0 (0x04)
 
 			private:
 				static UClass* pClassPointer;
@@ -387,21 +386,21 @@ public:
 				};
 			};
 
-			// (0x00D8 - 0x0100)
+			// (0x00D0 - 0x0F8)
 			class UFunction : public UStruct
 			{
 			public:
-				DWORD				FunctionFlags;				// 0x00D8 (0x04)	-- D0
-				short				iNative;					// 0x00DC (0x02)	-- D4
-				short				RepOffset;					// 0x00DE (0x02)
-				struct FName		FriendlyName;				// 0x00E0 (0x08)
-				BYTE				OperPrecedence;				// 0x00E8 (0x01)
-				BYTE				NumParms;					// 0x00E9 (0x01)
-				unsigned short		ParmsSize;					// 0x00EA (0x02)	-- E2
-				short				ReturnValueOffset;			// 0x00EC (0x02)	-- E4
-				char				PaddingEE[2];				// 0x00EE (0x02)
-				void*				FirstPropertyToInit;		// 0x00F0 (0x08)
-				void*				Func;						// 0x00F8 (0x08)	-- F0
+				DWORD				FunctionFlags;				// 0x00D0 (0x04)
+				short				iNative;					// 0x00D4 (0x02)
+				short				RepOffset;					// 0x00D6 (0x02)
+				struct FName		FriendlyName;				// 0x00D8 (0x08)
+				BYTE				OperPrecedence;				// 0x00E0 (0x01)
+				BYTE				NumParms;					// 0x00E1 (0x01)
+				unsigned short		ParmsSize;					// 0x00E2 (0x02)
+				short				ReturnValueOffset;			// 0x00E4 (0x02)
+				char				PaddingEE[2];				// 0x00E6 (0x02)
+				void*				FirstPropertyToInit;		// 0x00E8 (0x08)
+				void*				Func;						// 0x00F0 (0x08)
 
 			private:
 				static UClass* pClassPointer;
@@ -416,11 +415,11 @@ public:
 				};
 			};
 
-			// (0x00D8 - 0x0138)
+			// (0x00D0 - 0x0130)
 			class UState : public UStruct
 			{
 			public:
-				BYTE				UnknownD8[0x60];				// 0x00D8 (0x60)
+				BYTE				UnknownD8[0x60];				// 0x00D0 (0x60)
 
 			private:
 				static UClass* pClassPointer;
@@ -435,11 +434,11 @@ public:
 				};
 			};
 
-				// (0x0138 - 0x0220)
+				// (0x0130 - 0x01F8)
 				class UClass : public UState
 				{
 				public:
-					BYTE				UnknownData138[0xE8];			// 0x0138 (0xE8)
+					BYTE				UnknownData130[0xC8];			// 0x0130 (0xC8)
 
 				private:
 					static UClass* pClassPointer;
@@ -458,17 +457,17 @@ public:
 		class UProperty : public UField 
 		{
 		public:
-			int						ArrayDim;						//0x0070 (0x04)		-- 70
-			int						ElementSize;					//0x0074 (0x04)		-- 74
-			unsigned long long		PropertyFlags;					//0x0078 (0x08)		-- 78
+			int						ArrayDim;						//0x0070 (0x04)
+			int						ElementSize;					//0x0074 (0x04)
+			unsigned long long		PropertyFlags;					//0x0078 (0x08)
 			unsigned short			RepOffset;						//0x0080 (0x02)
 			unsigned short			RepIndex;						//0x0082 (0x02)
 			struct FName			Category;						//0x0084 (0x08)
 			class UEnum*			ArraySizeEnum;					//0x008C (0x08)
-			int						Offset;							//0x0094 (0x04)		-- 94
+			int						Offset;							//0x0094 (0x04)
 			void*					PropertyLinkNext;				//0x0098 (0x08)
 			void*					ConfigLinkNext;					//0x00A0 (0x08)
-			void*					ConstructorLinkNext;			//0x00A8 (0x08)		-- A8
+			void*					ConstructorLinkNext;			//0x00A8 (0x08)
 			void*					NextRef;						//0x00B0 (0x08)
 			void*					RepOwner;						//0x00B8 (0x08)
 			void*					ComponentPropertyLinkNext;		//0x00C0 (0x08)
@@ -757,29 +756,29 @@ public:
 */
 
 UClass* UObject								::pClassPointer = NULL;  // +
-UClass*		UField							::pClassPointer = NULL;  // -
-UClass*			UEnum						::pClassPointer = NULL;  // -
-UClass*			UConst						::pClassPointer = NULL;  // -
-UClass*			UStruct						::pClassPointer = NULL;  // -
-UClass*				UScriptStruct			::pClassPointer = NULL;  // -
-UClass*				UFunction				::pClassPointer = NULL;  // -
-UClass*				UState					::pClassPointer = NULL;  // -
-UClass*					UClass				::pClassPointer = NULL;  // -
-UClass*			UProperty					::pClassPointer = NULL;  // -
-UClass*				UByteProperty			::pClassPointer = NULL;  // -
-UClass*				UIntProperty			::pClassPointer = NULL;  // -
-UClass*				UFloatProperty			::pClassPointer = NULL;  // -
-UClass*				UBoolProperty			::pClassPointer = NULL;  // -
-UClass*				UStrProperty			::pClassPointer = NULL;  // -
-UClass*				UStringRefProperty		::pClassPointer = NULL;  // -
-UClass*				UNameProperty			::pClassPointer = NULL;  // -
-UClass*				UDelegateProperty		::pClassPointer = NULL;  // -
-UClass*				UObjectProperty			::pClassPointer = NULL;  // -
-UClass*					UClassProperty		::pClassPointer = NULL;  // -
-UClass*				UInterfaceProperty		::pClassPointer = NULL;  // -
-UClass*				UStructProperty			::pClassPointer = NULL;  // -
-UClass*				UArrayProperty			::pClassPointer = NULL;  // -
-UClass*				UMapProperty			::pClassPointer = NULL;  // -
+UClass*		UField							::pClassPointer = NULL;  // +
+UClass*			UEnum						::pClassPointer = NULL;  // +
+UClass*			UConst						::pClassPointer = NULL;  // +
+UClass*			UStruct						::pClassPointer = NULL;  // +
+UClass*				UScriptStruct			::pClassPointer = NULL;  // +
+UClass*				UFunction				::pClassPointer = NULL;  // +
+UClass*				UState					::pClassPointer = NULL;  // +
+UClass*					UClass				::pClassPointer = NULL;  // +
+UClass*			UProperty					::pClassPointer = NULL;  // +
+UClass*				UByteProperty			::pClassPointer = NULL;  // +
+UClass*				UIntProperty			::pClassPointer = NULL;  // +
+UClass*				UFloatProperty			::pClassPointer = NULL;  // +
+UClass*				UBoolProperty			::pClassPointer = NULL;  // +
+UClass*				UStrProperty			::pClassPointer = NULL;  // +
+UClass*				UStringRefProperty		::pClassPointer = NULL;  // +
+UClass*				UNameProperty			::pClassPointer = NULL;  // +
+UClass*				UDelegateProperty		::pClassPointer = NULL;  // +
+UClass*				UObjectProperty			::pClassPointer = NULL;  // +
+UClass*					UClassProperty		::pClassPointer = NULL;  // +
+UClass*				UInterfaceProperty		::pClassPointer = NULL;  // +
+UClass*				UStructProperty			::pClassPointer = NULL;  // +
+UClass*				UArrayProperty			::pClassPointer = NULL;  // +
+UClass*				UMapProperty			::pClassPointer = NULL;  // +
 
 /*
 # ========================================================================================= #
