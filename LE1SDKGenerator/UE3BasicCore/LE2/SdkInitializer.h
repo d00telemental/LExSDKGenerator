@@ -10,8 +10,8 @@ class UObject;
 
 
 #define LEx_MODULE_NAME		L"MassEffect2.exe"
-#define LEx_NAME_POOLS		0x16A2090       // RVA of the name pools
-#define LEx_OBJOBJECTS		0x1770670       // RVA of the UObject::ObjObjects
+#define LEx_NAME_POOLS		0x1668A10       // RVA of the name pools
+#define LEx_OBJOBJECTS		0x173CC48       // RVA of the UObject::ObjObjects
 
 
 class SDKInitializer

@@ -106,7 +106,7 @@ struct FName\n\
 			if (IsDebuggerPresent()) DebugBreak();\n\n\
 			if (!strcmp(lookup, \"None\")) \n\
 			{\n\
-				MessageBoxW(nullptr, L\"FName lookup contstructor failed for 'None'!\", L\"LE1 SDK ERROR\", MB_OK | MB_ICONERROR);\n\
+				MessageBoxW(nullptr, L\"FName lookup contstructor failed for 'None'!\", L\"LE2 SDK ERROR\", MB_OK | MB_ICONERROR);\n\
 				exit(-1);\n\
 			}\n\
 			else \n\
