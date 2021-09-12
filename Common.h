@@ -13,7 +13,7 @@
  * Index of LE game, starting with 1.
  * Launcher not supported for obvious reasons.
  */
-#define LE_GAME_INDEX	3
+#define LE_GAME_INDEX	1
 
 /**
  * Base directory for SDK generation output.
