@@ -44,7 +44,14 @@ void PrintFileHeder ( char* cFileName, char* cFileExt, bool setPP = false, bool 
 	fprintf ( pFile, "#include <cstdio>\n" );
 	if (!isFunctions)
 	{
-		fprintf(pFile, "#include \"../SdkInitializer.h\"\n");
+		if ( ! strcmp(cFileName, "SdkHeaders") )
+		{
+			fprintf(pFile, "#include \"SdkInitializer.h\"\n");
+		}
+		else
+		{
+			fprintf(pFile, "#include \"../SdkInitializer.h\"\n");
+		}
 	}
 	else
 	{

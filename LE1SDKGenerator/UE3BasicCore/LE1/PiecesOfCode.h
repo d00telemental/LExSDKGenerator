@@ -309,6 +309,21 @@ bool UObject::IsA ( UClass* pClass ) \n\
 
 
 
+#define CLASS_PROPERTIES_USTRUCT "\
+	class UField*		Children;					// 0x0070 (0x08) - NOT AUTO-GENERATED PROPERTY \n\
+	int					PropertySize;				// 0x0078 (0x04) - NOT AUTO-GENERATED PROPERTY \n\
+	struct TArray<BYTE> Script;						// 0x007C (0x10) - NOT AUTO-GENERATED PROPERTY \n\
+	int					MinAlignment;				// 0x008C (0x04) - NOT AUTO-GENERATED PROPERTY \n\
+	void*				Unknown90;					// 0x0090 (0x08) - NOT AUTO-GENERATED PROPERTY \n\
+	void*				Unknown98;					// 0x0098 (0x08) - NOT AUTO-GENERATED PROPERTY \n\
+	void*				UnknownA0;					// 0x00A0 (0x08) - NOT AUTO-GENERATED PROPERTY \n\
+	void*				UnknownA8;					// 0x00A8 (0x08) - NOT AUTO-GENERATED PROPERTY \n\
+	void*				UnknownB0;					// 0x00B0 (0x08) - NOT AUTO-GENERATED PROPERTY \n\
+	void*				UnknownB8;					// 0x00B8 (0x08) - NOT AUTO-GENERATED PROPERTY \n\
+	void*				UnknownC0;					// 0x00C0 (0x08) - NOT AUTO-GENERATED PROPERTY \n"
+
+
+
 #define CLASS_PROPERTIES_UFUNCTION "\
 	DWORD				FunctionFlags;				// 0x00D8 (0x04) - NOT AUTO-GEN \n\
 	short				iNative;					// 0x00DC (0x02) - NOT AUTO-GEN \n\
