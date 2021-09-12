@@ -92,6 +92,9 @@
     <ClInclude Include="UE3BasicCore\LE2\GameDefines.h" />
     <ClInclude Include="UE3BasicCore\LE2\ObjectFunctions.h" />
     <ClInclude Include="UE3BasicCore\LE2\PiecesOfCode.h" />
+    <ClInclude Include="UE3BasicCore\LE3\GameDefines.h" />
+    <ClInclude Include="UE3BasicCore\LE3\ObjectFunctions.h" />
+    <ClInclude Include="UE3BasicCore\LE3\PiecesOfCode.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

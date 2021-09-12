@@ -122,6 +122,20 @@ struct UObject
 
 #elif LE_GAME_INDEX == 3
 
+	void*				VfTableObject;         // 0x00
+	signed long			ObjectInternalIndex;   // 0x08
+	unsigned long long	ObjectFlags;           // 0x0C
+	UObject*			HashNext;              // 0x14
+	UObject*			HashOuterNext;         // 0x1C
+	void*				StateFrame;            // 0x24
+	void*				Linker;                // 0x2C
+	void*				LinkerIndex;           // 0x34
+	signed long			NetIndex;              // 0x3C
+	UObject*			Outer;                 // 0x40
+	FName				Name;                  // 0x48
+	UObject*			Class;                 // 0x50
+	UObject*			ObjectArchetype;       // 0x58
+
 #else
 
 #error LE_GAME_INDEX not set for UObject!

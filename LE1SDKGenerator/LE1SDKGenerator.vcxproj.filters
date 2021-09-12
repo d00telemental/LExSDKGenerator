@@ -53,5 +53,14 @@
     <ClInclude Include="UE3BasicCore\LE2\PiecesOfCode.h">
       <Filter>Header Files</Filter>
     </ClInclude>
+    <ClInclude Include="UE3BasicCore\LE3\GameDefines.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UE3BasicCore\LE3\ObjectFunctions.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="UE3BasicCore\LE3\PiecesOfCode.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>
