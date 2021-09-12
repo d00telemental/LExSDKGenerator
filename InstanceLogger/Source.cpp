@@ -44,8 +44,8 @@ struct FName
 	__forceinline
 	char* Name() const noexcept
 	{
-		const auto& chunk = GBioNamePools[Chunk];
-		const auto& entry = (FNameEntry*)((BYTE*)chunk + Offset);
+		auto chunk = GBioNamePools[Chunk];
+		auto entry = (FNameEntry*)((BYTE*)chunk + Offset);
 		return entry->AnsiName;
 	}
 
@@ -106,6 +106,20 @@ struct UObject
 
 #elif LE_GAME_INDEX == 2
 
+	void*				VfTableObject;         // 0x00
+	signed long			ObjectInternalIndex;   // 0x08
+	unsigned long long	ObjectFlags;           // 0x0C
+	UObject*			HashNext;              // 0x14
+	UObject*			HashOuterNext;         // 0x1C
+	void*				StateFrame;            // 0x24
+	void*				Linker;                // 0x2C
+	void*				LinkerIndex;           // 0x34
+	signed long			NetIndex;              // 0x3C
+	UObject*			Outer;                 // 0x40
+	FName				Name;                  // 0x48
+	UObject*			Class;                 // 0x50
+	UObject*			ObjectArchetype;       // 0x58
+
 #elif LE_GAME_INDEX == 3
 
 #else
@@ -130,11 +144,20 @@ void ObjectDump()
 	fopen_s(&logFile, "ObjectDump.txt", "w+");
 	if (!logFile) return;
 	writeln(L"ObjectDump starting, addr = %p", UObject::GObjObjects);
+	writeln(L"ObjectDump - GObjObjects->Count = %d", UObject::GObjObjects ? UObject::GObjObjects->Count : -1);
 
 	for (int i = 0; i < UObject::GObjObjects->Count; i++)
 	{
 		auto obj = UObject::GObjObjects->Data[i];
-		fwriteln(logFile, L"Object[%06d] %-50S 0x%p", i, obj->GetName(), obj);
+		if (obj)
+		{
+			writeln(L"Object[%06d] %#p %d.%d_%d (%S)", i, obj, obj->Name.Chunk, obj->Name.Offset, obj->Name.Number, obj->GetName());
+			fwriteln(logFile, L"Object[%06d] %-50S 0x%p", i, obj->GetName(), obj);
+		}
+		else
+		{
+			fwriteln(logFile, L"Object[%06d] (nullptr) 0x%p", i, obj);
+		}
 	}
 
 	writeln(L"ObjectDump ending");

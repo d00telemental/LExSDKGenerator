@@ -13,7 +13,7 @@
  * Index of LE game, starting with 1.
  * Launcher not supported for obvious reasons.
  */
-#define LE_GAME_INDEX	1
+#define LE_GAME_INDEX	2
 
 /**
  * Base directory for SDK generation output.
@@ -32,8 +32,8 @@
 #elif LE_GAME_INDEX == 2
 
 #define LEx_MODULE_NAME		L"MassEffect2.exe"
-#define LEx_NAME_POOLS		0x0000000
-#define LEx_OBJOBJECTS		0x0000000
+#define LEx_NAME_POOLS		0x1668A10
+#define LEx_OBJOBJECTS		0x173CC48
 
 #elif LE_GAME_INDEX == 3
 
