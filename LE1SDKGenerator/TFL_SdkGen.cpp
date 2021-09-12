@@ -1141,7 +1141,8 @@ void GenerateFuncDef ( UClass* pClass )
 	auto className = GetValidName(string(pClass->GetNameCPP()));
 	auto sClassFullName = string(pClass->GetFullName());
 
-	if (strncmp(className.c_str(), "Default__", 9))
+	if (		0 != strncmp(className.c_str(), "Default__", 9)
+			&&	0 != strncmp(className.c_str(), "UClassDefault__", 15) )
 	{
 		ssStreamBuffer0 << "\n\n"
 			<< "class UClass* " << className << "::pClassPointer = NULL;"
@@ -2382,8 +2383,6 @@ void Final_SdkHeaders()
 	fprintf ( pFile, BASIC_STRUCTS );
 	
 	PrintSectionHeader ( "Includes" );
-
-	fprintf(pFile, "\n#pragma warning( disable : 26495 )\n");
 	
 	for ( unsigned int i = 0; i < vIncludes.size(); i++ )
 	{
@@ -2392,8 +2391,6 @@ void Final_SdkHeaders()
 		fprintf ( pFile, "#include \"SDK_HEADERS\\%s_f_structs.h\"\n",		vIncludes[i]->GetName() );		
 		fprintf ( pFile, "// #include \"SDK_HEADERS\\%s_functions.cpp\"\n",		vIncludes[i]->GetName() );
 	}
-
-	fprintf(pFile, "\n#pragma warning( enable : 26495 )\n");
 
 	fclose ( pFile );
 }
