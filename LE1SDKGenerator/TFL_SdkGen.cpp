@@ -1050,12 +1050,12 @@ void GenerateFuncStruct ( UClass* pClass )
 					ssStreamBuffer1 << "[ " << SDKMC_SSHEX ( pProperty->ArrayDim, 0 ) << " ]";
 				}
 
-				// special case bool
-				if ( pProperty->IsA ( UBoolProperty::StaticClass() ) ) 
-				{
-					// stream to support buffer
-					ssStreamBuffer1 << " : 1";
-				}
+				//// special case bool
+				//if ( pProperty->IsA ( UBoolProperty::StaticClass() ) ) 
+				//{
+				//	// stream to support buffer
+				//	ssStreamBuffer1 << " : 1";
+				//}
 
 				// stream to support buffer
 				ssStreamBuffer1 << ";";
@@ -1075,13 +1075,13 @@ void GenerateFuncStruct ( UClass* pClass )
 									<< "\t\t// " << SDKMC_SSHEX ( pProperty->Offset, 4 ) << " (" << SDKMC_SSHEX ( ( pProperty->ElementSize * pProperty->ArrayDim ), 4 ) << ") [" << SDKMC_SSHEX ( pProperty->PropertyFlags, 16 ) << "]";
 				}
 									
-				// stream to main buffer (bitmask)
-				if ( pProperty->IsA ( UBoolProperty::StaticClass() ) ) 
-				{
-					// stream to support buffer
-					ssStreamBuffer0 << " [" << SDKMC_SSHEX ( ( (UBoolProperty*) pProperty )->BitMask, 8 ) << "] ";
-				}
-				else
+				//// stream to main buffer (bitmask)
+				//if ( pProperty->IsA ( UBoolProperty::StaticClass() ) ) 
+				//{
+				//	// stream to support buffer
+				//	ssStreamBuffer0 << " [" << SDKMC_SSHEX ( ( (UBoolProperty*) pProperty )->BitMask, 8 ) << "] ";
+				//}
+				//else
 				{
 					ssStreamBuffer0 << SDKMC_SSCOL ( "", 14 ); // empty space
 				}
@@ -1132,6 +1132,7 @@ void GenerateFuncDef ( UClass* pClass )
 	// print out class pointer and StaticClass()
 
 	auto className = GetValidName(string(pClass->GetNameCPP()));
+	auto sClassFullName = string(pClass->GetFullName());
 
 	if (strncmp(className.c_str(), "Default__", 9))
 	{
@@ -1139,13 +1140,26 @@ void GenerateFuncDef ( UClass* pClass )
 			<< "class UClass* " << className << "::pClassPointer = NULL;"
 			<< "\n";
 
-		ssStreamBuffer0 << "\n"
-			<< "class UClass* " << className << "::StaticClass()\n"
-			<< "\t{\n"
-			<< "\t\tif ( ! pClassPointer )\n"
-			<< "\t\t\tpClassPointer = (UClass*) UObject::GObjObjects()->Data[ " << SDKMC_SSDEC(pClass->ObjectInternalInteger, 0) << " ];\n\n"
-			<< "\t\treturn pClassPointer;\n"
-			<< "\t};\n\n";
+		if ( SDK_NO_STR )
+		{
+			ssStreamBuffer0 << "\n"
+				<< "class UClass* " << className << "::StaticClass()\n"
+				<< "\t{\n"
+				<< "\t\tif ( ! pClassPointer )\n"
+				<< "\t\t\tpClassPointer = (UClass*) UObject::GObjObjects()->Data[ " << SDKMC_SSDEC(pClass->ObjectInternalInteger, 0) << " ];\n\n"
+				<< "\t\treturn pClassPointer;\n"
+				<< "\t};\n\n";
+		}
+		else
+		{
+			ssStreamBuffer0 << "\n"
+				<< "class UClass* " << className << "::StaticClass()\n"
+				<< "\t{\n"
+				<< "\t\tif ( ! pClassPointer )\n"
+				<< "\t\t\tpClassPointer = UObject::FindClass ( \"" << sClassFullName << "\" );\n\n"
+				<< "\t\treturn pClassPointer;\n"
+				<< "\t};\n\n";
+		}
 	}
 
 	// process functions
@@ -1654,6 +1668,7 @@ void GenerateClass ( UClass* pClass )
 	DWORD dwSize = 0;
 	signed long dwLastOffset = 0;
 	DWORD dwMissedOffset = 0;
+	static bool bUObjectVfTableCommented = false;
 
 	// get suoerfield
 	UClass* pSuperClass = ( UClass* ) pClass->SuperField;
@@ -1831,6 +1846,15 @@ void GenerateClass ( UClass* pClass )
 				// stream property flags to support stream
 				GetAllPropertyFlags ( pProperty->PropertyFlags, ssStreamBuffer2 );
 
+				// comment out the VfTableObject in UObject
+				if (		! bUObjectVfTableCommented
+						&&	! strcmp(sClassNameCPP.c_str(), "UObject")
+						&&  ! strcmp(sPropertyName.c_str(), "VfTableObject") )
+				{
+					bUObjectVfTableCommented = true;
+					ssStreamBuffer0 << "\t// ";
+				}
+
 				// stream to main buffer
 				ssStreamBuffer0 << "\t" << SDKMC_SSCOL ( sPropertyType, SDK_COL1 ) << " " << SDKMC_SSCOL ( ssStreamBuffer1.str(), SDK_COL2 ) 
 								<< "\t\t// " << SDKMC_SSHEX ( pProperty->Offset, 4 ) << " (" << SDKMC_SSHEX ( ( pProperty->ElementSize * pProperty->ArrayDim ), 4 ) << ") [" << SDKMC_SSHEX ( pProperty->PropertyFlags, 16 ) << "]";
@@ -1933,12 +1957,12 @@ void GenerateClass ( UClass* pClass )
 	}
 	else
 	{
-		ssStreamBuffer0 << "\tstatic UClass* StaticClass()\n"
-						<< "\t{\n"
-						<< "\t\tif ( ! pClassPointer )\n"
-						<< "\t\t\tpClassPointer = UObject::FindClass ( \"" << sClassFullName << "\" );\n\n"
-						<< "\t\treturn pClassPointer;\n"
-						<< "\t};\n\n";
+		ssStreamBuffer0 << "\tstatic UClass* StaticClass();\n\n";
+						//<< "\t{\n"
+						//<< "\t\tif ( ! pClassPointer )\n"
+						//<< "\t\t\tpClassPointer = UObject::FindClass ( \"" << sClassFullName << "\" );\n\n"
+						//<< "\t\treturn pClassPointer;\n"
+						//<< "\t};\n\n";
 	}
 
 	// print main stream buffer to file

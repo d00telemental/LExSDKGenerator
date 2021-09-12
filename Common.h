@@ -26,8 +26,8 @@
 #if LE_GAME_INDEX == 1
 
 #define LEx_MODULE_NAME		L"MassEffect1.exe"
-#define LEx_NAME_POOLS		0x16A2090
-#define LEx_OBJOBJECTS		0x1770670
+#define LEx_NAME_POOLS		0x16A2090       // RVA of the name pools
+#define LEx_OBJOBJECTS		0x1770670       // RVA of the UObject::ObjObjects
 
 #elif LE_GAME_INDEX == 2
 
