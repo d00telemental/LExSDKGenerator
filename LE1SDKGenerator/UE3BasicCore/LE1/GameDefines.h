@@ -202,7 +202,7 @@ struct FName
 				if (!strcmp(lookup, nameEntry->AnsiName))
 				{
 					FName name{};
-					name.Offset = (DWORD)((unsigned long long)nameEntry - (unsigned long long)namePool);
+					name.Offset = (DWORD)((unsigned long long)nameEntry - (unsigned long long)*namePool);
 					name.Chunk = (DWORD)((unsigned long long)namePool - (unsigned long long)GBioNamePools);
 					name.Number = instance;
 					*outName = name;
