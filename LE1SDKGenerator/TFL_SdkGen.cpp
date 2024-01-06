@@ -1413,6 +1413,31 @@ void GenerateFuncDef ( UClass* pClass )
 			}
 		}
 
+
+        // UPDATE - d00t - Tentative attempt to fix the crashes due to outparms not getting pre-populated.
+
+        // stream to main buffer (populate out part of parms struct) ( CPF_OutParm )
+        for ( unsigned int i = 0; i < vProperty_OutParms.size(); i++ )
+        {
+            pair< UProperty*, string > pProperty( vProperty_OutParms[ i ] );
+
+			ssStreamBuffer0 << "\n\tif ( " << pProperty.second << " )\n";
+
+			int iTypeResult = GetPropertyType ( pProperty.first, sPropertyType );
+
+			if ( iTypeResult > 1 || pProperty.first->ArrayDim > 1 ) // struct, tarray, tmap OR array
+			{
+				ssStreamBuffer0 << "\t\tmemcpy ( &" << sFunctionName << "_Parms." << pProperty.second << ", " << pProperty.second << ", " << SDKMC_SSHEX ( ( pProperty.first->ElementSize * pProperty.first->ArrayDim ), 0 ) << " );\n";
+			}
+			else if ( iTypeResult == 1 ) // dword, BYTE, string, ecc.
+			{
+				ssStreamBuffer0 << "\t\t" << sFunctionName << "_Parms." << pProperty.second << " = *" << pProperty.second << ";\n";
+			}
+        }
+
+        // UPDATE - d00t
+
+
 		// stream to main buffer (function native tricks)
 		if ( ( pFunction->FunctionFlags & FUNC_Native ) && pFunction->iNative )
 		{
