@@ -1,66 +1,81 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup>
-    <Filter Include="Source Files">
-      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
-      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    <Filter Include="UE3BasicCore">
+      <UniqueIdentifier>{fdd9d27b-11cb-4e7b-b19b-8c82ba5f43b8}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Header Files">
-      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
-      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    <Filter Include="UE3BasicCore\LE1">
+      <UniqueIdentifier>{62599eb6-c705-43f1-868b-b138bef7753b}</UniqueIdentifier>
     </Filter>
-    <Filter Include="Resource Files">
-      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
-      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    <Filter Include="UE3BasicCore\LE2">
+      <UniqueIdentifier>{e148be4c-a027-438b-ad8e-c3dbd077961b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="UE3BasicCore\LE3">
+      <UniqueIdentifier>{39630fb3-c5b8-42f8-8717-34c39f070ea4}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="SdkGen">
+      <UniqueIdentifier>{5b71e50d-86e5-4644-82c7-5350ceb4cdbb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Shared">
+      <UniqueIdentifier>{0b8e943f-b3c2-4fd2-af3f-c4b8ca180514}</UniqueIdentifier>
     </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TFL_HT.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>SdkGen</Filter>
     </ClCompile>
     <ClCompile Include="TFL_SdkGen.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>SdkGen</Filter>
     </ClCompile>
     <ClCompile Include="..\Common.cpp">
-      <Filter>Source Files</Filter>
+      <Filter>Shared</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="TFL_HT.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="TFL_SdkGen.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="UE3BasicCore\LE1\GameDefines.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="UE3BasicCore\LE1\PiecesOfCode.h">
+      <Filter>UE3BasicCore\LE1</Filter>
     </ClInclude>
     <ClInclude Include="UE3BasicCore\LE1\ObjectFunctions.h">
-      <Filter>Header Files</Filter>
+      <Filter>UE3BasicCore\LE1</Filter>
     </ClInclude>
-    <ClInclude Include="UE3BasicCore\LE1\PiecesOfCode.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\Common.h">
-      <Filter>Header Files</Filter>
+    <ClInclude Include="UE3BasicCore\LE1\GameDefines.h">
+      <Filter>UE3BasicCore\LE1</Filter>
     </ClInclude>
     <ClInclude Include="UE3BasicCore\LE2\GameDefines.h">
-      <Filter>Header Files</Filter>
+      <Filter>UE3BasicCore\LE2</Filter>
     </ClInclude>
     <ClInclude Include="UE3BasicCore\LE2\ObjectFunctions.h">
-      <Filter>Header Files</Filter>
+      <Filter>UE3BasicCore\LE2</Filter>
     </ClInclude>
     <ClInclude Include="UE3BasicCore\LE2\PiecesOfCode.h">
-      <Filter>Header Files</Filter>
+      <Filter>UE3BasicCore\LE2</Filter>
     </ClInclude>
     <ClInclude Include="UE3BasicCore\LE3\GameDefines.h">
-      <Filter>Header Files</Filter>
+      <Filter>UE3BasicCore\LE3</Filter>
     </ClInclude>
     <ClInclude Include="UE3BasicCore\LE3\ObjectFunctions.h">
-      <Filter>Header Files</Filter>
+      <Filter>UE3BasicCore\LE3</Filter>
     </ClInclude>
     <ClInclude Include="UE3BasicCore\LE3\PiecesOfCode.h">
-      <Filter>Header Files</Filter>
+      <Filter>UE3BasicCore\LE3</Filter>
+    </ClInclude>
+    <ClInclude Include="TFL_HT.h">
+      <Filter>SdkGen</Filter>
+    </ClInclude>
+    <ClInclude Include="TFL_SdkGen.h">
+      <Filter>SdkGen</Filter>
+    </ClInclude>
+    <ClInclude Include="..\Common.h">
+      <Filter>Shared</Filter>
+    </ClInclude>
+    <ClInclude Include="UE3BasicCore\LE1\SdkInitializer.h">
+      <Filter>UE3BasicCore\LE1</Filter>
+    </ClInclude>
+    <ClInclude Include="UE3BasicCore\LE2\SdkInitializer.h">
+      <Filter>UE3BasicCore\LE2</Filter>
+    </ClInclude>
+    <ClInclude Include="UE3BasicCore\LE3\SdkInitializer.h">
+      <Filter>UE3BasicCore\LE3</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>

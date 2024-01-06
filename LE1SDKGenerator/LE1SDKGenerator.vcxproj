@@ -21,13 +21,13 @@
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>true</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
   <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
     <ConfigurationType>DynamicLibrary</ConfigurationType>
     <UseDebugLibraries>false</UseDebugLibraries>
-    <PlatformToolset>v142</PlatformToolset>
+    <PlatformToolset>v143</PlatformToolset>
     <WholeProgramOptimization>true</WholeProgramOptimization>
     <CharacterSet>Unicode</CharacterSet>
   </PropertyGroup>
@@ -89,12 +89,15 @@
     <ClInclude Include="UE3BasicCore\LE1\GameDefines.h" />
     <ClInclude Include="UE3BasicCore\LE1\ObjectFunctions.h" />
     <ClInclude Include="UE3BasicCore\LE1\PiecesOfCode.h" />
+    <ClInclude Include="UE3BasicCore\LE1\SdkInitializer.h" />
     <ClInclude Include="UE3BasicCore\LE2\GameDefines.h" />
     <ClInclude Include="UE3BasicCore\LE2\ObjectFunctions.h" />
     <ClInclude Include="UE3BasicCore\LE2\PiecesOfCode.h" />
+    <ClInclude Include="UE3BasicCore\LE2\SdkInitializer.h" />
     <ClInclude Include="UE3BasicCore\LE3\GameDefines.h" />
     <ClInclude Include="UE3BasicCore\LE3\ObjectFunctions.h" />
     <ClInclude Include="UE3BasicCore\LE3\PiecesOfCode.h" />
+    <ClInclude Include="UE3BasicCore\LE3\SdkInitializer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">
