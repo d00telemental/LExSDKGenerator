@@ -15,190 +15,190 @@
 
 TArray< UObject* >* UObject::GObjObjects()
 {
-	return GObjects;
+    return GObjects;
 }
 
 char* UObject::GetName()
 {
-	static char cOutBuffer[ 256 ];
-	sprintf_s ( cOutBuffer, "%s", this->Name.GetName() );
-	return cOutBuffer;
+    static char cOutBuffer[ 256 ];
+    sprintf_s ( cOutBuffer, "%s", this->Name.GetName() );
+    return cOutBuffer;
 }
 
 char* UObject::GetNameCPP()
 {
-	static char cOutBuffer[ 256 ];
+    static char cOutBuffer[ 256 ];
 
-	if ( this->IsA ( UClass::StaticClass() ) )
-	{
-		UClass* pClass = (UClass*) this;
-		while ( pClass )
-		{
-			if ( ! strcmp ( pClass->GetName(), "Actor" ) )
-			{
-				strcpy_s ( cOutBuffer, "A" );
-				break;
-			}
-			else if ( ! strcmp ( pClass->GetName(), "Object" ) )
-			{
-				strcpy_s ( cOutBuffer, "U" );
-				break;
-			}
+    if ( this->IsA ( UClass::StaticClass() ) )
+    {
+        UClass* pClass = (UClass*) this;
+        while ( pClass )
+        {
+            if ( ! strcmp ( pClass->GetName(), "Actor" ) )
+            {
+                strcpy_s ( cOutBuffer, "A" );
+                break;
+            }
+            else if ( ! strcmp ( pClass->GetName(), "Object" ) )
+            {
+                strcpy_s ( cOutBuffer, "U" );
+                break;
+            }
 
-			pClass = (UClass*) pClass->SuperField;
-		}
-	}
-	else
-	{
-		strcpy_s ( cOutBuffer, "F" );
-	}
-		
-	strcat_s ( cOutBuffer, this->GetName() );
+            pClass = (UClass*) pClass->SuperField;
+        }
+    }
+    else
+    {
+        strcpy_s ( cOutBuffer, "F" );
+    }
+        
+    strcat_s ( cOutBuffer, this->GetName() );
 
-	return cOutBuffer;
+    return cOutBuffer;
 }
 
 char* UObject::GetFullName()
 {
-	if ( this->Class && this->Outer )
-	{
-		static char cOutBuffer[ 512 ];
-		char cTmpBuffer[ 512 ];
+    if ( this->Class && this->Outer )
+    {
+        static char cOutBuffer[ 512 ];
+        char cTmpBuffer[ 512 ];
 
-		strcpy_s ( cOutBuffer, this->GetName() );
+        strcpy_s ( cOutBuffer, this->GetName() );
 
-		for ( UObject* pOuter = this->Outer; pOuter; pOuter = pOuter->Outer )
-		{
-			strcpy_s ( cTmpBuffer, pOuter->GetName() );
-			strcat_s ( cTmpBuffer, "." );
+        for ( UObject* pOuter = this->Outer; pOuter; pOuter = pOuter->Outer )
+        {
+            strcpy_s ( cTmpBuffer, pOuter->GetName() );
+            strcat_s ( cTmpBuffer, "." );
 
-			size_t len1 = strlen ( cTmpBuffer );
-			size_t len2 = strlen ( cOutBuffer );
+            size_t len1 = strlen ( cTmpBuffer );
+            size_t len2 = strlen ( cOutBuffer );
 
-			memmove ( cOutBuffer + len1, cOutBuffer, len1 + len2 + 1 );
-			memcpy ( cOutBuffer, cTmpBuffer, len1 );
-		}
+            memmove ( cOutBuffer + len1, cOutBuffer, len1 + len2 + 1 );
+            memcpy ( cOutBuffer, cTmpBuffer, len1 );
+        }
 
-		strcpy_s ( cTmpBuffer, this->Class->GetName() );
-		strcat_s ( cTmpBuffer, " " );
+        strcpy_s ( cTmpBuffer, this->Class->GetName() );
+        strcat_s ( cTmpBuffer, " " );
 
-		size_t len1 = strlen ( cTmpBuffer );
-		size_t len2 = strlen ( cOutBuffer );
+        size_t len1 = strlen ( cTmpBuffer );
+        size_t len2 = strlen ( cOutBuffer );
 
-		memmove ( cOutBuffer + len1, cOutBuffer, len1 + len2 + 1 );
-		memcpy ( cOutBuffer, cTmpBuffer, len1 );
+        memmove ( cOutBuffer + len1, cOutBuffer, len1 + len2 + 1 );
+        memcpy ( cOutBuffer, cTmpBuffer, len1 );
 
-		return cOutBuffer;
-	}
-	
-	return "(null)";
+        return cOutBuffer;
+    }
+    
+    return "(null)";
 }
 
 char* UObject::GetPackageName()
 {
-	UObject* pPackage = this->GetPackageObj();
+    UObject* pPackage = this->GetPackageObj();
 
-	if ( pPackage )
-	{
-		static char cOutBuffer[ 256 ];
-		strcpy_s ( cOutBuffer, pPackage->GetName() );
-		return cOutBuffer;
-	}
-	else
-	{
-		return "(null)";
-	}	
+    if ( pPackage )
+    {
+        static char cOutBuffer[ 256 ];
+        strcpy_s ( cOutBuffer, pPackage->GetName() );
+        return cOutBuffer;
+    }
+    else
+    {
+        return "(null)";
+    }	
 }
 
 UObject* UObject::GetPackageObj()
 {
-	UObject* pPackage = NULL;
+    UObject* pPackage = NULL;
 
-	for ( UObject* pOuter = this->Outer; pOuter; pOuter = pOuter->Outer )
-	{
-		pPackage = pOuter;
-	}
+    for ( UObject* pOuter = this->Outer; pOuter; pOuter = pOuter->Outer )
+    {
+        pPackage = pOuter;
+    }
 
-	return pPackage;
+    return pPackage;
 }
 
 template< class T > T* UObject::FindObject ( char* ObjectFullName )
 {
-	for ( int i = 0; i < UObject::GObjObjects()->Count; ++i )
-	{
-		UObject* Object = UObject::GObjObjects()->Data[ i ];
+    for ( int i = 0; i < UObject::GObjObjects()->Count; ++i )
+    {
+        UObject* Object = UObject::GObjObjects()->Data[ i ];
 
-		if (!Object || !Object->IsA(T::StaticClass()))
-		{
-			continue;
-		}
+        if (!Object || !Object->IsA(T::StaticClass()))
+        {
+            continue;
+        }
 
-		if (!_stricmp(Object->GetFullName(), ObjectFullName))
-		{
-			return (T*)Object;
-		}
-	}
+        if (!_stricmp(Object->GetFullName(), ObjectFullName))
+        {
+            return (T*)Object;
+        }
+    }
 
-	return NULL;
+    return NULL;
 }
 
 template< class T > unsigned int UObject::CountObject ( char* ObjectName )
 {
-	static map< string, int > mCountCache;
-	string sObjectName = string ( ObjectName );
-	
-	if ( mCountCache.count ( sObjectName ) == 0 )
-	{
-		mCountCache[ sObjectName ] = 0;
-		
-		for ( int i = 0; i < UObject::GObjObjects()->Count; ++i )
-		{
-			UObject* Object = UObject::GObjObjects()->Data[ i ];
+    static map< string, int > mCountCache;
+    string sObjectName = string ( ObjectName );
+    
+    if ( mCountCache.count ( sObjectName ) == 0 )
+    {
+        mCountCache[ sObjectName ] = 0;
+        
+        for ( int i = 0; i < UObject::GObjObjects()->Count; ++i )
+        {
+            UObject* Object = UObject::GObjObjects()->Data[ i ];
 
-			if (!Object || !Object->IsA(T::StaticClass()))
-			{
-				continue;
-			}
+            if (!Object || !Object->IsA(T::StaticClass()))
+            {
+                continue;
+            }
 
-			if ( ! _stricmp ( Object->GetName(), ObjectName ) )
-			{
-				mCountCache[ sObjectName ]++;
-			}
-		}
-	}
+            if ( ! _stricmp ( Object->GetName(), ObjectName ) )
+            {
+                mCountCache[ sObjectName ]++;
+            }
+        }
+    }
 
-	return mCountCache[ sObjectName ];
+    return mCountCache[ sObjectName ];
 }
 
 UClass* UObject::FindClass ( char* ClassFullName )
 {
-	for ( int i = 0; i < UObject::GObjObjects()->Count; ++i )
-	{
-		UObject* Object = UObject::GObjObjects()->Data[ i ];
-		
-		if (!Object)
-		{
-			continue;
-		}
+    for ( int i = 0; i < UObject::GObjObjects()->Count; ++i )
+    {
+        UObject* Object = UObject::GObjObjects()->Data[ i ];
+        
+        if (!Object)
+        {
+            continue;
+        }
 
-		if (!_stricmp(Object->GetFullName(), ClassFullName))
-		{
-			return (UClass*)Object;
-		}
-	}
+        if (!_stricmp(Object->GetFullName(), ClassFullName))
+        {
+            return (UClass*)Object;
+        }
+    }
 
-	return NULL;
+    return NULL;
 }
 
 bool UObject::IsA ( UClass* pClass )
 {
-	for ( UClass* SuperClass = this->Class; SuperClass; SuperClass = (UClass*) SuperClass->SuperField )
-	{
-		if (SuperClass == pClass)
-		{
-			return true;
-		}
-	}
+    for ( UClass* SuperClass = this->Class; SuperClass; SuperClass = (UClass*) SuperClass->SuperField )
+    {
+        if (SuperClass == pClass)
+        {
+            return true;
+        }
+    }
 
-	return false;
+    return false;
 }

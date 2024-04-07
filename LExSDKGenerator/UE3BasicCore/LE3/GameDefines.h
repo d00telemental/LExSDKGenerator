@@ -10,7 +10,7 @@
 */
 
 #ifdef _MSC_VER
-	#pragma pack ( push, 0x4 )
+    #pragma pack ( push, 0x4 )
 #endif
 
 /*
@@ -120,32 +120,32 @@ FNameEntry** GBioNamePools = NULL;
 template< class T > struct TArray
 {
 public:
-	T* Data;
-	int Count;
-	int Max;
+    T* Data;
+    int Count;
+    int Max;
 
 public:
-	TArray()
-	{
-		Data = NULL;
-		Count = Max = 0;
-	};
+    TArray()
+    {
+        Data = NULL;
+        Count = Max = 0;
+    };
 
 public:
-	int Num()
-	{
-		return this->Count;
-	};
+    int Num()
+    {
+        return this->Count;
+    };
 
-	T& operator() ( int i )
-	{
-		return this->Data[ i ];
-	};
+    T& operator() ( int i )
+    {
+        return this->Data[ i ];
+    };
 
-	const T& operator() ( int i ) const
-	{ 
-		return this->Data[ i ];
-	};
+    const T& operator() ( int i ) const
+    { 
+        return this->Data[ i ];
+    };
 };
 struct FString : public TArray<wchar_t> { };
 
@@ -153,79 +153,79 @@ struct FString : public TArray<wchar_t> { };
 /** Packed index DWORD as seen in FNameEntry. */
 struct PackedIndex
 {
-	DWORD Offset : 20;  // The actual index, I guess???
-	DWORD Length : 9;   // Length of the AnsiName or WideName in symbols \wo null-terminator.
-	DWORD Bits : 3;     // Always 4 or 0. No idea wtf it really is, flags maybe?
+    DWORD Offset : 20;  // The actual index, I guess???
+    DWORD Length : 9;   // Length of the AnsiName or WideName in symbols \wo null-terminator.
+    DWORD Bits : 3;     // Always 4 or 0. No idea wtf it really is, flags maybe?
 };
 
 #pragma pack(1)
 /** Name as seen in some kind of name pool. */
 struct FNameEntry
 {
-	PackedIndex Index;     // 0x00
-	FNameEntry* HashNext;  // 0x04  Some pointer, often NULL.
-	char AnsiName[1];      // 0x0C  This *potentially* can be a widechar.
+    PackedIndex Index;     // 0x00
+    FNameEntry* HashNext;  // 0x04  Some pointer, often NULL.
+    char AnsiName[1];      // 0x0C  This *potentially* can be a widechar.
 };
 
 #pragma pack(1)
 /** Name reference as seen in individual UObjects. */
 struct FName
 {
-	DWORD Offset : 29;  // Binary offset into an individual chunk.
-	DWORD Chunk : 3;    // Index of the chunk, I've only seen 0 or 1.
-	signed long Number;        // ?= InstanceIndex
+    DWORD Offset : 29;  // Binary offset into an individual chunk.
+    DWORD Chunk : 3;    // Index of the chunk, I've only seen 0 or 1.
+    signed long Number;        // ?= InstanceIndex
 
-	__forceinline
-	char* GetName() const noexcept
-	{
-		auto chunk = GBioNamePools[Chunk];
-		auto entry = (FNameEntry*)((BYTE*)chunk + Offset);
-		return entry->AnsiName;
-	}
+    __forceinline
+    char* GetName() const noexcept
+    {
+        auto chunk = GBioNamePools[Chunk];
+        auto entry = (FNameEntry*)((BYTE*)chunk + Offset);
+        return entry->AnsiName;
+    }
 
-	bool operator==(const FName& A) const noexcept
-	{
-		return Offset == A.Offset && Chunk == A.Chunk && Number == A.Number;
-	}
+    bool operator==(const FName& A) const noexcept
+    {
+        return Offset == A.Offset && Chunk == A.Chunk && Number == A.Number;
+    }
 
-	/** IDK if this actually works yet. */
-	static bool TryFind(char* lookup, signed long instance, FName* outName)
-	{
-		for (FNameEntry** namePool = reinterpret_cast<FNameEntry**>(GBioNamePools);
-			*namePool != nullptr;
-			namePool++)
-		{
-			for (FNameEntry* nameEntry = *namePool;
-				nameEntry->Index.Length != 0;
-				nameEntry = reinterpret_cast<FNameEntry*>(reinterpret_cast<BYTE*>(nameEntry) + sizeof FNameEntry + nameEntry->Index.Length))
-			{
-				if (!strcmp(lookup, nameEntry->AnsiName))
-				{
-					FName name{};
-					name.Offset = (DWORD)((unsigned long long)nameEntry - (unsigned long long)*namePool);
-					name.Chunk = (DWORD)((unsigned long long)namePool - (unsigned long long)GBioNamePools);
-					name.Number = instance;
-					*outName = name;
-					return true;
-				}
-			}
-		}
-		outName = nullptr;
-		return false;
-	}
+    /** IDK if this actually works yet. */
+    static bool TryFind(char* lookup, signed long instance, FName* outName)
+    {
+        for (FNameEntry** namePool = reinterpret_cast<FNameEntry**>(GBioNamePools);
+            *namePool != nullptr;
+            namePool++)
+        {
+            for (FNameEntry* nameEntry = *namePool;
+                nameEntry->Index.Length != 0;
+                nameEntry = reinterpret_cast<FNameEntry*>(reinterpret_cast<BYTE*>(nameEntry) + sizeof FNameEntry + nameEntry->Index.Length))
+            {
+                if (!strcmp(lookup, nameEntry->AnsiName))
+                {
+                    FName name{};
+                    name.Offset = (DWORD)((unsigned long long)nameEntry - (unsigned long long)*namePool);
+                    name.Chunk = (DWORD)((unsigned long long)namePool - (unsigned long long)GBioNamePools);
+                    name.Number = instance;
+                    *outName = name;
+                    return true;
+                }
+            }
+        }
+        outName = nullptr;
+        return false;
+    }
 };
 
 
 struct FScriptDelegate
 {
-	class UObject*		Object;
-	struct FName		FunctionName;
+    class UObject*		Object;
+    struct FName		FunctionName;
 };
 
 struct FQWord
 {
-	int A;
-	int B;
+    int A;
+    int B;
 };
 
 /*
@@ -238,516 +238,516 @@ struct FQWord
 class UObject
 {
 public:
-	void*					VfTableObject;							// 0x0000 (0x08)
-	int						ObjectInternalInteger;					// 0x0008 (0x04)
-	unsigned long long		ObjectFlags;                            // 0x000C (0x08)
-	class UObject*			HashNext;                               // 0x0014 (0x08)
-	class UObject*			HashOuterNext;                          // 0x001C (0x08)
-	void*					StateFrame;                             // 0x0024 (0x08)
-	class UObject*			Linker;                                 // 0x002C (0x08)
-	long long				LinkerIndex;							// 0x0034 (0x08)
-	int						NetIndex;                               // 0x003C (0x04)
-	class UObject*			Outer;                                  // 0x0040 (0x08)
-	struct FName			Name;                                   // 0x0048 (0x08)
-	class UClass*			Class;                                  // 0x0050 (0x08)
-	class UObject*			ObjectArchetype;						// 0x0058 (0x08)
+    void*					VfTableObject;							// 0x0000 (0x08)
+    int						ObjectInternalInteger;					// 0x0008 (0x04)
+    unsigned long long		ObjectFlags;                            // 0x000C (0x08)
+    class UObject*			HashNext;                               // 0x0014 (0x08)
+    class UObject*			HashOuterNext;                          // 0x001C (0x08)
+    void*					StateFrame;                             // 0x0024 (0x08)
+    class UObject*			Linker;                                 // 0x002C (0x08)
+    long long				LinkerIndex;							// 0x0034 (0x08)
+    int						NetIndex;                               // 0x003C (0x04)
+    class UObject*			Outer;                                  // 0x0040 (0x08)
+    struct FName			Name;                                   // 0x0048 (0x08)
+    class UClass*			Class;                                  // 0x0050 (0x08)
+    class UObject*			ObjectArchetype;						// 0x0058 (0x08)
 
 private:
-	static UClass* pClassPointer;
+    static UClass* pClassPointer;
 
 public:
-	static TArray<UObject*>* GObjObjects();
+    static TArray<UObject*>* GObjObjects();
 
-	char* GetName();
-	char* GetNameCPP();
-	char* GetFullName();
-	char* GetPackageName();
-	UObject* GetPackageObj();
-	
-	template<class T> static T* FindObject(char* ObjectFullName);
-	template<class T> static unsigned int CountObject(char* ObjectName);
-	static UClass* FindClass (char* ClassFullName);
+    char* GetName();
+    char* GetNameCPP();
+    char* GetFullName();
+    char* GetPackageName();
+    UObject* GetPackageObj();
+    
+    template<class T> static T* FindObject(char* ObjectFullName);
+    template<class T> static unsigned int CountObject(char* ObjectName);
+    static UClass* FindClass (char* ClassFullName);
 
-	bool IsA (UClass* pClass);
+    bool IsA (UClass* pClass);
 
-	static UClass* StaticClass()
-	{
-		if (!pClassPointer)
-			pClassPointer = UObject::FindClass("Class Core.Object");
+    static UClass* StaticClass()
+    {
+        if (!pClassPointer)
+            pClassPointer = UObject::FindClass("Class Core.Object");
 
-		return pClassPointer;
-	};
+        return pClassPointer;
+    };
 };
 
-	// (0x0060 - 0x0070)
-	class UField : public UObject
-	{
-	public:
-		class UField*		SuperField;									// 0x0060 (0x08)
-		class UField*		Next;										// 0x0068 (0x08)
-
-	private:
-		static UClass* pClassPointer;
-
-	public:
-		static UClass* StaticClass()
-		{
-			if (!pClassPointer)
-				pClassPointer = UObject::FindClass("Class Core.Field");
-
-			return pClassPointer;
-		};
-	};
-
-		// (0x0070 - 0x0080)
-		class UEnum : public UField
-		{
-		public:
-			TArray<FName>			Names;									// 0x0070 (0x10)
-
-		private:
-			static UClass* pClassPointer;
-
-		public:
-			static UClass* StaticClass()
-			{
-				if (!pClassPointer)
-					pClassPointer = UObject::FindClass ("Class Core.Enum");
-
-				return pClassPointer;
-			};
-		};
-
-		// (0x0070 - 0x0080)
-		class UConst : public UField
-		{
-		public:
-			struct FString		Value;										// 0x0070 (0x10)													
-
-		private:
-			static UClass* pClassPointer;
-
-		public:
-			static UClass* StaticClass()
-			{
-				if (!pClassPointer)
-					pClassPointer = UObject::FindClass("Class Core.Const");
-
-				return pClassPointer;
-			};
-		};
-
-		// (0x0070 - 0x00D8)
-		class UStruct : public UField
-		{
-		public:
-			class UField*					Children;							// 0x0070 (0x08)
-			int								PropertySize;						// 0x0078 (0x04)
-			struct TArray<BYTE>				Script;								// 0x007C (0x10)
-			int								MinAlignment;						// 0x008C (0x04)
-			void*							RefLink;							// 0x0090 (0x08)
-			void*							PropertyLink;						// 0x0098 (0x08)
-			void*							ConfigLink;							// 0x00A0 (0x08)
-			void*							ConstructorLink;					// 0x00A8 (0x08)
-			void*							ComponentPropertyLink;				// 0x00B0 (0x08)
-			void*							TransientPropertyLink;				// 0x00B8 (0x08)
-			struct TArray<class UObject>	ScriptObjectReferences;				// 0x00C0 (0x10)
-			void*							UnknownD0;							// 0x00D0 (0x08)
-
-		private:
-			static UClass* pClassPointer;
-
-		public:
-			static UClass* StaticClass()
-			{
-				if ( ! pClassPointer )
-					pClassPointer = UObject::FindClass ( "Class Core.Struct" );
-
-				return pClassPointer;
-			};
-		};
-
-			// (0x00D8 - 0x00EC)
-			class UScriptStruct : public UStruct
-			{
-			public:
-				struct FString		DefaultStructPropText;						// 0x00D8 (0x10)
-				int					StructFlags;                                // 0x00E8 (0x04)
-
-			private:
-				static UClass* pClassPointer;
-
-			public:
-				static UClass* StaticClass()
-				{
-					if (!pClassPointer)
-						pClassPointer = UObject::FindClass ("Class Core.ScriptStruct");
-
-					return pClassPointer;
-				};
-			};
-
-			// (0x00D8 - 0x0F4)
-			#pragma pack(1)
-			class UFunction : public UStruct
-			{
-			public:
-				void*				Func;						// 0x00D8 (0x08)
-				DWORD				FunctionFlags;				// 0x00E0 (0x04)
-				short				iNative;					// 0x00E4 (0x02)
-				short				ParmsSize;					// 0x00E6 (0x02)
-				short				ReturnValueOffset;			// 0x00E8 (0x02)
-				BYTE				NumParms;					// 0x00EA (0x01)
-				BYTE				OperPrecendence;			// 0x00EB (0x01)
-				void*				FirstPropertyToInit;		// 0x00EC (0x08)
-
-			private:
-				static UClass* pClassPointer;
-
-			public:
-				static UClass* StaticClass()
-				{
-					if (!pClassPointer)
-						pClassPointer = UObject::FindClass ( "Class Core.Function" );
-
-					return pClassPointer;
-				};
-			};
-
-			// (0x00D8 - 0x0100)
-			class UState : public UStruct
-			{
-			public:
-				BYTE				UnknownD8[0x28];			// 0x00D8 (0x28)
-
-			private:
-				static UClass* pClassPointer;
-
-			public:
-				static UClass* StaticClass()
-				{
-					if ( ! pClassPointer )
-						pClassPointer = UObject::FindClass ( "Class Core.State" );
-
-					return pClassPointer;
-				};
-			};
-
-				// (0x0100 - 0x01F8)
-				class UClass : public UState
-				{
-				public:
-					BYTE				UnknownData130[0xF8];			// 0x0100 (0xF8)
-
-				private:
-					static UClass* pClassPointer;
-
-				public:
-					static UClass* StaticClass()
-					{
-						if ( ! pClassPointer )
-							pClassPointer = UObject::FindClass ( "Class Core.Class" );
-
-						return pClassPointer;
-					};
-				};
-
-		// (0x0070 - 0x00D0)
-		class UProperty : public UField 
-		{
-		public:
-			int						ArrayDim;						//0x0070 (0x04)
-			int						ElementSize;					//0x0074 (0x04)
-			unsigned long long		PropertyFlags;					//0x0078 (0x08)
-			unsigned short			RepOffset;						//0x0080 (0x02)
-			unsigned short			RepIndex;						//0x0082 (0x02)
-			struct FName			Category;						//0x0084 (0x08)
-			class UEnum*			ArraySizeEnum;					//0x008C (0x08)
-			int						Offset;							//0x0094 (0x04)
-			void*					PropertyLinkNext;				//0x0098 (0x08)
-			void*					ConfigLinkNext;					//0x00A0 (0x08)
-			void*					ConstructorLinkNext;			//0x00A8 (0x08)
-			void*					NextRef;						//0x00B0 (0x08)
-			void*					RepOwner;						//0x00B8 (0x08)
-			void*					ComponentPropertyLinkNext;		//0x00C0 (0x08)
-			void*					TransientPropertyLinkNext;		//0x00C8 (0x08)
-
-		private:
-			static UClass* pClassPointer;
-
-		public:
-			static UClass* StaticClass()
-			{
-				if (!pClassPointer )
-					pClassPointer = UObject::FindClass("Class Core.Property");
-
-				return pClassPointer;
-			};
-		};
-
-			// (0x00D0 - 0x00D8)
-			class UByteProperty : public UProperty 
-			{
-			public:
-				class UEnum*		Enum;						//0x00D0 (0x08)
-
-			private:
-				static UClass* pClassPointer;
-
-			public:
-				static UClass* StaticClass()
-				{
-					if (!pClassPointer)
-						pClassPointer = UObject::FindClass("Class Core.ByteProperty");
-
-					return pClassPointer;
-				};
-			};
-
-			// (0x00D0 - 0x00D0)
-			class UIntProperty : public UProperty 
-			{
-			public:
-
-			private:
-				static UClass* pClassPointer;
-
-			public:
-				static UClass* StaticClass()
-				{
-					if (!pClassPointer)
-						pClassPointer = UObject::FindClass("Class Core.IntProperty");
-
-					return pClassPointer;
-				};
-			};
-
-			// (0x00D0 - 0x00D0)
-			class UFloatProperty : public UProperty 
-			{
-			public:
-
-			private:
-				static UClass* pClassPointer;
-
-			public:
-				static UClass* StaticClass()
-				{
-					if (!pClassPointer)
-						pClassPointer = UObject::FindClass("Class Core.FloatProperty");
-
-					return pClassPointer;
-				};
-			};
-
-			// (0x00D0 - 0x00D8)
-			class UBoolProperty : public UProperty 
-			{
-			public:
-				DWORD			BitMask;						// 0x00D0 (0x04)
-				DWORD			UnknownD4;						// 0x00D4 (0x04)
-
-			private:
-				static UClass* pClassPointer;
-
-			public:
-				static UClass* StaticClass()
-				{
-					if (!pClassPointer)
-						pClassPointer = UObject::FindClass("Class Core.BoolProperty");
-
-					return pClassPointer;
-				};
-			};
-
-			// (0x00D0 - 0x00D0)
-			class UStrProperty : public UProperty 
-			{
-			public:
-
-			private:
-				static UClass* pClassPointer;
-
-			public:
-				static UClass* StaticClass()
-				{
-					if (!pClassPointer)
-						pClassPointer = UObject::FindClass("Class Core.StrProperty");
-
-					return pClassPointer;
-				};
-			};
-
-			// (0x00D0 - 0x00D0)
-			class UStringRefProperty : public UProperty 
-			{
-			public:
-
-			private:
-				static UClass* pClassPointer;
-
-			public:
-				static UClass* StaticClass()
-				{
-					if (!pClassPointer)
-						pClassPointer = UObject::FindClass("Class Core.StringRefProperty");
-
-					return pClassPointer;
-				};
-			};
-
-			// (0x00D0 - 0x00D0)
-			class UNameProperty : public UProperty 
-			{
-			public:
-
-			private:
-				static UClass* pClassPointer;
-
-			public:
-				static UClass* StaticClass()
-				{
-					if (!pClassPointer)
-						pClassPointer = UObject::FindClass("Class Core.NameProperty");
-
-					return pClassPointer;
-				};
-			};
-
-			// (0x00D0 - 0x00E0)
-			class UDelegateProperty : public UProperty 
-			{
-			public:
-				class UFunction*		Function;								//0x00D0 (0x08)
-				class UFunction*		SourceDelegate;							//0x00D8 (0x08)
-
-			private:
-				static UClass* pClassPointer;
-
-			public:
-				static UClass* StaticClass()
-				{
-					if (!pClassPointer)
-						pClassPointer = UObject::FindClass("Class Core.DelegateProperty");
-
-					return pClassPointer;
-				};
-			};
-
-			// (0x00D0 - 0x00D8)
-			class UObjectProperty : public UProperty 
-			{
-			public:
-				class UClass*		PropertyClass;								// 0x00D0 (0x08)
-
-			private:
-				static UClass* pClassPointer;
-
-			public:
-				static UClass* StaticClass()
-				{
-					if (!pClassPointer)
-						pClassPointer = UObject::FindClass("Class Core.ObjectProperty");
-
-					return pClassPointer;
-				};
-			};
-
-				// (0x00D8 - 0x00E0)
-				class UClassProperty : public UObjectProperty 
-				{
-				public:
-					class UClass*			MetaClass;							// 0x00D8 (0x08)
-
-				private:
-					static UClass* pClassPointer;
-
-				public:
-					static UClass* StaticClass()
-					{
-						if (!pClassPointer)
-							pClassPointer = UObject::FindClass("Class Core.ClassProperty");
-
-						return pClassPointer;
-					};
-				};
-
-			// (0x00D0 - 0x00D8)
-			class UInterfaceProperty : public UProperty
-			{
-			public:
-				class UClass*			InterfaceClass;							// 0x00D0 (0x08)
-
-			private:
-				static UClass* pClassPointer;
-
-			public:
-				static UClass* StaticClass()
-				{
-					if (!pClassPointer)
-						pClassPointer = UObject::FindClass("Class Core.InterfaceProperty");
-
-					return pClassPointer;
-				};
-			};
-
-			// (0x00D0 - 0x00D8)
-			class UStructProperty : public UProperty 
-			{
-			public:
-				class UStruct*			Struct;									// 0x00D0 (0x08)
-
-			private:
-				static UClass* pClassPointer;
-
-			public:
-				static UClass* StaticClass()
-				{
-					if (!pClassPointer)
-						pClassPointer = UObject::FindClass("Class Core.StructProperty");
-
-					return pClassPointer;
-				};
-			};
-
-			// (0x00D0 - 0x00D8)
-			class UArrayProperty : public UProperty 
-			{
-			public:
-				class UProperty*		Inner;									// 0x00D0 (0x08)
-
-			private:
-				static UClass* pClassPointer;
-
-			public:
-				static UClass* StaticClass()
-				{
-					if (!pClassPointer)
-						pClassPointer = UObject::FindClass("Class Core.ArrayProperty");
-
-					return pClassPointer;
-				};
-			};
-
-			// (0x00D0 - 0x00E0)
-			class UMapProperty : public UProperty 
-			{
-			public:
-				class UProperty*	Key;										// 0x00D0 (0x08)
-				class UProperty*	Value;										// 0x00D8 (0x08)
-
-			private:
-				static UClass* pClassPointer;
-
-			public:
-				static UClass* StaticClass()
-				{
-					if (!pClassPointer)
-						pClassPointer = UObject::FindClass("Class Core.MapProperty");
-
-					return pClassPointer;
-				};
-			};
+    // (0x0060 - 0x0070)
+    class UField : public UObject
+    {
+    public:
+        class UField*		SuperField;									// 0x0060 (0x08)
+        class UField*		Next;										// 0x0068 (0x08)
+
+    private:
+        static UClass* pClassPointer;
+
+    public:
+        static UClass* StaticClass()
+        {
+            if (!pClassPointer)
+                pClassPointer = UObject::FindClass("Class Core.Field");
+
+            return pClassPointer;
+        };
+    };
+
+        // (0x0070 - 0x0080)
+        class UEnum : public UField
+        {
+        public:
+            TArray<FName>			Names;									// 0x0070 (0x10)
+
+        private:
+            static UClass* pClassPointer;
+
+        public:
+            static UClass* StaticClass()
+            {
+                if (!pClassPointer)
+                    pClassPointer = UObject::FindClass ("Class Core.Enum");
+
+                return pClassPointer;
+            };
+        };
+
+        // (0x0070 - 0x0080)
+        class UConst : public UField
+        {
+        public:
+            struct FString		Value;										// 0x0070 (0x10)													
+
+        private:
+            static UClass* pClassPointer;
+
+        public:
+            static UClass* StaticClass()
+            {
+                if (!pClassPointer)
+                    pClassPointer = UObject::FindClass("Class Core.Const");
+
+                return pClassPointer;
+            };
+        };
+
+        // (0x0070 - 0x00D8)
+        class UStruct : public UField
+        {
+        public:
+            class UField*					Children;							// 0x0070 (0x08)
+            int								PropertySize;						// 0x0078 (0x04)
+            struct TArray<BYTE>				Script;								// 0x007C (0x10)
+            int								MinAlignment;						// 0x008C (0x04)
+            void*							RefLink;							// 0x0090 (0x08)
+            void*							PropertyLink;						// 0x0098 (0x08)
+            void*							ConfigLink;							// 0x00A0 (0x08)
+            void*							ConstructorLink;					// 0x00A8 (0x08)
+            void*							ComponentPropertyLink;				// 0x00B0 (0x08)
+            void*							TransientPropertyLink;				// 0x00B8 (0x08)
+            struct TArray<class UObject>	ScriptObjectReferences;				// 0x00C0 (0x10)
+            void*							UnknownD0;							// 0x00D0 (0x08)
+
+        private:
+            static UClass* pClassPointer;
+
+        public:
+            static UClass* StaticClass()
+            {
+                if ( ! pClassPointer )
+                    pClassPointer = UObject::FindClass ( "Class Core.Struct" );
+
+                return pClassPointer;
+            };
+        };
+
+            // (0x00D8 - 0x00EC)
+            class UScriptStruct : public UStruct
+            {
+            public:
+                struct FString		DefaultStructPropText;						// 0x00D8 (0x10)
+                int					StructFlags;                                // 0x00E8 (0x04)
+
+            private:
+                static UClass* pClassPointer;
+
+            public:
+                static UClass* StaticClass()
+                {
+                    if (!pClassPointer)
+                        pClassPointer = UObject::FindClass ("Class Core.ScriptStruct");
+
+                    return pClassPointer;
+                };
+            };
+
+            // (0x00D8 - 0x0F4)
+            #pragma pack(1)
+            class UFunction : public UStruct
+            {
+            public:
+                void*				Func;						// 0x00D8 (0x08)
+                DWORD				FunctionFlags;				// 0x00E0 (0x04)
+                short				iNative;					// 0x00E4 (0x02)
+                short				ParmsSize;					// 0x00E6 (0x02)
+                short				ReturnValueOffset;			// 0x00E8 (0x02)
+                BYTE				NumParms;					// 0x00EA (0x01)
+                BYTE				OperPrecendence;			// 0x00EB (0x01)
+                void*				FirstPropertyToInit;		// 0x00EC (0x08)
+
+            private:
+                static UClass* pClassPointer;
+
+            public:
+                static UClass* StaticClass()
+                {
+                    if (!pClassPointer)
+                        pClassPointer = UObject::FindClass ( "Class Core.Function" );
+
+                    return pClassPointer;
+                };
+            };
+
+            // (0x00D8 - 0x0100)
+            class UState : public UStruct
+            {
+            public:
+                BYTE				UnknownD8[0x28];			// 0x00D8 (0x28)
+
+            private:
+                static UClass* pClassPointer;
+
+            public:
+                static UClass* StaticClass()
+                {
+                    if ( ! pClassPointer )
+                        pClassPointer = UObject::FindClass ( "Class Core.State" );
+
+                    return pClassPointer;
+                };
+            };
+
+                // (0x0100 - 0x01F8)
+                class UClass : public UState
+                {
+                public:
+                    BYTE				UnknownData130[0xF8];			// 0x0100 (0xF8)
+
+                private:
+                    static UClass* pClassPointer;
+
+                public:
+                    static UClass* StaticClass()
+                    {
+                        if ( ! pClassPointer )
+                            pClassPointer = UObject::FindClass ( "Class Core.Class" );
+
+                        return pClassPointer;
+                    };
+                };
+
+        // (0x0070 - 0x00D0)
+        class UProperty : public UField 
+        {
+        public:
+            int						ArrayDim;						//0x0070 (0x04)
+            int						ElementSize;					//0x0074 (0x04)
+            unsigned long long		PropertyFlags;					//0x0078 (0x08)
+            unsigned short			RepOffset;						//0x0080 (0x02)
+            unsigned short			RepIndex;						//0x0082 (0x02)
+            struct FName			Category;						//0x0084 (0x08)
+            class UEnum*			ArraySizeEnum;					//0x008C (0x08)
+            int						Offset;							//0x0094 (0x04)
+            void*					PropertyLinkNext;				//0x0098 (0x08)
+            void*					ConfigLinkNext;					//0x00A0 (0x08)
+            void*					ConstructorLinkNext;			//0x00A8 (0x08)
+            void*					NextRef;						//0x00B0 (0x08)
+            void*					RepOwner;						//0x00B8 (0x08)
+            void*					ComponentPropertyLinkNext;		//0x00C0 (0x08)
+            void*					TransientPropertyLinkNext;		//0x00C8 (0x08)
+
+        private:
+            static UClass* pClassPointer;
+
+        public:
+            static UClass* StaticClass()
+            {
+                if (!pClassPointer )
+                    pClassPointer = UObject::FindClass("Class Core.Property");
+
+                return pClassPointer;
+            };
+        };
+
+            // (0x00D0 - 0x00D8)
+            class UByteProperty : public UProperty 
+            {
+            public:
+                class UEnum*		Enum;						//0x00D0 (0x08)
+
+            private:
+                static UClass* pClassPointer;
+
+            public:
+                static UClass* StaticClass()
+                {
+                    if (!pClassPointer)
+                        pClassPointer = UObject::FindClass("Class Core.ByteProperty");
+
+                    return pClassPointer;
+                };
+            };
+
+            // (0x00D0 - 0x00D0)
+            class UIntProperty : public UProperty 
+            {
+            public:
+
+            private:
+                static UClass* pClassPointer;
+
+            public:
+                static UClass* StaticClass()
+                {
+                    if (!pClassPointer)
+                        pClassPointer = UObject::FindClass("Class Core.IntProperty");
+
+                    return pClassPointer;
+                };
+            };
+
+            // (0x00D0 - 0x00D0)
+            class UFloatProperty : public UProperty 
+            {
+            public:
+
+            private:
+                static UClass* pClassPointer;
+
+            public:
+                static UClass* StaticClass()
+                {
+                    if (!pClassPointer)
+                        pClassPointer = UObject::FindClass("Class Core.FloatProperty");
+
+                    return pClassPointer;
+                };
+            };
+
+            // (0x00D0 - 0x00D8)
+            class UBoolProperty : public UProperty 
+            {
+            public:
+                DWORD			BitMask;						// 0x00D0 (0x04)
+                DWORD			UnknownD4;						// 0x00D4 (0x04)
+
+            private:
+                static UClass* pClassPointer;
+
+            public:
+                static UClass* StaticClass()
+                {
+                    if (!pClassPointer)
+                        pClassPointer = UObject::FindClass("Class Core.BoolProperty");
+
+                    return pClassPointer;
+                };
+            };
+
+            // (0x00D0 - 0x00D0)
+            class UStrProperty : public UProperty 
+            {
+            public:
+
+            private:
+                static UClass* pClassPointer;
+
+            public:
+                static UClass* StaticClass()
+                {
+                    if (!pClassPointer)
+                        pClassPointer = UObject::FindClass("Class Core.StrProperty");
+
+                    return pClassPointer;
+                };
+            };
+
+            // (0x00D0 - 0x00D0)
+            class UStringRefProperty : public UProperty 
+            {
+            public:
+
+            private:
+                static UClass* pClassPointer;
+
+            public:
+                static UClass* StaticClass()
+                {
+                    if (!pClassPointer)
+                        pClassPointer = UObject::FindClass("Class Core.StringRefProperty");
+
+                    return pClassPointer;
+                };
+            };
+
+            // (0x00D0 - 0x00D0)
+            class UNameProperty : public UProperty 
+            {
+            public:
+
+            private:
+                static UClass* pClassPointer;
+
+            public:
+                static UClass* StaticClass()
+                {
+                    if (!pClassPointer)
+                        pClassPointer = UObject::FindClass("Class Core.NameProperty");
+
+                    return pClassPointer;
+                };
+            };
+
+            // (0x00D0 - 0x00E0)
+            class UDelegateProperty : public UProperty 
+            {
+            public:
+                class UFunction*		Function;								//0x00D0 (0x08)
+                class UFunction*		SourceDelegate;							//0x00D8 (0x08)
+
+            private:
+                static UClass* pClassPointer;
+
+            public:
+                static UClass* StaticClass()
+                {
+                    if (!pClassPointer)
+                        pClassPointer = UObject::FindClass("Class Core.DelegateProperty");
+
+                    return pClassPointer;
+                };
+            };
+
+            // (0x00D0 - 0x00D8)
+            class UObjectProperty : public UProperty 
+            {
+            public:
+                class UClass*		PropertyClass;								// 0x00D0 (0x08)
+
+            private:
+                static UClass* pClassPointer;
+
+            public:
+                static UClass* StaticClass()
+                {
+                    if (!pClassPointer)
+                        pClassPointer = UObject::FindClass("Class Core.ObjectProperty");
+
+                    return pClassPointer;
+                };
+            };
+
+                // (0x00D8 - 0x00E0)
+                class UClassProperty : public UObjectProperty 
+                {
+                public:
+                    class UClass*			MetaClass;							// 0x00D8 (0x08)
+
+                private:
+                    static UClass* pClassPointer;
+
+                public:
+                    static UClass* StaticClass()
+                    {
+                        if (!pClassPointer)
+                            pClassPointer = UObject::FindClass("Class Core.ClassProperty");
+
+                        return pClassPointer;
+                    };
+                };
+
+            // (0x00D0 - 0x00D8)
+            class UInterfaceProperty : public UProperty
+            {
+            public:
+                class UClass*			InterfaceClass;							// 0x00D0 (0x08)
+
+            private:
+                static UClass* pClassPointer;
+
+            public:
+                static UClass* StaticClass()
+                {
+                    if (!pClassPointer)
+                        pClassPointer = UObject::FindClass("Class Core.InterfaceProperty");
+
+                    return pClassPointer;
+                };
+            };
+
+            // (0x00D0 - 0x00D8)
+            class UStructProperty : public UProperty 
+            {
+            public:
+                class UStruct*			Struct;									// 0x00D0 (0x08)
+
+            private:
+                static UClass* pClassPointer;
+
+            public:
+                static UClass* StaticClass()
+                {
+                    if (!pClassPointer)
+                        pClassPointer = UObject::FindClass("Class Core.StructProperty");
+
+                    return pClassPointer;
+                };
+            };
+
+            // (0x00D0 - 0x00D8)
+            class UArrayProperty : public UProperty 
+            {
+            public:
+                class UProperty*		Inner;									// 0x00D0 (0x08)
+
+            private:
+                static UClass* pClassPointer;
+
+            public:
+                static UClass* StaticClass()
+                {
+                    if (!pClassPointer)
+                        pClassPointer = UObject::FindClass("Class Core.ArrayProperty");
+
+                    return pClassPointer;
+                };
+            };
+
+            // (0x00D0 - 0x00E0)
+            class UMapProperty : public UProperty 
+            {
+            public:
+                class UProperty*	Key;										// 0x00D0 (0x08)
+                class UProperty*	Value;										// 0x00D8 (0x08)
+
+            private:
+                static UClass* pClassPointer;
+
+            public:
+                static UClass* StaticClass()
+                {
+                    if (!pClassPointer)
+                        pClassPointer = UObject::FindClass("Class Core.MapProperty");
+
+                    return pClassPointer;
+                };
+            };
 
 /*
 # ========================================================================================= #
@@ -787,5 +787,5 @@ UClass*				UMapProperty			::pClassPointer = NULL;  // +
 */
 
 #ifdef _MSC_VER
-	#pragma pack ( pop )
+    #pragma pack ( pop )
 #endif
