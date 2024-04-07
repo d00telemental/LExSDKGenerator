@@ -10,12 +10,6 @@
 // ========================================
 
 /**
- * Index of LE game, starting with 1.
- * Launcher not supported for obvious reasons.
- */
-#define LE_GAME_INDEX	1
-
-/**
  * Base directory for SDK generation output.
  * Used as a base, an LE1/LE2/LE3 directory
  * will be created in this path.
@@ -32,14 +26,14 @@
 #elif LE_GAME_INDEX == 2
 
 #define LEx_MODULE_NAME		L"MassEffect2.exe"
-#define LEx_NAME_POOLS		0x1668A10
-#define LEx_OBJOBJECTS		0x173CC48
+#define LEx_NAME_POOLS		0x1668A10       // RVA of the name pools
+#define LEx_OBJOBJECTS		0x173CC48       // RVA of the UObject::ObjObjects
 
 #elif LE_GAME_INDEX == 3
 
 #define LEx_MODULE_NAME		L"MassEffect3.exe"
-#define LEx_NAME_POOLS		0x17B33D0
-#define LEx_OBJOBJECTS		0x1887E40
+#define LEx_NAME_POOLS		0x17B33D0       // RVA of the name pools
+#define LEx_OBJOBJECTS		0x1887E40       // RVA of the UObject::ObjObjects
 
 #else
 

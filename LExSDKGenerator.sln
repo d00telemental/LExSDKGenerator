@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.9.34723.18
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "LExSDKGenerator", "LExSDKGenerator\LExSDKGenerator.vcxproj", "{A70967AF-BD4D-4F90-B1F0-1F42CBDA70C8}"
+EndProject
+Project("{8BC9CEB8-8B4A-11D0-8D11-00A0C91BC942}") = "InstanceLogger", "InstanceLogger\InstanceLogger.vcxproj", "{5538D7A2-C400-4030-B439-BD00E64C469E}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		LE1|x64 = LE1|x64
+		LE2|x64 = LE2|x64
+		LE3|x64 = LE3|x64
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A70967AF-BD4D-4F90-B1F0-1F42CBDA70C8}.LE1|x64.ActiveCfg = LE1|x64
+		{A70967AF-BD4D-4F90-B1F0-1F42CBDA70C8}.LE1|x64.Build.0 = LE1|x64
+		{A70967AF-BD4D-4F90-B1F0-1F42CBDA70C8}.LE2|x64.ActiveCfg = LE2|x64
+		{A70967AF-BD4D-4F90-B1F0-1F42CBDA70C8}.LE2|x64.Build.0 = LE2|x64
+		{A70967AF-BD4D-4F90-B1F0-1F42CBDA70C8}.LE3|x64.ActiveCfg = LE3|x64
+		{A70967AF-BD4D-4F90-B1F0-1F42CBDA70C8}.LE3|x64.Build.0 = LE3|x64
+		{5538D7A2-C400-4030-B439-BD00E64C469E}.LE1|x64.ActiveCfg = LE1|x64
+		{5538D7A2-C400-4030-B439-BD00E64C469E}.LE1|x64.Build.0 = LE1|x64
+		{5538D7A2-C400-4030-B439-BD00E64C469E}.LE2|x64.ActiveCfg = LE2|x64
+		{5538D7A2-C400-4030-B439-BD00E64C469E}.LE2|x64.Build.0 = LE2|x64
+		{5538D7A2-C400-4030-B439-BD00E64C469E}.LE3|x64.ActiveCfg = LE3|x64
+		{5538D7A2-C400-4030-B439-BD00E64C469E}.LE3|x64.Build.0 = LE3|x64
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {C354924F-CD06-4181-9A4E-CF06A3C6C16B}
+	EndGlobalSection
+EndGlobal
