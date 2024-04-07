@@ -2285,7 +2285,7 @@ void ProcessPackages()
                 vPackages.push_back ( pPackageObject );
 
                 // create new structs package header file
-                sprintf_s ( cBuffer, "%s\\%s\\SDK_HEADERS\\%s_structs.h", SDK_BASE_DIR, GAME_NAME_S, pPackageObject->GetName() );	
+                sprintf_s ( cBuffer, "%s\\%s\\SDK_HEADERS\\%s_structs.h", sOutputDir, GAME_NAME_S, pPackageObject->GetName() );
                 fopen_s ( &pFile, cBuffer, "w+" );
             
                 sprintf_s ( cBuffer, "%s_structs", pPackageObject->GetName() );
@@ -2298,7 +2298,7 @@ void ProcessPackages()
                 fclose ( pFile );
 
                 // create new classes package header file
-                sprintf_s ( cBuffer, "%s\\%s\\SDK_HEADERS\\%s_classes.h", SDK_BASE_DIR, GAME_NAME_S, pPackageObject->GetName() );	
+                sprintf_s ( cBuffer, "%s\\%s\\SDK_HEADERS\\%s_classes.h", sOutputDir, GAME_NAME_S, pPackageObject->GetName() );
                 fopen_s ( &pFile, cBuffer, "w+" );
             
                 sprintf_s ( cBuffer, "%s_classes", pPackageObject->GetName() );
@@ -2317,7 +2317,7 @@ void ProcessPackages()
                 fclose ( pFile );
 
                 // create new function structs package header file
-                sprintf_s ( cBuffer, "%s\\%s\\SDK_HEADERS\\%s_f_structs.h", SDK_BASE_DIR, GAME_NAME_S, pPackageObject->GetName() );	
+                sprintf_s ( cBuffer, "%s\\%s\\SDK_HEADERS\\%s_f_structs.h", sOutputDir, GAME_NAME_S, pPackageObject->GetName() );
                 fopen_s ( &pFile, cBuffer, "w+" );
             
                 sprintf_s ( cBuffer, "%s_f_structs", pPackageObject->GetName() );
@@ -2330,7 +2330,7 @@ void ProcessPackages()
                 fclose ( pFile );
 
                 // create new function package header file
-                sprintf_s ( cBuffer, "%s\\%s\\SDK_HEADERS\\%s_functions.cpp", SDK_BASE_DIR, GAME_NAME_S, pPackageObject->GetName() );	
+                sprintf_s ( cBuffer, "%s\\%s\\SDK_HEADERS\\%s_functions.cpp", sOutputDir, GAME_NAME_S, pPackageObject->GetName() );
                 fopen_s ( &pFile, cBuffer, "w+" );
             
                 sprintf_s ( cBuffer, "%s_functions", pPackageObject->GetName() );
@@ -2361,7 +2361,8 @@ void ProcessPackages()
 
 void Init_Core()
 {
-    auto moduleBase = Common::GetModuleBaseAddress(LEx_MODULE_NAME);
+    auto const moduleBase = Common::GetModuleBaseAddress(LEx_MODULE_NAME);
+    //auto const moduleBase = Common::GetFirstModuleBaseAddress();
 
     GBioNamePools = &*(FNameEntry**)(moduleBase + LEx_NAME_POOLS);
     fprintf(pLog, "GBioNamePools: 0x%p\n", GBioNamePools);
@@ -2381,7 +2382,7 @@ void Init_Core()
 void Final_SdkHeaders()
 {
     // init main header file
-    sprintf_s ( cBuffer, "%s\\%s\\SdkHeaders.h", SDK_BASE_DIR, GAME_NAME_S );
+    sprintf_s ( cBuffer, "%s\\%s\\SdkHeaders.h", sOutputDir, GAME_NAME_S );
     fopen_s ( &pFile, cBuffer, "w+" );
 
     PrintFileHeder("SdkHeaders", "h");
@@ -2428,7 +2429,21 @@ void Final_SdkHeaders()
 
 void OnAttach()
 {
-    //Sleep ( 60000 );
+    FILE* pConfigFile = nullptr;
+    fopen_s ( &pConfigFile, SDK_CONFIG_PATH, "r" );
+    fread ( sOutputDir, 1, sizeof ( sOutputDir ), pConfigFile );
+    fclose ( pConfigFile );
+
+    OutputDebugStringA ( "Configured output directory:" );
+    OutputDebugStringA ( sOutputDir );
+
+    Sleep ( 40000 );
+
+    if (bAbortRun)
+    {
+        // Attach thread was aborted by process termination.
+        return;
+    }
     
     // times
     SYSTEMTIME stST, stET;
@@ -2438,18 +2453,18 @@ void OnAttach()
     float fDiff;
 
     // mkdir base dir
-    _mkdir ( SDK_BASE_DIR );
+    _mkdir ( sOutputDir );
 
     // mkdir sdk dir
-    sprintf_s ( cBuffer, "%s\\%s", SDK_BASE_DIR, GAME_NAME_S );
+    sprintf_s ( cBuffer, "%s\\%s", sOutputDir, GAME_NAME_S );
     _mkdir ( cBuffer );
 
     // mkdir sdk headers
-    sprintf_s ( cBuffer, "%s\\%s\\SDK_HEADERS", SDK_BASE_DIR, GAME_NAME_S );
+    sprintf_s ( cBuffer, "%s\\%s\\SDK_HEADERS", sOutputDir, GAME_NAME_S );
     _mkdir ( cBuffer );
 
     // open log
-    sprintf_s ( cBuffer, "%s\\%s\\UE3SdkGenerator.log", SDK_BASE_DIR, GAME_NAME_S );
+    sprintf_s ( cBuffer, "%s\\%s\\UE3SdkGenerator.log", sOutputDir, GAME_NAME_S );
     fopen_s ( &pLog, cBuffer, "w+" );
 
     // get start time
@@ -2496,12 +2511,13 @@ BOOL WINAPI DllMain ( HMODULE hModule, DWORD dwReason, LPVOID lpReserved )
     switch ( dwReason )
     {
         case DLL_PROCESS_ATTACH:
-
             DisableThreadLibraryCalls ( hModule );
             CreateThread ( NULL, 0, ( LPTHREAD_START_ROUTINE ) OnAttach, NULL, 0, NULL );
-            
-            return true;
-        
-        break;
+            break;
+        case DLL_PROCESS_DETACH:
+            bAbortRun = true;
+            break;
     }
+
+    return TRUE;
 }

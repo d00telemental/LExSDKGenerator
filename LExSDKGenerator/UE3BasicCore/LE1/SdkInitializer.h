@@ -9,7 +9,7 @@ struct FNameEntry;
 class UObject;
 
 
-#define LEx_MODULE_NAME		L"MassEffect1.exe"
+#define LEx_MODULE_NAME		L"MassEffect1"
 #define LEx_NAME_POOLS		0x16A2090       // RVA of the name pools
 #define LEx_OBJOBJECTS		0x1770670       // RVA of the UObject::ObjObjects
 
@@ -35,7 +35,7 @@ private:
             {
                 do
                 {
-                    if (0 == wcscmp(moduleEntry.szModule, moduleName))
+                    if (moduleEntry.szModule == wcsstr(moduleEntry.szModule, moduleName))
                     {
                         baseAddress = moduleEntry.modBaseAddr;
                         break;

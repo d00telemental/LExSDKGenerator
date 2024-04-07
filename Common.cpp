@@ -36,13 +36,35 @@ BYTE* Common::GetModuleBaseAddress(wchar_t* moduleName)
         {
             do
             {
-                if (0 == wcscmp(moduleEntry.szModule, moduleName))
+                // Check that module entry name *starts* with our key...
+                if (moduleEntry.szModule == wcsstr(moduleEntry.szModule, moduleName))
                 {
                     baseAddress = moduleEntry.modBaseAddr;
                     break;
                 }
             } while (Module32Next(snapshot, &moduleEntry));
         }
+        CloseHandle(snapshot);
+    }
+
+    return baseAddress;
+}
+
+BYTE* Common::GetFirstModuleBaseAddress()
+{
+    DWORD const pid = GetCurrentProcessId();
+    HANDLE const snapshot = CreateToolhelp32Snapshot(TH32CS_SNAPMODULE, pid);
+
+    BYTE* baseAddress = nullptr;
+
+    if (INVALID_HANDLE_VALUE != snapshot)
+    {
+        MODULEENTRY32 moduleEntry = { 0 };
+        moduleEntry.dwSize = sizeof(MODULEENTRY32);
+
+        Module32First(snapshot, &moduleEntry);
+        baseAddress = moduleEntry.modBaseAddr;
+
         CloseHandle(snapshot);
     }
 
