@@ -133,8 +133,8 @@ void GetAllFunctionFlags ( unsigned long FunctionFlags, ostringstream& ssStreamB
     bool first = true;
 
     if ( FunctionFlags & FUNC_Final )		{ ssStreamBuffer << ( first ? "( " : " | " ) << "FUNC_Final";		first = false; }
-    //if ( FunctionFlags & FUNC_Latent )	{ ssStreamBuffer << ( first ? "( " : " | " ) << "FUNC_Latent";		first = false; }
-    //if ( FunctionFlags & FUNC_Simulated )	{ ssStreamBuffer << ( first ? "( " : " | " ) << "FUNC_Simulated";	first = false; }
+    if ( FunctionFlags & FUNC_Latent )	{ ssStreamBuffer << ( first ? "( " : " | " ) << "FUNC_Latent";		first = false; }
+    if ( FunctionFlags & FUNC_Simulated )	{ ssStreamBuffer << ( first ? "( " : " | " ) << "FUNC_Simulated";	first = false; }
     if ( FunctionFlags & FUNC_Exec )		{ ssStreamBuffer << ( first ? "( " : " | " ) << "FUNC_Exec";		first = false; }
     if ( FunctionFlags & FUNC_Event )		{ ssStreamBuffer << ( first ? "( " : " | " ) << "FUNC_Event";		first = false; }
     if ( FunctionFlags & FUNC_Native )		{ ssStreamBuffer << ( first ? "( " : " | " ) << "FUNC_Native";		first = false; }
@@ -972,7 +972,7 @@ void GenerateFuncStruct ( UClass* pClass )
         string sFunctionName = GetValidName ( string ( pFunction->GetName() ) );
         string sClassNameCPP = GetValidName ( string ( pClass->GetNameCPP() ) );
 
-        // stram to support buffer (function flags)
+        // stream to support buffer (function flags)
         GetAllFunctionFlags ( pFunction->FunctionFlags, ssStreamBuffer1 );
 
         // stream to main buffer (function infos + function flags)
@@ -1175,12 +1175,12 @@ void GenerateFuncDef ( UClass* pClass )
     {
         UFunction* pFunction = vFunction[ i ];
 
-        //get function names
+        // get function names
         string sFunctionFullName = string ( pFunction->GetFullName() ); 
         string sFunctionName = GetValidName ( string ( pFunction->GetName() ) );
         string sClassNameCPP = GetValidName ( string ( pClass->GetNameCPP() ) );
 
-        // stram to support buffer (function flags)
+        // stream to support buffer (function flags)
         GetAllFunctionFlags ( pFunction->FunctionFlags, ssStreamBuffer1 );
 
         // stream to main buffer (function infos + function flags)
