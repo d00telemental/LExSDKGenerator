@@ -39,23 +39,31 @@ void PrintFileHeder ( char* cFileName, char* cFileExt, bool setPP = false, bool 
     fprintf ( pFile, "#############################################################################################\n" );
     fprintf ( pFile, "*/\n" );
     fprintf  (pFile, "\n\n" );
-    fprintf ( pFile, "#pragma once\n" );
-    fprintf ( pFile, "#include <Windows.h>\n" );
-    fprintf ( pFile, "#include <cstdio>\n" );
-    if (!isFunctions)
+
+    if ( ! isFunctions )
     {
-        if ( ! strcmp(cFileName, "SdkHeaders") )
-        {
-            fprintf(pFile, "#include \"SdkInitializer.h\"\n");
-        }
-        else
-        {
-            fprintf(pFile, "#include \"../SdkInitializer.h\"\n");
-        }
+        fprintf ( pFile, "#pragma once\n" );
+        //if ( ! strcmp ( cFileName, "SdkHeaders" ) )
+        //{
+        //    fprintf ( pFile, "#include <Windows.h>\n" );
+        //    fprintf ( pFile, "#include <cstdio>\n" );
+        //    fprintf( pFile, "#include \"SdkInitializer.h\"\n" );
+        //}
+        //else
+        //{
+        //    fprintf ( pFile, "#include \"../SdkInitializer.h\"\n" );
+        //}
     }
     else
     {
-        fprintf(pFile, "#include \"../SdkHeaders.h\"\n");
+        if ( ! strcmp ( cFileName, "Core_functions" ) )
+        {
+            fprintf ( pFile, "#include <cstdio>\n" );
+            fprintf ( pFile, "#include <cstring>\n" );
+            fprintf ( pFile, "\n" );
+        }
+
+        fprintf ( pFile, "#include \"../Headers.%s.hpp\"\n", LE_SHORTHAND );
     }
     fprintf ( pFile, "\n\n" );
 
@@ -275,7 +283,7 @@ int GetPropertyType ( UProperty* pProperty, string& sPropertyType, bool bFuncRet
     #endif
 
     #ifdef CCP_USTR
-    else if ( pProperty->IsA ( UStrProperty::StaticClass() ) )		{ sPropertyType = "struct FString";			return 2; }
+    else if ( pProperty->IsA ( UStrProperty::StaticClass() ) )		{ sPropertyType = "class FString";			return 2; }
     #endif
 
     #ifdef CCP_USTRINGREF
@@ -283,7 +291,7 @@ int GetPropertyType ( UProperty* pProperty, string& sPropertyType, bool bFuncRet
     #endif
     
     #ifdef CCP_UNAME
-    else if ( pProperty->IsA ( UNameProperty::StaticClass() ) )		{ sPropertyType = "struct FName";			return 2; }
+    else if ( pProperty->IsA ( UNameProperty::StaticClass() ) )		{ sPropertyType = "struct SFXName";			return 2; }
     #endif	
 
     #ifdef CCP_UDELEGATE
@@ -325,7 +333,7 @@ int GetPropertyType ( UProperty* pProperty, string& sPropertyType, bool bFuncRet
             
         if ( GetPropertyType ( ( (UArrayProperty*) pProperty )->Inner, sPropertyTypeInner ) )
         {
-            sPropertyType = "struct TArray<" + sPropertyTypeInner + ">";
+            sPropertyType = "class TArray<" + sPropertyTypeInner + ">";
             
             return 4;
         }

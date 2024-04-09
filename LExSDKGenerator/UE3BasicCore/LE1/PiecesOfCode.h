@@ -153,7 +153,7 @@ struct FScriptDelegate \n\
 
 
 #define BASIC_FUNCTIONS_DEC "\
-    static struct TArray<class UObject*>* GObjObjects; \n\
+    static class TArray<class UObject*>* GObjObjects; \n\
 \n\
     char* GetName(); \n\
     char* GetNameCPP(); \n\
@@ -167,7 +167,7 @@ struct FScriptDelegate \n\
 
 
 #define BASIC_FUNCTIONS_DEF "\
-struct TArray<class UObject*>* UObject::GObjObjects = nullptr; \n\
+class TArray<class UObject*>* UObject::GObjObjects = nullptr; \n\
 \n\
 char* UObject::GetName() \n\
 { \n\
@@ -244,9 +244,6 @@ char* UObject::GetFullName() \n\
 \n\
 template< class T > T* UObject::FindObject ( char* ObjectFullName ) \n\
 { \n\
-    while ( ! UObject::GObjObjects ) \n\
-        Sleep ( 100 ); \n\
-\n\
     for ( int i = 0; i < UObject::GObjObjects->Num(); ++i ) \n\
     { \n\
         UObject* Object = UObject::GObjObjects->GetData()[ i ]; \n\
@@ -269,9 +266,6 @@ template< class T > T* UObject::FindObject ( char* ObjectFullName ) \n\
 \n\
 UClass* UObject::FindClass ( char* ClassFullName ) \n\
 { \n\
-    while ( ! UObject::GObjObjects ) \n\
-        Sleep ( 100 ); \n\
-\n\
     for ( int i = 0; i < UObject::GObjObjects->Num(); ++i ) \n\
     { \n\
         UObject* Object = UObject::GObjObjects->GetData()[ i ]; \n\
@@ -308,7 +302,7 @@ bool UObject::IsA ( UClass* pClass ) \n\
 #define CLASS_PROPERTIES_USTRUCT "\
     class UField*		Children;					// 0x0070 (0x08) - NOT AUTO-GENERATED PROPERTY \n\
     int					PropertySize;				// 0x0078 (0x04) - NOT AUTO-GENERATED PROPERTY \n\
-    struct TArray<BYTE> Script;						// 0x007C (0x10) - NOT AUTO-GENERATED PROPERTY \n\
+    class TArray<BYTE>  Script;						// 0x007C (0x10) - NOT AUTO-GENERATED PROPERTY \n\
     int					MinAlignment;				// 0x008C (0x04) - NOT AUTO-GENERATED PROPERTY \n\
     void*				Unknown90;					// 0x0090 (0x08) - NOT AUTO-GENERATED PROPERTY \n\
     void*				Unknown98;					// 0x0098 (0x08) - NOT AUTO-GENERATED PROPERTY \n\
@@ -321,15 +315,15 @@ bool UObject::IsA ( UClass* pClass ) \n\
 
 
 #define CLASS_PROPERTIES_UFUNCTION "\
-    DWORD				FunctionFlags;				// 0x00D8 (0x04) - NOT AUTO-GEN \n\
-    short				iNative;					// 0x00DC (0x02) - NOT AUTO-GEN \n\
-    short				RepOffset;					// 0x00DE (0x02) - NOT AUTO-GEN \n\
-    struct FName		FriendlyName;				// 0x00E0 (0x08) - NOT AUTO-GEN \n\
-    BYTE				OperPrecedence;				// 0x00E8 (0x01) - NOT AUTO-GEN \n\
-    BYTE				NumParms;					// 0x00E9 (0x01) - NOT AUTO-GEN \n\
-    unsigned short		ParmsSize;					// 0x00EA (0x02) - NOT AUTO-GEN \n\
-    short				ReturnValueOffset;			// 0x00EC (0x02) - NOT AUTO-GEN \n\
-    char				PaddingEE[2];				// 0x00EE (0x02) - NOT AUTO-GEN \n\
-    void*				FirstPropertyToInit;		// 0x00F0 (0x08) - NOT AUTO-GEN \n\
-    void*				Func;						// 0x00F8 (0x08) - NOT AUTO-GEN \n"
+    DWORD               FunctionFlags;              // 0x00D8 (0x04) - NOT AUTO-GEN \n\
+    short               iNative;                    // 0x00DC (0x02) - NOT AUTO-GEN \n\
+    short               RepOffset;                  // 0x00DE (0x02) - NOT AUTO-GEN \n\
+    struct SFXName      FriendlyName;               // 0x00E0 (0x08) - NOT AUTO-GEN \n\
+    BYTE                OperPrecedence;             // 0x00E8 (0x01) - NOT AUTO-GEN \n\
+    BYTE                NumParms;                   // 0x00E9 (0x01) - NOT AUTO-GEN \n\
+    unsigned short      ParmsSize;                  // 0x00EA (0x02) - NOT AUTO-GEN \n\
+    short               ReturnValueOffset;          // 0x00EC (0x02) - NOT AUTO-GEN \n\
+    char                PaddingEE[2];               // 0x00EE (0x02) - NOT AUTO-GEN \n\
+    void*               FirstPropertyToInit;        // 0x00F0 (0x08) - NOT AUTO-GEN \n\
+    void*               Func;                       // 0x00F8 (0x08) - NOT AUTO-GEN \n"
 

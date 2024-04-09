@@ -153,7 +153,7 @@ struct FScriptDelegate \n\
 
 
 #define BASIC_FUNCTIONS_DEC "\
-    static struct TArray<class UObject*>* GObjObjects; \n\
+    static class TArray<class UObject*>* GObjObjects; \n\
 \n\
     char* GetName(); \n\
     char* GetNameCPP(); \n\
@@ -167,7 +167,7 @@ struct FScriptDelegate \n\
 
 
 #define BASIC_FUNCTIONS_DEF "\
-struct TArray<class UObject*>* UObject::GObjObjects = nullptr; \n\
+class TArray<class UObject*>* UObject::GObjObjects = nullptr; \n\
 \n\
 char* UObject::GetName() \n\
 { \n\
@@ -244,9 +244,6 @@ char* UObject::GetFullName() \n\
 \n\
 template< class T > T* UObject::FindObject ( char* ObjectFullName ) \n\
 { \n\
-    while ( ! UObject::GObjObjects ) \n\
-        Sleep ( 100 ); \n\
-\n\
     for ( int i = 0; i < UObject::GObjObjects->Num(); ++i ) \n\
     { \n\
         UObject* Object = UObject::GObjObjects->GetData()[ i ]; \n\
@@ -269,9 +266,6 @@ template< class T > T* UObject::FindObject ( char* ObjectFullName ) \n\
 \n\
 UClass* UObject::FindClass ( char* ClassFullName ) \n\
 { \n\
-    while ( ! UObject::GObjObjects ) \n\
-        Sleep ( 100 ); \n\
-\n\
     for ( int i = 0; i < UObject::GObjObjects->Num(); ++i ) \n\
     { \n\
         UObject* Object = UObject::GObjObjects->GetData()[ i ]; \n\
@@ -308,7 +302,7 @@ bool UObject::IsA ( UClass* pClass ) \n\
 #define CLASS_PROPERTIES_USTRUCT "\
     class UField*					Children;							// 0x0070 (0x08) - NOT AUTO-GENERATED PROPERTY \n\
     int								PropertySize;						// 0x0078 (0x04) - NOT AUTO-GENERATED PROPERTY \n\
-    struct TArray<BYTE>				Script;								// 0x007C (0x10) - NOT AUTO-GENERATED PROPERTY \n\
+    class TArray<BYTE>				Script;								// 0x007C (0x10) - NOT AUTO-GENERATED PROPERTY \n\
     int								MinAlignment;						// 0x008C (0x04) - NOT AUTO-GENERATED PROPERTY \n\
     void*							RefLink;							// 0x0090 (0x08) - NOT AUTO-GENERATED PROPERTY \n\
     void*							PropertyLink;						// 0x0098 (0x08) - NOT AUTO-GENERATED PROPERTY \n\
@@ -316,7 +310,7 @@ bool UObject::IsA ( UClass* pClass ) \n\
     void*							ConstructorLink;					// 0x00A8 (0x08) - NOT AUTO-GENERATED PROPERTY \n\
     void*							ComponentPropertyLink;				// 0x00B0 (0x08) - NOT AUTO-GENERATED PROPERTY \n\
     void*							TransientPropertyLink;				// 0x00B8 (0x08) - NOT AUTO-GENERATED PROPERTY \n\
-    struct TArray<class UObject>	ScriptObjectReferences;				// 0x00C0 (0x10) - NOT AUTO-GENERATED PROPERTY \n\
+    class TArray<class UObject>     ScriptObjectReferences;				// 0x00C0 (0x10) - NOT AUTO-GENERATED PROPERTY \n\
     void*							UnknownD0;							// 0x00D0 (0x08) - NOT AUTO-GENERATED PROPERTY \n"
 
 
