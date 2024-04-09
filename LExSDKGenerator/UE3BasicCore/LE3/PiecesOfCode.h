@@ -153,7 +153,7 @@ struct FScriptDelegate \n\
 
 
 #define BASIC_FUNCTIONS_DEC "\
-    static struct TArray<class UObject*>* GObjObjects(); \n\
+    static struct TArray<class UObject*>* GObjObjects; \n\
 \n\
     char* GetName(); \n\
     char* GetNameCPP(); \n\
@@ -167,11 +167,7 @@ struct FScriptDelegate \n\
 
 
 #define BASIC_FUNCTIONS_DEF "\
-struct TArray<class UObject*>* UObject::GObjObjects() \n\
-{ \n\
-    struct TArray<class UObject*>* ObjectArray = (struct TArray<class UObject*>*) SDKInitializer::Instance()->GetObjects(); \n\
-    return ObjectArray; \n\
-} \n\
+struct TArray<class UObject*>* UObject::GObjObjects = nullptr; \n\
 \n\
 char* UObject::GetName() \n\
 { \n\
@@ -248,12 +244,12 @@ char* UObject::GetFullName() \n\
 \n\
 template< class T > T* UObject::FindObject ( char* ObjectFullName ) \n\
 { \n\
-    while ( ! UObject::GObjObjects() ) \n\
+    while ( ! UObject::GObjObjects ) \n\
         Sleep ( 100 ); \n\
 \n\
-    for ( int i = 0; i < UObject::GObjObjects()->Count; ++i ) \n\
+    for ( int i = 0; i < UObject::GObjObjects->Num(); ++i ) \n\
     { \n\
-        UObject* Object = UObject::GObjObjects()->Data[ i ]; \n\
+        UObject* Object = UObject::GObjObjects->GetData()[ i ]; \n\
 \n\
         // skip no T class objects \n\
         if \n\
@@ -273,12 +269,12 @@ template< class T > T* UObject::FindObject ( char* ObjectFullName ) \n\
 \n\
 UClass* UObject::FindClass ( char* ClassFullName ) \n\
 { \n\
-    while ( ! UObject::GObjObjects() ) \n\
+    while ( ! UObject::GObjObjects ) \n\
         Sleep ( 100 ); \n\
 \n\
-    for ( int i = 0; i < UObject::GObjObjects()->Count; ++i ) \n\
+    for ( int i = 0; i < UObject::GObjObjects->Num(); ++i ) \n\
     { \n\
-        UObject* Object = UObject::GObjObjects()->Data[ i ]; \n\
+        UObject* Object = UObject::GObjObjects->GetData()[ i ]; \n\
 \n\
         if ( ! Object ) \n\
             continue; \n\

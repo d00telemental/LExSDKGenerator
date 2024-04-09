@@ -1154,7 +1154,7 @@ void GenerateFuncDef ( UClass* pClass )
                 << "class UClass* " << className << "::StaticClass()\n"
                 << "\t{\n"
                 << "\t\tif ( ! pClassPointer )\n"
-                << "\t\t\tpClassPointer = (UClass*) UObject::GObjObjects()->Data[ " << SDKMC_SSDEC(pClass->ObjectInternalInteger, 0) << " ];\n\n"
+                << "\t\t\tpClassPointer = (UClass*) UObject::GObjObjects->GetData()[ " << SDKMC_SSDEC(pClass->ObjectInternalInteger, 0) << " ];\n\n"
                 << "\t\treturn pClassPointer;\n"
                 << "\t};\n\n";
         }
@@ -1376,7 +1376,7 @@ void GenerateFuncDef ( UClass* pClass )
             ssStreamBuffer0 << " )\n{\n"																																			// open function
                             << "\tstatic UFunction* pFn" << sFunctionName << " = NULL;\n\n"																							// function static pointer
                             << "\tif ( ! pFn" << sFunctionName << " )\n"																											// init function static pointer
-                            << "\t\tpFn" << sFunctionName << " = (UFunction*) UObject::GObjObjects()->Data[ " << SDKMC_SSDEC( pFunction->ObjectInternalInteger, 0 ) << " ];\n\n"		
+                            << "\t\tpFn" << sFunctionName << " = (UFunction*) UObject::GObjObjects->GetData()[ " << SDKMC_SSDEC( pFunction->ObjectInternalInteger, 0 ) << " ];\n\n"
                             << "\t" << sClassNameCPP << "_";																														// params struct
         }
         else
@@ -1981,21 +1981,10 @@ void GenerateClass ( UClass* pClass )
     if ( SDK_NO_STR )
     {
         ssStreamBuffer0 << "\tstatic UClass* StaticClass();\n\n";
-        //ssStreamBuffer0 << "\tstatic UClass* StaticClass()\n"
-        //				<< "\t{\n"
-        //				<< "\t\tif ( ! pClassPointer )\n"
-        //				<< "\t\t\tpClassPointer = (UClass*) UObject::GObjObjects()->Data[ " << SDKMC_SSDEC( pClass->ObjectInternalInteger, 0 ) << " ];\n\n"
-        //				<< "\t\treturn pClassPointer;\n"
-        //				<< "\t};\n\n";
     }
     else
     {
         ssStreamBuffer0 << "\tstatic UClass* StaticClass();\n\n";
-                        //<< "\t{\n"
-                        //<< "\t\tif ( ! pClassPointer )\n"
-                        //<< "\t\t\tpClassPointer = UObject::FindClass ( \"" << sClassFullName << "\" );\n\n"
-                        //<< "\t\treturn pClassPointer;\n"
-                        //<< "\t};\n\n";
     }
 
     // print main stream buffer to file
@@ -2009,8 +1998,7 @@ void GenerateClass ( UClass* pClass )
         GenerateVirtualFunc ( pClass );
 
     // stream to main buffer
-    ssStreamBuffer0 << "};\n\n";														// close class
-    //ssStreamBuffer0 << "UClass* " << sClassNameCPP << "::pClassPointer = NULL;\n\n";	// init static pointer
+    ssStreamBuffer0 << "};\n\n";
 
     // print main stream buffer to file
     SDKFN_PRINT ( pFile, ssStreamBuffer0 );
