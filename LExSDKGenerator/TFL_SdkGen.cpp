@@ -43,16 +43,6 @@ void PrintFileHeder ( char* cFileName, char* cFileExt, bool setPP = false, bool 
     if ( ! isFunctions )
     {
         fprintf ( pFile, "#pragma once\n" );
-        //if ( ! strcmp ( cFileName, "SdkHeaders" ) )
-        //{
-        //    fprintf ( pFile, "#include <Windows.h>\n" );
-        //    fprintf ( pFile, "#include <cstdio>\n" );
-        //    fprintf( pFile, "#include \"SdkInitializer.h\"\n" );
-        //}
-        //else
-        //{
-        //    fprintf ( pFile, "#include \"../SdkInitializer.h\"\n" );
-        //}
     }
     else
     {
@@ -69,17 +59,26 @@ void PrintFileHeder ( char* cFileName, char* cFileExt, bool setPP = false, bool 
 
     if ( setPP )
     {
-        fprintf ( pFile, "\n#ifdef _MSC_VER\n" );
+        fprintf ( pFile, "#ifdef _MSC_VER\n" );
         fprintf ( pFile, "\t#pragma pack ( push, 0x%X )\n",  CLASS_ALIGN );
         fprintf ( pFile, "#endif\n" );
     }
+
+    fprintf ( pFile, "#define LESDK_IN_GENERATED\n" );
+    fprintf ( pFile, "\n" );
 }
 
 void PrintFileFooter()
 {
-    fprintf ( pFile, "\n#ifdef _MSC_VER\n" );
+    fprintf ( pFile, "\n\n" );
+
+    fprintf ( pFile, "#undef LESDK_IN_GENERATED\n" );
+
+    fprintf ( pFile, "\n" );
+
+    fprintf ( pFile, "#ifdef _MSC_VER\n" );
     fprintf ( pFile, "\t#pragma pack ( pop )\n" );
-    fprintf ( pFile, "#endif" );
+    fprintf ( pFile, "#endif\n" );
 }
 
 void PrintSectionHeader ( char* cSectionName )
@@ -2281,11 +2280,11 @@ void ProcessPackages()
                 vPackages.push_back ( pPackageObject );
 
                 // create new structs package header file
-                sprintf_s ( cBuffer, "%s\\%s\\SDK_HEADERS\\%s_structs.h", sOutputDir, GAME_NAME_S, pPackageObject->GetName() );
+                sprintf_s ( cBuffer, "%s\\%s\\SDK_HEADERS\\%s_structs.hpp", sOutputDir, GAME_NAME_S, pPackageObject->GetName() );
                 fopen_s ( &pFile, cBuffer, "w+" );
             
                 sprintf_s ( cBuffer, "%s_structs", pPackageObject->GetName() );
-                PrintFileHeder ( cBuffer, "h", true, false );
+                PrintFileHeder ( cBuffer, "hpp", true, false );
 
                 PrintSectionHeader ( "Script Structs" );
                 ProcessScriptStructsByPackage ( pPackageObject );
@@ -2294,11 +2293,11 @@ void ProcessPackages()
                 fclose ( pFile );
 
                 // create new classes package header file
-                sprintf_s ( cBuffer, "%s\\%s\\SDK_HEADERS\\%s_classes.h", sOutputDir, GAME_NAME_S, pPackageObject->GetName() );
+                sprintf_s ( cBuffer, "%s\\%s\\SDK_HEADERS\\%s_classes.hpp", sOutputDir, GAME_NAME_S, pPackageObject->GetName() );
                 fopen_s ( &pFile, cBuffer, "w+" );
             
                 sprintf_s ( cBuffer, "%s_classes", pPackageObject->GetName() );
-                PrintFileHeder ( cBuffer, "h", true, false);
+                PrintFileHeder ( cBuffer, "hpp", true, false);
             
                 PrintSectionHeader ( "Constants" );
                 ProcessConstsByPackage ( pPackageObject );
@@ -2313,11 +2312,11 @@ void ProcessPackages()
                 fclose ( pFile );
 
                 // create new function structs package header file
-                sprintf_s ( cBuffer, "%s\\%s\\SDK_HEADERS\\%s_f_structs.h", sOutputDir, GAME_NAME_S, pPackageObject->GetName() );
+                sprintf_s ( cBuffer, "%s\\%s\\SDK_HEADERS\\%s_f_structs.hpp", sOutputDir, GAME_NAME_S, pPackageObject->GetName() );
                 fopen_s ( &pFile, cBuffer, "w+" );
             
                 sprintf_s ( cBuffer, "%s_f_structs", pPackageObject->GetName() );
-                PrintFileHeder ( cBuffer, "h", true, false);
+                PrintFileHeder ( cBuffer, "hpp", true, false);
             
                 PrintSectionHeader ( "Function Structs" );
                 ProcessFuncStructsByPackage ( pPackageObject );
@@ -2378,10 +2377,10 @@ void Init_Core()
 void Final_SdkHeaders()
 {
     // init main header file
-    sprintf_s ( cBuffer, "%s\\%s\\SdkHeaders.h", sOutputDir, GAME_NAME_S );
+    sprintf_s ( cBuffer, "%s\\%s\\SdkHeaders.hpp", sOutputDir, GAME_NAME_S );
     fopen_s ( &pFile, cBuffer, "w+" );
 
-    PrintFileHeder("SdkHeaders", "h");
+    PrintFileHeder("SdkHeaders", "hpp");
     
     PrintSectionHeader ( "Defines" );
     fprintf(pFile, "#undef lst1\n");
@@ -2408,9 +2407,9 @@ void Final_SdkHeaders()
     
     for ( unsigned int i = 0; i < vIncludes.size(); i++ )
     {
-        fprintf ( pFile, "#include \"SDK_HEADERS\\%s_structs.h\"\n",		vIncludes[i]->GetName() );
-        fprintf ( pFile, "#include \"SDK_HEADERS\\%s_classes.h\"\n",		vIncludes[i]->GetName() );		
-        fprintf ( pFile, "#include \"SDK_HEADERS\\%s_f_structs.h\"\n",		vIncludes[i]->GetName() );		
+        fprintf ( pFile, "#include \"SDK_HEADERS\\%s_structs.hpp\"\n",		vIncludes[i]->GetName() );
+        fprintf ( pFile, "#include \"SDK_HEADERS\\%s_classes.hpp\"\n",		vIncludes[i]->GetName() );		
+        fprintf ( pFile, "#include \"SDK_HEADERS\\%s_f_structs.hpp\"\n",		vIncludes[i]->GetName() );		
         fprintf ( pFile, "// #include \"SDK_HEADERS\\%s_functions.cpp\"\n",		vIncludes[i]->GetName() );
     }
 
