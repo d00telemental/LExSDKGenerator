@@ -371,7 +371,7 @@ public:
             class UScriptStruct : public UStruct
             {
             public:
-                struct FString		DefaultStructPropText[0x10];				// 0x00D8 (0x10)
+                struct FString		DefaultStructPropText;				        // 0x00D8 (0x10)
                 int					StructFlags;                                // 0x00E8 (0x04)
 
             private:
@@ -466,13 +466,13 @@ public:
             struct FName			Category;						//0x0084 (0x08)
             class UEnum*			ArraySizeEnum;					//0x008C (0x08)
             int						Offset;							//0x0094 (0x04)
-            void*					PropertyLinkNext;				//0x0098 (0x08)
-            void*					ConfigLinkNext;					//0x00A0 (0x08)
-            void*					ConstructorLinkNext;			//0x00A8 (0x08)
-            void*					NextRef;						//0x00B0 (0x08)
-            void*					RepOwner;						//0x00B8 (0x08)
-            void*					ComponentPropertyLinkNext;		//0x00C0 (0x08)
-            void*					TransientPropertyLinkNext;		//0x00C8 (0x08)
+            UProperty*				PropertyLinkNext;				//0x0098 (0x08)
+            UProperty*				ConfigLinkNext;					//0x00A0 (0x08)
+            UProperty*				ConstructorLinkNext;			//0x00A8 (0x08)
+            UProperty*				NextRef;						//0x00B0 (0x08)
+            UProperty*				RepOwner;						//0x00B8 (0x08)
+            UProperty*				ComponentPropertyLinkNext;		//0x00C0 (0x08)
+            UProperty*				TransientPropertyLinkNext;		//0x00C8 (0x08)
 
         private:
             static UClass* pClassPointer;
@@ -763,8 +763,8 @@ UClass*			UConst						::pClassPointer = NULL;  // +
 UClass*			UStruct						::pClassPointer = NULL;  // +
 UClass*				UScriptStruct			::pClassPointer = NULL;  // +
 UClass*				UFunction				::pClassPointer = NULL;  // +
-UClass*				UState					::pClassPointer = NULL;  // + !
-UClass*					UClass				::pClassPointer = NULL;  // + !
+UClass*				UState					::pClassPointer = NULL;  // +
+UClass*					UClass				::pClassPointer = NULL;  // +
 UClass*			UProperty					::pClassPointer = NULL;  // +
 UClass*				UByteProperty			::pClassPointer = NULL;  // +
 UClass*				UIntProperty			::pClassPointer = NULL;  // +

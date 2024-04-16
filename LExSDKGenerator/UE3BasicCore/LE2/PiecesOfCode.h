@@ -298,31 +298,60 @@ bool UObject::IsA ( UClass* pClass ) \n\
     class UField*					Next;								// 0x0068 (0x08) - NOT AUTO-GENERATED PROPERTY \n"
 
 
+#define CLASS_PROPERTIES_UENUM "\
+    class TArray<struct SFXName>    Names;                              // 0x0070 (0x10) - NOT AUTO-GENERATED PROPERTY \n"
+
+
+#define CLASS_PROPERTIES_UCONST "\
+    class FString                   Value;                              // 0x0070 (0x10) - NOT AUTO-GENERATED PROPERTY \n"
+
 
 #define CLASS_PROPERTIES_USTRUCT "\
-    class UField*					Children;							// 0x0070 (0x08) \n\
-    int								PropertySize;						// 0x0078 (0x04) \n\
-    class TArray<BYTE>				Script;								// 0x007C (0x10) \n\
-    int								MinAlignment;						// 0x008C (0x04) \n\
-    void*							RefLink;							// 0x0090 (0x08) \n\
-    void*							PropertyLink;						// 0x0098 (0x08) \n\
-    void*							ConfigLink;							// 0x00A0 (0x08) \n\
-    void*							ConstructorLink;					// 0x00A8 (0x08) \n\
-    void*							ComponentPropertyLink;				// 0x00B0 (0x08) \n\
-    void*							TransientPropertyLink;				// 0x00B8 (0x08) \n\
-    class TArray<class UObject>     ScriptObjectReferences;				// 0x00C0 (0x10) \n"
+    class UField*                   Children;                           // 0x0070 (0x08) - NOT AUTO-GENERATED PROPERTY \n\
+    int                             PropertySize;                       // 0x0078 (0x04) - NOT AUTO-GENERATED PROPERTY \n\
+    class TArray<BYTE>              Script;                             // 0x007C (0x10) - NOT AUTO-GENERATED PROPERTY \n\
+    int                             MinAlignment;                       // 0x008C (0x04) - NOT AUTO-GENERATED PROPERTY \n\
+    UProperty*                      RefLink;                            // 0x0090 (0x08) - NOT AUTO-GENERATED PROPERTY \n\
+    UProperty*                      PropertyLink;                       // 0x0098 (0x08) - NOT AUTO-GENERATED PROPERTY \n\
+    UProperty*                      ConfigLink;                         // 0x00A0 (0x08) - NOT AUTO-GENERATED PROPERTY \n\
+    UProperty*                      ConstructorLink;                    // 0x00A8 (0x08) - NOT AUTO-GENERATED PROPERTY \n\
+    UProperty*                      ComponentPropertyLink;              // 0x00B0 (0x08) - NOT AUTO-GENERATED PROPERTY \n\
+    UProperty*                      TransientPropertyLink;              // 0x00B8 (0x08) - NOT AUTO-GENERATED PROPERTY \n\
+    class TArray<class UObject>     ScriptObjectReferences;				// 0x00C0 (0x10) - NOT AUTO-GENERATED PROPERTY \n"
 
+
+#define CLASS_PROPERTIES_USCRIPTSTRUCT "\
+    class FString                   DefaultStructPropText;              // 0x00D0 (0x10) - NOT AUTO-GENERATED PROPERTY \n\
+    int                             StructFlags;                        // 0x00E0 (0x04) - NOT AUTO-GENERATED PROPERTY \n"
 
 
 #define CLASS_PROPERTIES_UFUNCTION "\
-    DWORD							FunctionFlags;						// 0x00D0 (0x04) \n\
-    short							iNative;							// 0x00D4 (0x02) \n\
-    short							RepOffset;							// 0x00D6 (0x02) \n\
-    struct SFXName					FriendlyName;						// 0x00D8 (0x08) \n\
-    BYTE							OperPrecedence;						// 0x00E0 (0x01) \n\
-    BYTE							NumParms;							// 0x00E1 (0x01) \n\
-    unsigned short					ParmsSize;							// 0x00E2 (0x02) \n\
-    short							ReturnValueOffset;					// 0x00E4 (0x02) \n\
-    char							PaddingEE[2];						// 0x00E6 (0x02) \n\
-    void*							FirstPropertyToInit;				// 0x00E8 (0x08) \n\
-    void*							Func;								// 0x00F0 (0x08) \n"
+    DWORD							FunctionFlags;						// 0x00D0 (0x04) - NOT AUTO-GENERATED PROPERTY \n\
+    short							iNative;							// 0x00D4 (0x02) - NOT AUTO-GENERATED PROPERTY \n\
+    short							RepOffset;							// 0x00D6 (0x02) - NOT AUTO-GENERATED PROPERTY \n\
+    struct SFXName					FriendlyName;						// 0x00D8 (0x08) - NOT AUTO-GENERATED PROPERTY \n\
+    BYTE							OperPrecedence;						// 0x00E0 (0x01) - NOT AUTO-GENERATED PROPERTY \n\
+    BYTE							NumParms;							// 0x00E1 (0x01) - NOT AUTO-GENERATED PROPERTY \n\
+    unsigned short					ParmsSize;							// 0x00E2 (0x02) - NOT AUTO-GENERATED PROPERTY \n\
+    short							ReturnValueOffset;					// 0x00E4 (0x02) - NOT AUTO-GENERATED PROPERTY \n\
+    char							PaddingEE[2];						// 0x00E6 (0x02) - NOT AUTO-GENERATED PROPERTY \n\
+    void*							FirstPropertyToInit;				// 0x00E8 (0x08) - NOT AUTO-GENERATED PROPERTY \n\
+    void*							Func;								// 0x00F0 (0x08) - NOT AUTO-GENERATED PROPERTY \n"
+
+
+#define CLASS_PROPERTIES_UPROPERTY "\
+    int                             ArrayDim;                           // 0x0070 (0x04) - NOT AUTO-GENERATED PROPERTY \n\
+    int                             ElementSize;                        // 0x0074 (0x04) - NOT AUTO-GENERATED PROPERTY \n\
+    unsigned long long              PropertyFlags;                      // 0x0078 (0x08) - NOT AUTO-GENERATED PROPERTY \n\
+    unsigned short                  RepOffset;                          // 0x0080 (0x02) - NOT AUTO-GENERATED PROPERTY \n\
+    unsigned short                  RepIndex;                           // 0x0082 (0x02) - NOT AUTO-GENERATED PROPERTY \n\
+    struct SFXName                  Category;                           // 0x0084 (0x08) - NOT AUTO-GENERATED PROPERTY \n\
+    class UEnum*                    ArraySizeEnum;                      // 0x008C (0x08) - NOT AUTO-GENERATED PROPERTY \n\
+    int                             Offset;                             // 0x0094 (0x04) - NOT AUTO-GENERATED PROPERTY \n\
+    UProperty*                      PropertyLinkNext;                   // 0x0098 (0x08) - NOT AUTO-GENERATED PROPERTY \n\
+    UProperty*                      ConfigLinkNext;                     // 0x00A0 (0x08) - NOT AUTO-GENERATED PROPERTY \n\
+    UProperty*                      ConstructorLinkNext;                // 0x00A8 (0x08) - NOT AUTO-GENERATED PROPERTY \n\
+    UProperty*                      NextRef;                            // 0x00B0 (0x08) - NOT AUTO-GENERATED PROPERTY \n\
+    UProperty*                      RepOwner;                           // 0x00B8 (0x08) - NOT AUTO-GENERATED PROPERTY \n\
+    UProperty*                      ComponentPropertyLinkNext;          // 0x00C0 (0x08) - NOT AUTO-GENERATED PROPERTY \n\
+    UProperty*                      TransientPropertyLinkNext;          // 0x00C8 (0x08) - NOT AUTO-GENERATED PROPERTY \n"

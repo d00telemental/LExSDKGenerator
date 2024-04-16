@@ -53,7 +53,7 @@ void PrintFileHeder ( char* cFileName, char* cFileExt, bool setPP = false, bool 
             fprintf ( pFile, "\n" );
         }
 
-        fprintf ( pFile, "#include \"../Headers.%s.hpp\"\n", LE_SHORTHAND );
+        fprintf ( pFile, "#include \"../Includes.%s.hpp\"\n", LE_SHORTHAND );
     }
     fprintf ( pFile, "\n\n" );
 
@@ -1791,14 +1791,34 @@ void GenerateClass ( UClass* pClass )
         ssStreamBuffer0 << CLASS_PROPERTIES_UFIELD;
     #endif
 
-    #ifdef CLASS_PROPERTIES_UFUNCTION
-    else if ( pClass == UObject::FindClass ( "Class Core.Function" ) )		// UFunction
-        ssStreamBuffer0 << CLASS_PROPERTIES_UFUNCTION;
+    #ifdef CLASS_PROPERTIES_UENUM
+    else if ( pClass == UObject::FindClass ( "Class Core.Enum" ) )		    // UEnum
+        ssStreamBuffer0 << CLASS_PROPERTIES_UENUM;
+    #endif
+
+    #ifdef CLASS_PROPERTIES_UCONST
+    else if ( pClass == UObject::FindClass ( "Class Core.Const" ) )		    // UConst
+        ssStreamBuffer0 << CLASS_PROPERTIES_UCONST;
     #endif
 
     #ifdef CLASS_PROPERTIES_USTRUCT
     else if ( pClass == UObject::FindClass ( "Class Core.Struct" ) )		// UStruct
         ssStreamBuffer0 << CLASS_PROPERTIES_USTRUCT;
+    #endif
+
+    #ifdef CLASS_PROPERTIES_USCRIPTSTRUCT
+    else if ( pClass == UObject::FindClass ( "Class Core.ScriptStruct" ) )  // UScriptStruct
+        ssStreamBuffer0 << CLASS_PROPERTIES_USCRIPTSTRUCT;
+    #endif
+
+    #ifdef CLASS_PROPERTIES_UFUNCTION
+    else if ( pClass == UObject::FindClass ( "Class Core.Function" ) )		// UFunction
+        ssStreamBuffer0 << CLASS_PROPERTIES_UFUNCTION;
+    #endif
+
+    #ifdef CLASS_PROPERTIES_UPROPERTY
+    else if ( pClass == UObject::FindClass ( "Class Core.Property" ) )		// UProperty
+        ssStreamBuffer0 << CLASS_PROPERTIES_UPROPERTY;
     #endif
 
     else																	// normal classes
