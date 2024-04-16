@@ -360,7 +360,8 @@ bool UObject::IsA ( UClass* pClass ) \n\
 
 
 #define CLASS_PROPERTIES_UBOOLPROPERTY "\
-    QWORD                           BitMask;                            // 0x00D0 (0x08) - NOT AUTO-GENERATED PROPERTY \n"
+    DWORD                           BitMask;                            // 0x00D0 (0x04) - NOT AUTO-GENERATED PROPERTY \n\
+    DWORD                           Unknown0xD4;                        // 0x00D4 (0x04) - NOT AUTO-GENERATED PROPERTY \n"
 
 
 #define CLASS_PROPERTIES_UDELEGATEPROPERTY "\
