@@ -286,7 +286,7 @@ int GetPropertyType ( UProperty* pProperty, string& sPropertyType, bool bFuncRet
     #endif
 
     #ifdef CCP_USTRINGREF
-    else if ( pProperty->IsA ( UStringRefProperty::StaticClass() ) )	{ sPropertyType = "int";					return 1; }
+    else if ( pProperty->IsA ( UStringRefProperty::StaticClass() ) )	{ sPropertyType = "int";			    return 1; }
     #endif
     
     #ifdef CCP_UNAME
@@ -1787,41 +1787,86 @@ void GenerateClass ( UClass* pClass )
 
     // special classes that need to be filled manualy
     #ifdef CLASS_PROPERTIES_UFIELD
-    else if ( pClass == UObject::FindClass ( "Class Core.Field" ) )			// UField
+    else if ( pClass == UObject::FindClass ( "Class Core.Field" ) )			        // UField
         ssStreamBuffer0 << CLASS_PROPERTIES_UFIELD;
     #endif
 
     #ifdef CLASS_PROPERTIES_UENUM
-    else if ( pClass == UObject::FindClass ( "Class Core.Enum" ) )		    // UEnum
+    else if ( pClass == UObject::FindClass ( "Class Core.Enum" ) )		            // UEnum
         ssStreamBuffer0 << CLASS_PROPERTIES_UENUM;
     #endif
 
     #ifdef CLASS_PROPERTIES_UCONST
-    else if ( pClass == UObject::FindClass ( "Class Core.Const" ) )		    // UConst
+    else if ( pClass == UObject::FindClass ( "Class Core.Const" ) )		            // UConst
         ssStreamBuffer0 << CLASS_PROPERTIES_UCONST;
     #endif
 
     #ifdef CLASS_PROPERTIES_USTRUCT
-    else if ( pClass == UObject::FindClass ( "Class Core.Struct" ) )		// UStruct
+    else if ( pClass == UObject::FindClass ( "Class Core.Struct" ) )		        // UStruct
         ssStreamBuffer0 << CLASS_PROPERTIES_USTRUCT;
     #endif
 
     #ifdef CLASS_PROPERTIES_USCRIPTSTRUCT
-    else if ( pClass == UObject::FindClass ( "Class Core.ScriptStruct" ) )  // UScriptStruct
+    else if ( pClass == UObject::FindClass ( "Class Core.ScriptStruct" ) )          // UScriptStruct
         ssStreamBuffer0 << CLASS_PROPERTIES_USCRIPTSTRUCT;
     #endif
 
     #ifdef CLASS_PROPERTIES_UFUNCTION
-    else if ( pClass == UObject::FindClass ( "Class Core.Function" ) )		// UFunction
+    else if ( pClass == UObject::FindClass ( "Class Core.Function" ) )		        // UFunction
         ssStreamBuffer0 << CLASS_PROPERTIES_UFUNCTION;
     #endif
 
     #ifdef CLASS_PROPERTIES_UPROPERTY
-    else if ( pClass == UObject::FindClass ( "Class Core.Property" ) )		// UProperty
+    else if ( pClass == UObject::FindClass ( "Class Core.Property" ) )		        // UProperty
         ssStreamBuffer0 << CLASS_PROPERTIES_UPROPERTY;
     #endif
 
-    else																	// normal classes
+    #ifdef CLASS_PROPERTIES_UBYTEPROPERTY
+    else if ( pClass == UObject::FindClass ( "Class Core.ByteProperty" ) )		    // UByteProperty
+        ssStreamBuffer0 << CLASS_PROPERTIES_UBYTEPROPERTY;
+    #endif
+
+    #ifdef CLASS_PROPERTIES_UBOOLPROPERTY
+    else if ( pClass == UObject::FindClass ( "Class Core.BoolProperty" ) )		    // UBoolProperty
+        ssStreamBuffer0 << CLASS_PROPERTIES_UBOOLPROPERTY;
+    #endif
+
+    #ifdef CLASS_PROPERTIES_UDELEGATEPROPERTY
+    else if ( pClass == UObject::FindClass ( "Class Core.DelegateProperty" ) )	    // UDelegateProperty
+        ssStreamBuffer0 << CLASS_PROPERTIES_UDELEGATEPROPERTY;
+    #endif
+
+    #ifdef CLASS_PROPERTIES_UOBJECTPROPERTY
+    else if ( pClass == UObject::FindClass ( "Class Core.ObjectProperty" ) )	    // UObjectProperty
+        ssStreamBuffer0 << CLASS_PROPERTIES_UOBJECTPROPERTY;
+    #endif
+
+    #ifdef CLASS_PROPERTIES_UCLASSPROPERTY
+    else if ( pClass == UObject::FindClass ( "Class Core.ClassProperty" ) )	        // UClassProperty
+        ssStreamBuffer0 << CLASS_PROPERTIES_UCLASSPROPERTY;
+    #endif
+
+    #ifdef CLASS_PROPERTIES_UINTERFACEPROPERTY
+    else if ( pClass == UObject::FindClass ( "Class Core.InterfaceProperty" ) )	    // UInterfaceProperty
+        ssStreamBuffer0 << CLASS_PROPERTIES_UINTERFACEPROPERTY;
+    #endif
+
+    #ifdef CLASS_PROPERTIES_USTRUCTPROPERTY
+    else if ( pClass == UObject::FindClass ( "Class Core.StructProperty" ) )	    // UStructProperty
+        ssStreamBuffer0 << CLASS_PROPERTIES_USTRUCTPROPERTY;
+    #endif
+
+    #ifdef CLASS_PROPERTIES_UARRAYPROPERTY
+    else if ( pClass == UObject::FindClass ( "Class Core.ArrayProperty" ) )	        // UArrayProperty
+        ssStreamBuffer0 << CLASS_PROPERTIES_UARRAYPROPERTY;
+    #endif
+
+    #ifdef CLASS_PROPERTIES_UMAPPROPERTY
+    else if ( pClass == UObject::FindClass ( "Class Core.MapProperty" ) )	        // UMapProperty
+        ssStreamBuffer0 << CLASS_PROPERTIES_UMAPPROPERTY;
+    #endif
+
+    else																	        // normal classes
     {
         // property unique name array
         StrIntM_t mPropertyName;		
