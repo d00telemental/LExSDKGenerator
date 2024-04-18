@@ -2445,37 +2445,15 @@ void Final_SdkHeaders()
     sprintf_s ( cBuffer, "%s\\%s\\SdkHeaders.hpp", sOutputDir, GAME_NAME_S );
     fopen_s ( &pFile, cBuffer, "w+" );
 
-    PrintFileHeder("SdkHeaders", "hpp");
-    
-    PrintSectionHeader ( "Defines" );
-    fprintf(pFile, "#undef lst1\n");
-    fprintf(pFile, "#undef lst2\n");
-    fprintf(pFile, "#undef lst3\n");
-    fprintf(pFile, "#undef lst4\n");
-    fprintf(pFile, "#undef lst5\n");
-    fprintf(pFile, "#undef lst6\n");
-    fprintf(pFile, "#undef lst7\n");
-    fprintf(pFile, "#undef lst8\n");
-    fprintf(pFile, "#undef lst9\n");
-    fprintf(pFile, "#undef lst10\n");
-    fprintf(pFile, "#undef lst11\n");
-    fprintf(pFile, "#undef lst12\n");
-    fprintf(pFile, "#undef lst13\n");
-    fprintf(pFile, "#undef lst14\n");
-    fprintf(pFile, "#undef lst15\n");
-    fprintf(pFile, "#undef lst16\n");
-    
-    PrintSectionHeader ( "Structs" );
-    fprintf ( pFile, BASIC_STRUCTS );
-    
+    PrintFileHeder ( "SdkHeaders", "hpp" );
     PrintSectionHeader ( "Includes" );
     
     for ( unsigned int i = 0; i < vIncludes.size(); i++ )
     {
-        fprintf ( pFile, "#include \"SDK_HEADERS\\%s_structs.hpp\"\n",		vIncludes[i]->GetName() );
-        fprintf ( pFile, "#include \"SDK_HEADERS\\%s_classes.hpp\"\n",		vIncludes[i]->GetName() );		
-        fprintf ( pFile, "#include \"SDK_HEADERS\\%s_f_structs.hpp\"\n",		vIncludes[i]->GetName() );		
-        fprintf ( pFile, "// #include \"SDK_HEADERS\\%s_functions.cpp\"\n",		vIncludes[i]->GetName() );
+        fprintf ( pFile, "#include \"%s\\%s_structs.hpp\"\n",       LE_SHORTHAND, vIncludes[i]->GetName() );
+        fprintf ( pFile, "#include \"%s\\%s_classes.hpp\"\n",       LE_SHORTHAND, vIncludes[i]->GetName() );		
+        fprintf ( pFile, "#include \"%s\\%s_f_structs.hpp\"\n",     LE_SHORTHAND, vIncludes[i]->GetName() );		
+        fprintf ( pFile, "// #include \"%s\\%s_functions.cpp\"\n",  LE_SHORTHAND, vIncludes[i]->GetName() );
     }
 
     fclose ( pFile );

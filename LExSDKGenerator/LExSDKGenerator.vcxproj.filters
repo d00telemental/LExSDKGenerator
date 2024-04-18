@@ -77,5 +77,8 @@
     <ClInclude Include="UE3BasicCore\LE3\SdkInitializer.h">
       <Filter>UE3BasicCore\LE3</Filter>
     </ClInclude>
+    <ClInclude Include="UE3BasicCore\CommonPiecesOfCode.h">
+      <Filter>UE3BasicCore</Filter>
+    </ClInclude>
   </ItemGroup>
 </Project>

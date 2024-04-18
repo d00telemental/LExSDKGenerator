@@ -118,6 +118,7 @@
     <ClInclude Include="..\Common.h" />
     <ClInclude Include="TFL_HT.h" />
     <ClInclude Include="TFL_SdkGen.h" />
+    <ClInclude Include="UE3BasicCore\CommonPiecesOfCode.h" />
     <ClInclude Include="UE3BasicCore\LE1\GameDefines.h" />
     <ClInclude Include="UE3BasicCore\LE1\ObjectFunctions.h" />
     <ClInclude Include="UE3BasicCore\LE1\PiecesOfCode.h" />
