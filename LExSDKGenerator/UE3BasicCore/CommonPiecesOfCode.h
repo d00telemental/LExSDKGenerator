@@ -2,134 +2,127 @@
 
 
 #define BASIC_FUNCTIONS_DEC "\
-    static class TArray<class UObject*>* GObjObjects; \n\
+    static class TArray<class UObject*>* GObjObjects;\n\
 \n\
-    char* GetName(); \n\
-    char* GetNameCPP(); \n\
-    char* GetFullName(); \n\
+    void AppendName(FString& OutString, SFXName::FormatMode Mode) const;\n\
+    void AppendName(FStringRAII& OutString, SFXName::FormatMode Mode) const;\n\
+    void AppendNameCPP(FString& OutString) const;\n\
+    void AppendNameCPP(FStringRAII& OutString) const;\n\
+    void AppendFullName(FString& OutString, SFXName::FormatMode Mode) const;\n\
+    void AppendFullName(FStringRAII& OutString, SFXName::FormatMode Mode) const;\n\
 \n\
-    template<class T> static T* FindObject (char* ObjectFullName); \n\
-    static class UClass* FindClass (char* ClassFullName); \n\
+    FStringRAII GetName() const;\n\
+    FStringRAII GetNameCPP() const;\n\
+    FStringRAII GetFullName() const;\n\
 \n\
-    bool IsA(class UClass* pClass); \n\n"
+    FStringRAII const& StaticName() const;\n\
+    FStringRAII const& StaticNameCPP() const;\n\
+    FStringRAII const& StaticFullName() const;\n\
+\n\
+    template<class T> static T* FindObject (wchar_t const* const ObjectFullName) {\n\
+        for ( int i = 0; i < (int)UObject::GObjObjects->Count(); ++i ) {\n\
+            UObject* Object = UObject::GObjObjects->GetData()[ i ];\n\
+            if ( ! Object || ! Object->IsA ( T::StaticClass() ) )\n\
+                continue;\n\
+            if ( Object->StaticFullName().Equals ( ObjectFullName, true ) )\n\
+                return (T*) Object;\n\
+        } \n\
+        return NULL;\n\
+    }\n\
+\n\
+    static class UClass* FindClass (wchar_t const* ClassFullName);\n\
+    bool IsA(class UClass* pClass) const;\n\n"
 
 
 
 #define BASIC_FUNCTIONS_DEF "\
-class TArray<class UObject*>* UObject::GObjObjects = nullptr; \n\
+class TArray<class UObject*>* UObject::GObjObjects = nullptr;\n\
 \n\
-char* UObject::GetName() \n\
+void UObject::AppendName(FString& OutString, SFXName::FormatMode const Mode) const {\n\
+    ::LESDK::AppendObjectName(this, OutString, Mode);\n\
+}\n\
+\n\
+void UObject::AppendName(FStringRAII& OutString, SFXName::FormatMode const Mode) const {\n\
+    ::LESDK::AppendObjectName(this, OutString, Mode);\n\
+}\n\
+\n\
+void UObject::AppendNameCPP(FString& OutString) const {\n\
+    ::LESDK::AppendObjectNameCPP(this, OutString);\n\
+}\n\
+\n\
+void UObject::AppendNameCPP(FStringRAII& OutString) const {\n\
+    ::LESDK::AppendObjectNameCPP(this, OutString);\n\
+}\n\
+\n\
+void UObject::AppendFullName(FString& OutString, SFXName::FormatMode const Mode) const {\n\
+    ::LESDK::AppendObjectNameFull(this, OutString, Mode);\n\
+}\n\
+\n\
+void UObject::AppendFullName(FStringRAII& OutString, SFXName::FormatMode const Mode) const {\n\
+    ::LESDK::AppendObjectNameFull(this, OutString, Mode);\n\
+}\n\
+\n\
+\n\
+FStringRAII UObject::GetName() const {\n\
+    FStringRAII OutString{};\n\
+    OutString.Reserve(256);\n\
+    AppendName(OutString, SFXName::k_formatInstanced);\n\
+    return OutString;\n\
+}\n\
+\n\
+FStringRAII UObject::GetNameCPP() const {\n\
+    FStringRAII OutString{};\n\
+    OutString.Reserve(256);\n\
+    AppendNameCPP(OutString);\n\
+    return OutString;\n\
+}\n\
+\n\
+FStringRAII UObject::GetFullName() const {\n\
+    FStringRAII OutString{};\n\
+    OutString.Reserve(256);\n\
+    AppendFullName(OutString, SFXName::k_formatInstanced);\n\
+    return OutString;\n\
+}\n\
+\n\
+\n\
+FStringRAII const& UObject::StaticName() const {\n\
+    thread_local FStringRAII OutString{};\n\
+    OutString.Reserve(256);\n\
+    AppendName(OutString, SFXName::k_formatInstanced);\n\
+    return OutString;\n\
+}\n\
+\n\
+FStringRAII const& UObject::StaticNameCPP() const {\n\
+    thread_local FStringRAII OutString{};\n\
+    OutString.Reserve(256);\n\
+    AppendNameCPP(OutString);\n\
+    return OutString;\n\
+}\n\
+\n\
+FStringRAII const& UObject::StaticFullName() const {\n\
+    thread_local FStringRAII OutString{};\n\
+    OutString.Reserve(256);\n\
+    AppendFullName(OutString, SFXName::k_formatInstanced);\n\
+    return OutString;\n\
+}\n\
+\n\
+UClass* UObject::FindClass ( wchar_t const* ClassFullName ) \n\
 { \n\
-    static char cOutBuffer[ 256 ]; \n\
-\n\
-    sprintf_s ( cOutBuffer, \"%%s\", this->Name.GetName() ); \n\
-\n\
-    return cOutBuffer; \n\
-} \n\
-\n\
-char* UObject::GetNameCPP() \n\
-{ \n\
-    static char cOutBuffer[ 256 ]; \n\
-\n\
-    if ( this->IsA ( UClass::StaticClass() ) ) \n\
-    { \n\
-        UClass* pClass = (UClass*) this; \n\
-        while ( pClass ) \n\
-        { \n\
-            if ( ! strcmp ( pClass->GetName(), \"Actor\" ) ) \n\
-            { \n\
-                strcpy_s ( cOutBuffer, \"A\" ); \n\
-                break; \n\
-            } \n\
-            else if ( ! strcmp ( pClass->GetName(), \"Object\" ) ) \n\
-            { \n\
-                strcpy_s ( cOutBuffer, \"U\" ); \n\
-                break; \n\
-            } \n\
-\n\
-            pClass = (UClass*) pClass->SuperField; \n\
-        } \n\
-    } \n\
-    else \n\
-    { \n\
-        strcpy_s ( cOutBuffer, \"F\" ); \n\
-    } \n\
-\n\
-    strcat_s ( cOutBuffer, this->GetName() ); \n\
-\n\
-    return cOutBuffer; \n\
-} \n\
-\n\
-char* UObject::GetFullName() \n\
-{ \n\
-    if ( this->Class && this->Outer ) \n\
-    { \n\
-        static char cOutBuffer[ 256 ]; \n\
-\n\
-        if ( this->Outer->Outer ) \n\
-        { \n\
-            strcpy_s ( cOutBuffer, this->Class->GetName() ); \n\
-            strcat_s ( cOutBuffer, \" \" ); \n\
-            strcat_s ( cOutBuffer, this->Outer->Outer->GetName() ); \n\
-            strcat_s ( cOutBuffer, \".\" ); \n\
-            strcat_s ( cOutBuffer, this->Outer->GetName() ); \n\
-            strcat_s ( cOutBuffer, \".\" ); \n\
-            strcat_s ( cOutBuffer, this->GetName() ); \n\
-        } \n\
-        else \n\
-        { \n\
-            strcpy_s ( cOutBuffer, this->Class->GetName() ); \n\
-            strcat_s ( cOutBuffer, \" \" ); \n\
-            strcat_s ( cOutBuffer, this->Outer->GetName() ); \n\
-            strcat_s ( cOutBuffer, \".\" ); \n\
-            strcat_s ( cOutBuffer, this->GetName() ); \n\
-        } \n\
-\n\
-        return cOutBuffer; \n\
-    } \n\
-\n\
-    return \"(null)\"; \n\
-} \n\
-\n\
-template< class T > T* UObject::FindObject ( char* ObjectFullName ) \n\
-{ \n\
-    for ( int i = 0; i < UObject::GObjObjects->Num(); ++i ) \n\
-    { \n\
-        UObject* Object = UObject::GObjObjects->GetData()[ i ]; \n\
-\n\
-        // skip no T class objects \n\
-        if \n\
-        ( \n\
-                ! Object \n\
-            ||	! Object->IsA ( T::StaticClass() ) \n\
-        ) \n\
-            continue; \n\
-\n\
-        // check \n\
-        if ( ! _stricmp ( Object->GetFullName(), ObjectFullName ) ) \n\
-            return (T*) Object; \n\
-    } \n\
-\n\
-    return NULL; \n\
-} \n\
-\n\
-UClass* UObject::FindClass ( char* ClassFullName ) \n\
-{ \n\
-    for ( int i = 0; i < UObject::GObjObjects->Num(); ++i ) \n\
+    for ( int i = 0; i < (int)UObject::GObjObjects->Count(); ++i ) \n\
     { \n\
         UObject* Object = UObject::GObjObjects->GetData()[ i ]; \n\
 \n\
         if ( ! Object ) \n\
             continue; \n\
 \n\
-        if ( ! _stricmp ( Object->GetFullName(), ClassFullName ) ) \n\
+        if ( Object->StaticFullName().Equals ( ClassFullName, true ) ) \n\
             return (UClass*) Object; \n\
     } \n\
 \n\
     return NULL; \n\
 } \n\
 \n\
-bool UObject::IsA ( UClass* pClass ) \n\
+bool UObject::IsA ( UClass* pClass ) const \n\
 { \n\
     for ( UClass* SuperClass = this->Class; SuperClass; SuperClass = ( UClass* ) SuperClass->SuperField ) \n\
     { \n\

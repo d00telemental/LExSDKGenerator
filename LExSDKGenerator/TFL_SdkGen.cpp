@@ -1171,7 +1171,7 @@ void GenerateFuncDef ( UClass* pClass )
                 << "class UClass* " << className << "::StaticClass()\n"
                 << "\t{\n"
                 << "\t\tif ( ! pClassPointer )\n"
-                << "\t\t\tpClassPointer = UObject::FindClass ( \"" << sClassFullName << "\" );\n\n"
+                << "\t\t\tpClassPointer = UObject::FindClass ( L\"" << sClassFullName << "\" );\n\n"
                 << "\t\treturn pClassPointer;\n"
                 << "\t};\n\n";
         }
@@ -1391,7 +1391,7 @@ void GenerateFuncDef ( UClass* pClass )
             ssStreamBuffer0 << " )\n{\n"																																			// open function
                             << "\tstatic UFunction* pFn" << sFunctionName << " = NULL;\n\n"																							// function static pointer
                             << "\tif ( ! pFn" << sFunctionName << " )\n"																											// init function static pointer
-                            << "\t\tpFn" << sFunctionName << " = UObject::FindObject< UFunction > ( \"" << sFunctionFullName << "\" );\n\n"
+                            << "\t\tpFn" << sFunctionName << " = UObject::FindObject< UFunction > ( L\"" << sFunctionFullName << "\" );\n\n"
                             << "\t" << sClassNameCPP << "_";																														// params struct
         }																													
 
