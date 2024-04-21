@@ -53,6 +53,18 @@
     BYTE							OperPrecendence;					// 0x00EB (0x01) - NOT AUTO-GENERATED PROPERTY \n\
     void*							FirstPropertyToInit;				// 0x00EC (0x08) - NOT AUTO-GENERATED PROPERTY \n"
 
+#define CLASS_PROPERTIES_USTATE "\
+\n\
+    struct FFuncMapPair final {\n\
+        SFXName Key;\n\
+        UFunction* Value;\n\
+    };\n\
+\n\
+    QWORD                           ProbeMask;                          // 0x00D8 (0x08) - NOT AUTO-GENERATED PROPERTY \n\
+    QWORD                           IgnoreMask;                         // 0x00E0 (0x08) - NOT AUTO-GENERATED PROPERTY \n\
+    DWORD                           StateFlags;                         // 0x00E8 (0x04) - NOT AUTO-GENERATED PROPERTY \n\
+    WORD                            LabelTableOffset;                   // 0x00EC (0x02) - NOT AUTO-GENERATED PROPERTY \n\
+    TArray<FFuncMapPair>            FuncMap;                            // 0x00F0 (0x10) - NOT AUTO-GENERATED PROPERTY \n"
 
 #define CLASS_PROPERTIES_UPROPERTY "\
     int                             ArrayDim;                           // 0x0070 (0x04) - NOT AUTO-GENERATED PROPERTY \n\

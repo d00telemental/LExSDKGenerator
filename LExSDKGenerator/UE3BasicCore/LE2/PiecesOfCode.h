@@ -55,6 +55,12 @@
     void*							FirstPropertyToInit;				// 0x00E8 (0x08) - NOT AUTO-GENERATED PROPERTY \n\
     void*							Func;								// 0x00F0 (0x08) - NOT AUTO-GENERATED PROPERTY \n"
 
+#define CLASS_PROPERTIES_USTATE "\
+    QWORD                           ProbeMask;                          // 0x00D0 (0x08) - NOT AUTO-GENERATED PROPERTY \n\
+    QWORD                           IgnoreMask;                         // 0x00D8 (0x08) - NOT AUTO-GENERATED PROPERTY \n\
+    DWORD                           StateFlags;                         // 0x00E0 (0x04) - NOT AUTO-GENERATED PROPERTY \n\
+    WORD                            LabelTableOffset;                   // 0x00E4 (0x02) - NOT AUTO-GENERATED PROPERTY \n\
+    TMap<SFXName, UFunction*>       FuncMap;                            // 0x00E8 (0x48) - NOT AUTO-GENERATED PROPERTY \n"
 
 #define CLASS_PROPERTIES_UPROPERTY "\
     int                             ArrayDim;                           // 0x0070 (0x04) - NOT AUTO-GENERATED PROPERTY \n\

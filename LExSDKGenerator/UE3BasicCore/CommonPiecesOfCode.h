@@ -31,7 +31,12 @@
     }\n\
 \n\
     static class UClass* FindClass (wchar_t const* ClassFullName);\n\
-    bool IsA(class UClass* pClass) const;\n\n"
+    bool IsA(class UClass* pClass) const;\n\
+\n\
+    template<class T> bool IsA() const requires requires { T::StaticClass(); } {\n\
+        return this->IsA(T::StaticClass());\n\
+    }\n\
+\n"
 
 
 
@@ -65,21 +70,21 @@ void UObject::AppendFullName(FStringRAII& OutString, SFXName::FormatMode const M
 \n\
 FStringRAII UObject::GetName() const {\n\
     FStringRAII OutString{};\n\
-    OutString.Reserve(256);\n\
+    OutString.Reserve(255);\n\
     AppendName(OutString, SFXName::k_formatInstanced);\n\
     return OutString;\n\
 }\n\
 \n\
 FStringRAII UObject::GetNameCPP() const {\n\
     FStringRAII OutString{};\n\
-    OutString.Reserve(256);\n\
+    OutString.Reserve(255);\n\
     AppendNameCPP(OutString);\n\
     return OutString;\n\
 }\n\
 \n\
 FStringRAII UObject::GetFullName() const {\n\
     FStringRAII OutString{};\n\
-    OutString.Reserve(256);\n\
+    OutString.Reserve(255);\n\
     AppendFullName(OutString, SFXName::k_formatInstanced);\n\
     return OutString;\n\
 }\n\
@@ -87,21 +92,24 @@ FStringRAII UObject::GetFullName() const {\n\
 \n\
 FStringRAII const& UObject::StaticName() const {\n\
     thread_local FStringRAII OutString{};\n\
-    OutString.Reserve(256);\n\
+    OutString.Clear();\n\
+    OutString.Reserve(255);\n\
     AppendName(OutString, SFXName::k_formatInstanced);\n\
     return OutString;\n\
 }\n\
 \n\
 FStringRAII const& UObject::StaticNameCPP() const {\n\
     thread_local FStringRAII OutString{};\n\
-    OutString.Reserve(256);\n\
+    OutString.Clear();\n\
+    OutString.Reserve(255);\n\
     AppendNameCPP(OutString);\n\
     return OutString;\n\
 }\n\
 \n\
 FStringRAII const& UObject::StaticFullName() const {\n\
     thread_local FStringRAII OutString{};\n\
-    OutString.Reserve(256);\n\
+    OutString.Clear();\n\
+    OutString.Reserve(255);\n\
     AppendFullName(OutString, SFXName::k_formatInstanced);\n\
     return OutString;\n\
 }\n\

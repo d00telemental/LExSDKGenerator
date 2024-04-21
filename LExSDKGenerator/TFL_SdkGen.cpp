@@ -1816,6 +1816,11 @@ void GenerateClass ( UClass* pClass )
         ssStreamBuffer0 << CLASS_PROPERTIES_UFUNCTION;
     #endif
 
+    #ifdef CLASS_PROPERTIES_USTATE
+    else if ( pClass == UObject::FindClass ( "Class Core.State" ) )		            // UState
+        ssStreamBuffer0 << CLASS_PROPERTIES_USTATE;
+    #endif
+
     #ifdef CLASS_PROPERTIES_UPROPERTY
     else if ( pClass == UObject::FindClass ( "Class Core.Property" ) )		        // UProperty
         ssStreamBuffer0 << CLASS_PROPERTIES_UPROPERTY;
