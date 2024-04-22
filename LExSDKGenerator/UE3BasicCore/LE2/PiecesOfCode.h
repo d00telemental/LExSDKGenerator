@@ -62,6 +62,19 @@
     WORD                            LabelTableOffset;                   // 0x00E4 (0x02) - NOT AUTO-GENERATED PROPERTY \n\
     TMap<SFXName, UFunction*>       FuncMap;                            // 0x00E8 (0x48) - NOT AUTO-GENERATED PROPERTY \n"
 
+#define CLASS_PROPERTIES_UCLASS "\
+\n\
+    DWORD                           ClassFlags;                         // 0x0130 (0x04) - NOT AUTO-GENERATED PROPERTY\n\
+    DWORD                           ClassCastFlags;                     // 0x0134 (0x04) - NOT AUTO-GENERATED PROPERTY\n\
+    DWORD                           ClassUnique;                        // 0x0138 (0x04) - NOT AUTO-GENERATED PROPERTY\n\
+    UClass*                         ClassWithin;                        // 0x013C (0x08) - NOT AUTO-GENERATED PROPERTY\n\
+    SFXName                         ClassConfigName;                    // 0x0144 (0x08) - NOT AUTO-GENERATED PROPERTY\n\
+    TArray<FRepRecord>              ClassReps;                          // 0x014C (0x10) - NOT AUTO-GENERATED PROPERTY\n\
+    TArray<UField*>                 NetFields;                          // 0x015C (0x10) - NOT AUTO-GENERATED PROPERTY\n\
+    UObject*                        ClassDefaultObject;                 // 0x016C (0x08) - NOT AUTO-GENERATED PROPERTY\n\
+\n\
+    unsigned char                   UnknownData174[ 0x84 ];             // 0x0174 (0x84) - UNKNOWN DATA\n"
+
 #define CLASS_PROPERTIES_UPROPERTY "\
     int                             ArrayDim;                           // 0x0070 (0x04) - NOT AUTO-GENERATED PROPERTY \n\
     int                             ElementSize;                        // 0x0074 (0x04) - NOT AUTO-GENERATED PROPERTY \n\

@@ -35,7 +35,6 @@ void PrintFileHeder ( char* cFileName, char* cFileExt, bool setPP = false, bool 
     fprintf ( pFile, "# ========================================================================================= #\n" );
     fprintf ( pFile, "# Credits: %s\n", SDK_GEN_CREDITS );
     fprintf ( pFile, "# Thanks: %s\n", SDK_GEN_STHANKS );
-    fprintf ( pFile, "# Forums: %s\n", SDK_GEN_FORUMS );
     fprintf ( pFile, "#############################################################################################\n" );
     fprintf ( pFile, "*/\n" );
     fprintf  (pFile, "\n\n" );
@@ -1839,6 +1838,11 @@ void GenerateClass ( UClass* pClass )
     #ifdef CLASS_PROPERTIES_USTATE
     else if ( pClass == UObject::FindClass ( "Class Core.State" ) )		            // UState
         ssStreamBuffer0 << CLASS_PROPERTIES_USTATE;
+    #endif
+
+    #ifdef CLASS_PROPERTIES_UCLASS
+    else if ( pClass == UObject::FindClass ( "Class Core.Class" ) )		            // UClass
+        ssStreamBuffer0 << CLASS_PROPERTIES_UCLASS;
     #endif
 
     #ifdef CLASS_PROPERTIES_UPROPERTY

@@ -75,9 +75,8 @@ using namespace std;
 */
 
 // Generator
-#define SDK_GEN_VER				"v1.4_Beta-Rev.53-MELE"
-#define SDK_GEN_CREDITS			"uNrEaL, Tamimego, SystemFiles, R00T88, _silencer, the1domo, K@N@VEL"
-#define SDK_GEN_FORUMS			"www.uc-forum.com, www.gamedeception.net"
+#define SDK_GEN_VER				"v1.5_Beta-Rev.60-MELE"
+#define SDK_GEN_CREDITS			"uNrEaL, Tamimego, SystemFiles, R00T88, _silencer, the1domo, K@N@VEL, SirCxyrtyx"
 #define SDK_GEN_STHANKS			"HOOAH07, lowHertz"
 #define SDK_CONFIG_PATH         "LExSdkGen.cfg"
 #define SDK_BUFF_SIZE			256			

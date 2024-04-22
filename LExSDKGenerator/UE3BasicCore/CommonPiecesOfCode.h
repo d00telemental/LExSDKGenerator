@@ -52,6 +52,22 @@
     template<class T> bool IsA() const requires requires { T::StaticClass(); } {\n\
         return this->IsA(T::StaticClass());\n\
     }\n\
+\n\
+	template<std::derived_from<UObject> T> T* Cast() {\n\
+		return this->IsA<T>() ? reinterpret_cast<T*>(this) : nullptr;\n\
+	}\n\
+\n\
+	template<std::derived_from<UObject> T> T const* Cast() const {\n\
+		return this->IsA<T>() ? reinterpret_cast<T const*>(this) : nullptr;\n\
+	}\n\
+\n\
+	template<std::derived_from<UObject> T> T* CastDirect() requires requires { T::StaticClass(); } {\n\
+		return this->Class == T::StaticClass() ? reinterpret_cast<T*>(this) : nullptr;\n\
+	}\n\
+\n\
+	template<std::derived_from<UObject> T> T const* CastDirect() const requires requires { T::StaticClass(); } {\n\
+		return this->Class == T::StaticClass() ? reinterpret_cast<T const*>(this) : nullptr;\n\
+	}\n\
 \n"
 
 
