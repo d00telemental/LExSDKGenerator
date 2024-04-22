@@ -311,7 +311,13 @@ int GetPropertyType ( UProperty* pProperty, string& sPropertyType, bool bFuncRet
 
     #ifdef CCP_USTRUCT
     else if ( pProperty->IsA ( UStructProperty::StaticClass() ) )		
-    { 
+    {
+        // do not prefix "FPointer" with "struct" because it is now a typedef ...
+        if ( string ( ( (UStructProperty*) pProperty )->Struct->GetNameCPP() ) == "FPointer" ) {
+            sPropertyType = GetValidName ( "FPointer" );
+            return 3;
+        }
+
         // count name
         strcpy_s ( cBuffer, ( (UStructProperty*) pProperty )->Struct->GetName() );
         unsigned int nCounterF = UObject::CountObject< UScriptStruct > ( cBuffer );
@@ -620,6 +626,14 @@ void GenerateScriptStruct ( UScriptStruct* pScriptStruct )
 
     // stream to main buffer
     ssStreamBuffer0 << "// " << sSStructFullName << "\n";
+
+    // special early-exit cases
+    if ( sSStructNameCPP == "FPointer" )
+    {
+        ssStreamBuffer0 << "using FPointer = void*;\n\n";
+        SDKFN_PRINT(pFile, ssStreamBuffer0);
+        return;
+    }
     
     // vars
     signed long dwSize = 0;
@@ -1786,6 +1800,12 @@ void GenerateClass ( UClass* pClass )
     if ( false ) {}
 
     // special classes that need to be filled manualy
+
+    #ifdef CLASS_PROPERTIES_UOBJECT
+    else if ( pClass == UObject::FindClass ( "Class Core.Object" ) )			    // UObject
+        ssStreamBuffer0 << CLASS_PROPERTIES_UOBJECT;
+    #endif
+
     #ifdef CLASS_PROPERTIES_UFIELD
     else if ( pClass == UObject::FindClass ( "Class Core.Field" ) )			        // UField
         ssStreamBuffer0 << CLASS_PROPERTIES_UFIELD;

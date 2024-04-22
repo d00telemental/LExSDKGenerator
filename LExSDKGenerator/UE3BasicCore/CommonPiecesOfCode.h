@@ -1,6 +1,22 @@
 #pragma once
 
 
+#define CLASS_PROPERTIES_UOBJECT "\
+    // void*                            VfTableObject;                      // 0x0000 (0x08) - NOT AUTO-GENERATED PROPERTY \n\
+    int                             ObjectInternalInteger;              // 0x0008 (0x04) - NOT AUTO-GENERATED PROPERTY \n\
+    unsigned long long              ObjectFlags;                        // 0x000C (0x08) - NOT AUTO-GENERATED PROPERTY \n\
+    class UObject*                  HashNext;                           // 0x0014 (0x08) - NOT AUTO-GENERATED PROPERTY \n\
+    class UObject*                  HashOuterNext;                      // 0x001C (0x08) - NOT AUTO-GENERATED PROPERTY \n\
+    struct FStateFrame*             StateFrame;                         // 0x0024 (0x08) - NOT AUTO-GENERATED PROPERTY \n\
+    class UObject*                  Linker;                             // 0x002C (0x08) - NOT AUTO-GENERATED PROPERTY \n\
+    long long                       LinkerIndex;                        // 0x0034 (0x08) - NOT AUTO-GENERATED PROPERTY \n\
+    int                             NetIndex;                           // 0x003C (0x04) - NOT AUTO-GENERATED PROPERTY \n\
+    class UObject*                  Outer;                              // 0x0040 (0x08) - NOT AUTO-GENERATED PROPERTY \n\
+    struct SFXName                  Name;                               // 0x0048 (0x08) - NOT AUTO-GENERATED PROPERTY \n\
+    class UClass*                   Class;                              // 0x0050 (0x08) - NOT AUTO-GENERATED PROPERTY \n\
+    class UObject*                  ObjectArchetype;                    // 0x0058 (0x08) - NOT AUTO-GENERATED PROPERTY \n"
+
+
 #define BASIC_FUNCTIONS_DEC "\
     static class TArray<class UObject*>* GObjObjects;\n\
 \n\
