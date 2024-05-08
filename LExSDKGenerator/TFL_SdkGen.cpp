@@ -300,17 +300,15 @@ int GetPropertyType ( UProperty* pProperty, string& sPropertyType, ETypeContext 
         case ETC_ClassField:
         case ETC_ScriptStruct:
         case ETC_FuncStruct:  // wrapped in 'union { ... }' to prevent destruction
+        case ETC_Param:
         case ETC_ParamOut:  // pointer should be added by caller in this case
         case ETC_Return:
             sPropertyType = "FString";
             break;
-        case ETC_Param:
-            sPropertyType = "FString const&";
-            break;
-        //case ETC_FuncStruct:
-        //    sPropertyType = "FStringView";
-        //    break;
         }
+
+        if ( Context == ETC_Param && pProperty->ArrayDim <= 1 )
+            sPropertyType += " const&";
 
         return 2;
     }
@@ -382,7 +380,7 @@ int GetPropertyType ( UProperty* pProperty, string& sPropertyType, ETypeContext 
         else
             sPropertyType = "struct " + GetValidName ( string ( ( (UStructProperty*) pProperty )->Struct->GetNameCPP() ) );
 
-        if ( Context == ETC_Param )
+        if ( Context == ETC_Param && pProperty->ArrayDim <= 1 )
             sPropertyType += " const&";
         
         return 3; 
@@ -393,12 +391,13 @@ int GetPropertyType ( UProperty* pProperty, string& sPropertyType, ETypeContext 
     else if ( pProperty->IsA ( UArrayProperty::StaticClass() ) )
     {
         string sPropertyTypeInner;
-            
-        if ( GetPropertyType ( ( (UArrayProperty*) pProperty )->Inner, sPropertyTypeInner, Context ) )
+
+        // Do not pass Context here because that might lead to "TArray of const reference" situation.
+        if ( GetPropertyType ( ( (UArrayProperty*) pProperty )->Inner, sPropertyTypeInner, ETC_ClassField ) )
         {
             sPropertyType = "TArray<" + sPropertyTypeInner + ">";
 
-            if ( Context == ETC_Param )
+            if ( Context == ETC_Param && pProperty->ArrayDim <= 1 )
                 sPropertyType += " const&";
 
             return 4;
@@ -1132,9 +1131,12 @@ void GenerateFuncStruct ( UClass* pClass )
         else												{ ssStreamBuffer1 << "exec"; }
 
 
+        std::ostringstream ssStreamBufferName{};
+        ssStreamBufferName << sClassNameCPP << "_" << ssStreamBuffer1.str() << sFunctionName << "_Parms";
+
         // stream to main buffer (struct name)
         ssStreamBuffer0 << "\n"
-                        << "struct " << sClassNameCPP << "_" << ssStreamBuffer1.str() << sFunctionName << "_Parms\n"
+                        << "struct " << ssStreamBufferName.str() << "\n"
                         << "{\n";
         
         // empty support buffers
@@ -1256,6 +1258,10 @@ void GenerateFuncStruct ( UClass* pClass )
                 ssStreamBuffer0 << "\t// UNKNOWN PROPERTY: " << sPropertyFullName << "\n";			
             }
         }
+
+        // TODO: Consider only doing this for func structs with destructible members?...
+        ssStreamBuffer0 << "\n\t " << ssStreamBufferName.str() << "() { memset(this, 0, sizeof *this); }";
+        ssStreamBuffer0 << "\n\t~" << ssStreamBufferName.str() << "() {}\n";
 
         // stream to main buffer
         ssStreamBuffer0 << "};\n\n";
@@ -1562,8 +1568,6 @@ void GenerateFuncDef ( UClass* pClass )
         }
 
 
-        // UPDATE - d00t - Tentative attempt to fix the crashes due to outparms not getting pre-populated.
-
         // stream to main buffer (populate out part of parms struct) ( CPF_OutParm )
         for ( unsigned int i = 0; i < vProperty_OutParms.size(); i++ )
         {
@@ -1582,8 +1586,6 @@ void GenerateFuncDef ( UClass* pClass )
                 ssStreamBuffer0 << "\t\t" << sFunctionName << "_Parms." << pProperty.second << " = *" << pProperty.second << ";\n";
             }
         }
-
-        // UPDATE - d00t
 
 
         // stream to main buffer (function native tricks)
