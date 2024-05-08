@@ -120,6 +120,18 @@ vector< UObject* >	vIncludes;
 bool                bAbortRun                   = false;
 char                sOutputDir[ 512 ]          = { '\0' };
 
+
+enum ETypeContext : int
+{
+    ETC_ClassField = 1,
+    ETC_ScriptStruct = 2,
+    ETC_FuncStruct = 3,
+    ETC_Param = 4,
+    ETC_ParamOut = 5,
+    ETC_Return = 6,
+};
+
+
 /*
 # ========================================================================================= #
 # Functions																					
@@ -160,7 +172,7 @@ void			GenerateClassPre				( UClass* pClass, UObject* pPackageToProcess );
 UScriptStruct*	FindBiggestScriptStruct			( string ScriptStructFullName );
 
 // Property Utils
-int				GetPropertyType					( UProperty* pProperty, string& sPropertyType, bool bFuncRet );
+int				GetPropertyType					( UProperty* pProperty, string& sPropertyType, ETypeContext Context );
 unsigned long	GetPropertySize					( UProperty* pProperty );
 bool			SortProperty					( UProperty* pPropertyA, UProperty* pPropertyB );
 bool			SortPropertyPair				( pair< UProperty*, string > pPropertyA, pair< UProperty*, string > pPropertyB );

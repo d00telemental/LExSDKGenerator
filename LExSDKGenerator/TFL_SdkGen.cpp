@@ -248,7 +248,7 @@ bool SortPropertyPair ( pair< UProperty*, string > pPropertyA, pair< UProperty*,
 // - (3) custom struct
 // - (4) tarray
 // - (5) tmap
-int GetPropertyType ( UProperty* pProperty, string& sPropertyType, bool bFuncRet )
+int GetPropertyType ( UProperty* pProperty, string& sPropertyType, ETypeContext const Context )
 {
     if ( ! pProperty ) // necessary because this function is recursive
         return 0; 
@@ -283,7 +283,7 @@ int GetPropertyType ( UProperty* pProperty, string& sPropertyType, bool bFuncRet
     #ifdef CCP_UBOOL
     else if ( pProperty->IsA ( UBoolProperty::StaticClass() ) )
     {
-        if ( bFuncRet )
+        if ( Context == ETC_Return )
             sPropertyType = "bool";
         else
             sPropertyType = "unsigned long";
@@ -295,7 +295,23 @@ int GetPropertyType ( UProperty* pProperty, string& sPropertyType, bool bFuncRet
     #ifdef CCP_USTR
     else if ( pProperty->IsA ( UStrProperty::StaticClass() ) )
     {
-        sPropertyType = "class FString";
+        switch ( Context )
+        {
+        case ETC_ClassField:
+        case ETC_ScriptStruct:
+        case ETC_FuncStruct:  // wrapped in 'union { ... }' to prevent destruction
+        case ETC_ParamOut:  // pointer should be added by caller in this case
+        case ETC_Return:
+            sPropertyType = "FString";
+            break;
+        case ETC_Param:
+            sPropertyType = "FString const&";
+            break;
+        //case ETC_FuncStruct:
+        //    sPropertyType = "FStringView";
+        //    break;
+        }
+
         return 2;
     }
     #endif
@@ -360,11 +376,14 @@ int GetPropertyType ( UProperty* pProperty, string& sPropertyType, bool bFuncRet
         // count name
         strcpy_s ( cBuffer, ( (UStructProperty*) pProperty )->Struct->GetName() );
         unsigned int nCounterF = UObject::CountObject< UScriptStruct > ( cBuffer );
-        
+
         if ( nCounterF > 1 )
             sPropertyType = "struct " + GetValidName ( string ( ( (UStructProperty*) pProperty )->Struct->Outer->GetNameCPP() ) ) + "_" + GetValidName ( string ( ( (UStructProperty*) pProperty )->Struct->GetNameCPP() ) );
         else
             sPropertyType = "struct " + GetValidName ( string ( ( (UStructProperty*) pProperty )->Struct->GetNameCPP() ) );
+
+        if ( Context == ETC_Param )
+            sPropertyType += " const&";
         
         return 3; 
     }
@@ -375,16 +394,17 @@ int GetPropertyType ( UProperty* pProperty, string& sPropertyType, bool bFuncRet
     {
         string sPropertyTypeInner;
             
-        if ( GetPropertyType ( ( (UArrayProperty*) pProperty )->Inner, sPropertyTypeInner, false ) )
+        if ( GetPropertyType ( ( (UArrayProperty*) pProperty )->Inner, sPropertyTypeInner, Context ) )
         {
-            sPropertyType = "class TArray<" + sPropertyTypeInner + ">";
-            
+            sPropertyType = "TArray<" + sPropertyTypeInner + ">";
+
+            if ( Context == ETC_Param )
+                sPropertyType += " const&";
+
             return 4;
         }
-        else
-        {
-            return 0;
-        }
+
+        return 0;
     }
     #endif
 
@@ -401,11 +421,15 @@ int GetPropertyType ( UProperty* pProperty, string& sPropertyType, bool bFuncRet
 
         if
         ( 
-                GetPropertyType ( ( (UMapProperty*) pProperty )-> Key, sPropertyTypeKey, false )
-            &&	GetPropertyType ( ( (UMapProperty*) pProperty )-> Value, sPropertyTypeValue, false ) 
+                GetPropertyType ( ( (UMapProperty*) pProperty )-> Key, sPropertyTypeKey, Context )
+            &&	GetPropertyType ( ( (UMapProperty*) pProperty )-> Value, sPropertyTypeValue, Context ) 
         )
         {
             sPropertyType = "TMap< " + sPropertyTypeKey + ", " + sPropertyTypeValue + " >";
+
+            if ( Context == ETC_Param )
+                sPropertyType += " const&";
+
             return 5;
         }
         else
@@ -837,7 +861,7 @@ void GenerateScriptStruct ( UScriptStruct* pScriptStruct )
         string sPropertyType;
 
         // strem properties to main buffer
-        if ( GetPropertyType ( pProperty, sPropertyType, false ) )
+        if ( GetPropertyType ( pProperty, sPropertyType, ETC_ScriptStruct ) )
         {
             // get correct element size
             unsigned long dwCorrectElementSize = GetPropertySize ( pProperty );
@@ -1019,7 +1043,7 @@ void GenerateScriptStructPre ( UScriptStruct* pScriptStruct, UObject* pPackageTo
         // check properties prerequisites
         for ( UProperty* pStructProperty = (UProperty*) pScriptStruct->Children; pStructProperty; pStructProperty = (UProperty*) pStructProperty->Next )
         {
-            int iTypeResult = GetPropertyType ( pStructProperty, sPropertyType, false );
+            int iTypeResult = GetPropertyType ( pStructProperty, sPropertyType, ETC_ScriptStruct );
             
             // check structs
             if
@@ -1037,7 +1061,7 @@ void GenerateScriptStructPre ( UScriptStruct* pScriptStruct, UObject* pPackageTo
             if
             ( 
                     iTypeResult == 4 // tarray
-                &&	GetPropertyType ( ( (UArrayProperty*) pStructProperty )->Inner, sPropertyType, false ) == 3 // struct
+                &&	GetPropertyType ( ( (UArrayProperty*) pStructProperty )->Inner, sPropertyType, ETC_ScriptStruct ) == 3 // struct
                 &&  (UScriptStruct*) ( ( (UStructProperty*) ( (UArrayProperty*) pStructProperty )->Inner )->Struct ) != pScriptStruct // the prerequisite is not itself
                 &&	find ( vGenScriptStructs.begin(), vGenScriptStructs.end(), string ( ( (UScriptStruct*) ( ( (UStructProperty*) ( (UArrayProperty*) pStructProperty )->Inner )->Struct ) )->GetFullName() ) ) == vGenScriptStructs.end() // not generated
             ) 
@@ -1140,11 +1164,19 @@ void GenerateFuncStruct ( UClass* pClass )
             // dec property type
             string sPropertyType;
 
-            if ( GetPropertyType ( pProperty, sPropertyType, false ) )
+            int const iPropType = GetPropertyType(pProperty, sPropertyType, ETC_FuncStruct);
+            if ( iPropType )
             {
+                // If this is a destructible type, the property must be wrapped in a union.
+                // This should prevent destructor being called, thus in theory avoiding double-free.
+                bool const bNeedsUnion = iPropType >= 2;
+
+                if (bNeedsUnion)
+                    sPropertyType = string("union { ") + sPropertyType;
+
                 // get property name
                 string sPropertyName = GetValidName ( string ( pProperty->GetName() ) );
-
+                     
                 // check unique var name
                 if ( mPropertyName.count ( sPropertyName ) == 0 ) // not exist
                 {
@@ -1179,6 +1211,9 @@ void GenerateFuncStruct ( UClass* pClass )
 
                 // stream to support buffer
                 ssStreamBuffer1 << ";";
+
+                if (bNeedsUnion)
+                    ssStreamBuffer1 << " };";
 
                 // stream property flags to support stream
                 GetAllPropertyFlags ( pProperty->PropertyFlags, ssStreamBuffer2 );
@@ -1372,7 +1407,7 @@ void GenerateFuncDef ( UClass* pClass )
         string sPropertyType;
 
         // stream to main buffer properties infos ( CPF_ReturnParm )
-        if ( pProperty_ReturnParm.first && GetPropertyType ( pProperty_ReturnParm.first, sPropertyType, true ) ) 
+        if ( pProperty_ReturnParm.first && GetPropertyType ( pProperty_ReturnParm.first, sPropertyType, ETC_Return ) ) 
         { 
             // stram to support buffer (property flags)
             GetAllPropertyFlags ( pProperty_ReturnParm.first->PropertyFlags, ssStreamBuffer1 );
@@ -1389,7 +1424,7 @@ void GenerateFuncDef ( UClass* pClass )
         {
             pair< UProperty*, string > pProperty ( vProperty_Parms[ i ] );
 
-            if ( GetPropertyType ( pProperty.first, sPropertyType, false ) )
+            if ( GetPropertyType ( pProperty.first, sPropertyType, ETC_FuncStruct ) )
             {
                 // stram to support buffer (property flags)
                 GetAllPropertyFlags ( pProperty.first->PropertyFlags, ssStreamBuffer1 );
@@ -1407,7 +1442,7 @@ void GenerateFuncDef ( UClass* pClass )
         {
             pair< UProperty*, string > pProperty ( vProperty_OutParms[ i ] );
 
-            if ( GetPropertyType ( pProperty.first, sPropertyType, false ) )
+            if ( GetPropertyType ( pProperty.first, sPropertyType, ETC_FuncStruct ) )
             {
                 // stram to support buffer (property flags)
                 GetAllPropertyFlags ( pProperty.first->PropertyFlags, ssStreamBuffer1 );
@@ -1421,7 +1456,7 @@ void GenerateFuncDef ( UClass* pClass )
         }
 
         // stream to main buffer return type
-        if ( pProperty_ReturnParm.first && GetPropertyType ( pProperty_ReturnParm.first, sPropertyType, true ) ) 
+        if ( pProperty_ReturnParm.first && GetPropertyType ( pProperty_ReturnParm.first, sPropertyType, ETC_Return ) ) 
         { 
             ssStreamBuffer0 << "\n" << sPropertyType;
         }
@@ -1443,7 +1478,7 @@ void GenerateFuncDef ( UClass* pClass )
         {
             pair< UProperty*, string > pProperty ( vProperty_Parms[ i ] );
 
-            if ( GetPropertyType ( pProperty.first, sPropertyType, false ) )
+            if ( GetPropertyType ( pProperty.first, sPropertyType, ETC_Param ) )
             {
                 // stream to main buffer (comma)
                 if ( bPrintComma ) { ssStreamBuffer0 << ","; }
@@ -1470,7 +1505,7 @@ void GenerateFuncDef ( UClass* pClass )
         {
             pair< UProperty*, string > pProperty ( vProperty_OutParms[ i ] );
 
-            if ( GetPropertyType ( pProperty.first, sPropertyType, false ) )
+            if ( GetPropertyType ( pProperty.first, sPropertyType, ETC_ParamOut ) )
             {
                 // stream to main buffer (comma)
                 if ( bPrintComma ) { ssStreamBuffer0 << ","; }
@@ -1514,7 +1549,7 @@ void GenerateFuncDef ( UClass* pClass )
         {		
             pair< UProperty*, string > pProperty ( vProperty_Parms[ i ] );
 
-            int iTypeResult = GetPropertyType ( pProperty.first, sPropertyType, false );
+            int iTypeResult = GetPropertyType ( pProperty.first, sPropertyType, ETC_FuncStruct );
 
             if ( iTypeResult > 1 || pProperty.first->ArrayDim > 1 ) // struct, tarray, tmap OR array
             {
@@ -1536,7 +1571,7 @@ void GenerateFuncDef ( UClass* pClass )
 
             ssStreamBuffer0 << "\n\tif ( " << pProperty.second << " )\n";
 
-            int iTypeResult = GetPropertyType ( pProperty.first, sPropertyType, false );
+            int iTypeResult = GetPropertyType ( pProperty.first, sPropertyType, ETC_FuncStruct );
 
             if ( iTypeResult > 1 || pProperty.first->ArrayDim > 1 ) // struct, tarray, tmap OR array
             {
@@ -1587,7 +1622,7 @@ void GenerateFuncDef ( UClass* pClass )
             // stream to main buffer (if outparm)
             ssStreamBuffer0 << "\n\tif ( " << pProperty.second << " )\n"; 
 
-            int iTypeResult = GetPropertyType ( pProperty.first, sPropertyType, false );
+            int iTypeResult = GetPropertyType ( pProperty.first, sPropertyType, ETC_FuncStruct );
 
             if ( iTypeResult > 1 || pProperty.first->ArrayDim > 1 ) // struct, tarray, tmap OR array
             {
@@ -1600,7 +1635,7 @@ void GenerateFuncDef ( UClass* pClass )
         }
 
         // stream to main buffer (return value)
-        if ( pProperty_ReturnParm.first && GetPropertyType ( pProperty_ReturnParm.first, sPropertyType, false ) )
+        if ( pProperty_ReturnParm.first && GetPropertyType ( pProperty_ReturnParm.first, sPropertyType, ETC_FuncStruct ) )
         {
             ssStreamBuffer0 << "\n\treturn " << sFunctionName << "_Parms." << pProperty_ReturnParm.second << ";\n";
         }
@@ -1699,7 +1734,7 @@ void GenerateFuncDec ( UClass* pClass )
         string sPropertyType;
 
         // stream to main buffer return type
-        if ( pProperty_ReturnParm.first && GetPropertyType ( pProperty_ReturnParm.first, sPropertyType, true ) ) 
+        if ( pProperty_ReturnParm.first && GetPropertyType ( pProperty_ReturnParm.first, sPropertyType, ETC_Return ) ) 
         { 
             ssStreamBuffer0 << "\t" << sPropertyType;
         }
@@ -1721,7 +1756,7 @@ void GenerateFuncDec ( UClass* pClass )
         {
             pair< UProperty*, string > pProperty ( vProperty_Parms[ i ] );
 
-            if ( GetPropertyType ( pProperty.first, sPropertyType, false ) )
+            if ( GetPropertyType ( pProperty.first, sPropertyType, ETC_Param ) )
             {
                 // stream to main buffer (comma)
                 if ( bPrintComma ) { ssStreamBuffer0 << ","; }
@@ -1748,7 +1783,7 @@ void GenerateFuncDec ( UClass* pClass )
         {
             pair< UProperty*, string > pProperty ( vProperty_OutParms[ i ] );
 
-            if ( GetPropertyType ( pProperty.first, sPropertyType, false ) )
+            if ( GetPropertyType ( pProperty.first, sPropertyType, ETC_ParamOut ) )
             {
                 // stream to main buffer (comma)
                 if ( bPrintComma ) { ssStreamBuffer0 << ","; }
@@ -2027,7 +2062,7 @@ void GenerateClass ( UClass* pClass )
             string sPropertyType;
 
             // strem properties to main buffer
-            if ( GetPropertyType ( pProperty, sPropertyType, false ) )
+            if ( GetPropertyType ( pProperty, sPropertyType, ETC_ClassField ) )
             {
                 // get correct element size
                 unsigned long dwCorrectElementSize = GetPropertySize ( pProperty );
