@@ -257,15 +257,27 @@ int GetPropertyType ( UProperty* pProperty, string& sPropertyType, bool bFuncRet
     if ( false ) {}
 
     #ifdef CCP_UBYTE
-    else if	( pProperty->IsA ( UByteProperty::StaticClass() ) )		{ sPropertyType = "unsigned char";	return 1; }
+    else if	( pProperty->IsA ( UByteProperty::StaticClass() ) )
+    {
+        sPropertyType = "unsigned char";
+        return 1;
+    }
     #endif	
 
     #ifdef CCP_UINT
-    else if ( pProperty->IsA ( UIntProperty::StaticClass() ) )		{ sPropertyType = "int";			return 1; }
+    else if ( pProperty->IsA ( UIntProperty::StaticClass() ) )
+    {
+        sPropertyType = "int";
+        return 1;
+    }
     #endif
     
     #ifdef CCP_UFLOAT
-    else if ( pProperty->IsA ( UFloatProperty::StaticClass() ) )		{ sPropertyType = "float";			return 1; }
+    else if ( pProperty->IsA ( UFloatProperty::StaticClass() ) )
+    {
+        sPropertyType = "float";
+        return 1;
+    }
     #endif
     
     #ifdef CCP_UBOOL
@@ -281,31 +293,59 @@ int GetPropertyType ( UProperty* pProperty, string& sPropertyType, bool bFuncRet
     #endif
 
     #ifdef CCP_USTR
-    else if ( pProperty->IsA ( UStrProperty::StaticClass() ) )		{ sPropertyType = "class FString";			return 2; }
+    else if ( pProperty->IsA ( UStrProperty::StaticClass() ) )
+    {
+        sPropertyType = "class FString";
+        return 2;
+    }
     #endif
 
     #ifdef CCP_USTRINGREF
-    else if ( pProperty->IsA ( UStringRefProperty::StaticClass() ) )	{ sPropertyType = "int";			    return 1; }
+    else if ( pProperty->IsA ( UStringRefProperty::StaticClass() ) )
+    {
+        sPropertyType = "int";
+        return 1;
+    }
     #endif
     
     #ifdef CCP_UNAME
-    else if ( pProperty->IsA ( UNameProperty::StaticClass() ) )		{ sPropertyType = "struct SFXName";			return 2; }
+    else if ( pProperty->IsA ( UNameProperty::StaticClass() ) )
+    {
+        sPropertyType = "struct SFXName";
+        return 2;
+    }
     #endif	
 
     #ifdef CCP_UDELEGATE
-    else if ( pProperty->IsA ( UDelegateProperty::StaticClass() ) )	{ sPropertyType = "struct FScriptDelegate"; return 2; }
+    else if ( pProperty->IsA ( UDelegateProperty::StaticClass() ) )
+    {
+        sPropertyType = "struct FScriptDelegate";
+        return 2;
+    }
     #endif
 
     #ifdef CCP_UOBJECT
-    else if ( pProperty->IsA ( UObjectProperty::StaticClass() ) )	{ sPropertyType = "class " + GetValidName ( string ( ( (UObjectProperty*) pProperty )->PropertyClass->GetNameCPP() ) ) + "*";		return 1; }
+    else if ( pProperty->IsA ( UObjectProperty::StaticClass() ) )
+    {
+        sPropertyType = "class " + GetValidName ( string ( ( (UObjectProperty*) pProperty )->PropertyClass->GetNameCPP() ) ) + "*";
+        return 1;
+    }
     #endif
     
     #ifdef CCP_UCLASS
-    else if ( pProperty->IsA ( UClassProperty::StaticClass() ) )		{ sPropertyType = "class " + GetValidName ( string ( ( (UClassProperty*) pProperty )->MetaClass->GetNameCPP() ) ) + "*";				return 1; }
+    else if ( pProperty->IsA ( UClassProperty::StaticClass() ) )
+    {
+        sPropertyType = "class " + GetValidName ( string ( ( (UClassProperty*) pProperty )->MetaClass->GetNameCPP() ) ) + "*";
+        return 1;
+    }
     #endif
     
     #ifdef CCP_UINTERFACE
-    else if ( pProperty->IsA ( UInterfaceProperty::StaticClass() ) )	{ sPropertyType = "class " + GetValidName ( string ( ( (UInterfaceProperty*) pProperty )->InterfaceClass->GetNameCPP() ) ) + "*";	return 1; }
+    else if ( pProperty->IsA ( UInterfaceProperty::StaticClass() ) )
+    {
+        sPropertyType = "class " + GetValidName ( string ( ( (UInterfaceProperty*) pProperty )->InterfaceClass->GetNameCPP() ) ) + "*";
+        return 1;
+    }
     #endif
 
     #ifdef CCP_USTRUCT
@@ -342,7 +382,9 @@ int GetPropertyType ( UProperty* pProperty, string& sPropertyType, bool bFuncRet
             return 4;
         }
         else
+        {
             return 0;
+        }
     }
     #endif
 
@@ -351,7 +393,12 @@ int GetPropertyType ( UProperty* pProperty, string& sPropertyType, bool bFuncRet
     {
         string sPropertyTypeKey;
         string sPropertyTypeValue;
-        
+
+        //UMapProperty* const MapProp = (UMapProperty*)pProperty;
+        //std::string const KeyName(MapProp->Key ? MapProp->Key->GetName() : "??");
+        //std::string const ValueName(MapProp->Value ? MapProp->Value->GetName() : "??");
+        //fprintf(pLog, "!!! DEBUG MAP PROPERTY: %s => %s\n", KeyName.c_str(), ValueName.c_str());
+
         if
         ( 
                 GetPropertyType ( ( (UMapProperty*) pProperty )-> Key, sPropertyTypeKey )
@@ -359,16 +406,19 @@ int GetPropertyType ( UProperty* pProperty, string& sPropertyType, bool bFuncRet
         )
         {
             sPropertyType = "TMap< " + sPropertyTypeKey + ", " + sPropertyTypeValue + " >";
-
             return 5;
         }
         else
+        {
             return 0;
+        }
     }
     #endif
 
     else
+    {
         return 0;
+    }
 }
 
 unsigned long GetPropertySize ( UProperty* pProperty )
@@ -376,59 +426,102 @@ unsigned long GetPropertySize ( UProperty* pProperty )
     if ( false ) {}
     
     #ifdef CCP_UBYTE
-    else if	( pProperty->IsA ( UByteProperty::StaticClass() ) )		{ return sizeof ( unsigned char ); }
+    else if	( pProperty->IsA ( UByteProperty::StaticClass() ) )
+    {
+        return sizeof ( unsigned char );
+    }
     #endif
     
     #ifdef CCP_UINT
-    else if ( pProperty->IsA ( UIntProperty::StaticClass() ) )		{ return sizeof ( int ); }
+    else if ( pProperty->IsA ( UIntProperty::StaticClass() ) )
+    {
+        return sizeof ( int );
+    }
     #endif
     
     #ifdef CCP_UFLOAT
-    else if ( pProperty->IsA ( UFloatProperty::StaticClass() ) )		{ return sizeof ( float ); }
+    else if ( pProperty->IsA ( UFloatProperty::StaticClass() ) )
+    {
+        return sizeof ( float );
+    }
     #endif
 
     #ifdef CCP_UBOOL
-    else if ( pProperty->IsA ( UBoolProperty::StaticClass() ) )		{ return sizeof ( unsigned long ); }
+    else if ( pProperty->IsA ( UBoolProperty::StaticClass() ) )
+    {
+        return sizeof ( unsigned long );
+    }
     #endif
 
     #ifdef CCP_USTR
-    else if ( pProperty->IsA ( UStrProperty::StaticClass() ) )		{ return sizeof ( FString ); }
+    else if ( pProperty->IsA ( UStrProperty::StaticClass() ) )
+    {
+        return 0x10;
+    }
     #endif
 
     #ifdef CCP_USTRINGREF
-    else if ( pProperty->IsA ( UStringRefProperty::StaticClass() ) )	{ return sizeof ( int ); }
+    else if ( pProperty->IsA ( UStringRefProperty::StaticClass() ) )
+    {
+        return sizeof ( int );
+    }
     #endif
 
     #ifdef CCP_UNAME
-    else if ( pProperty->IsA ( UNameProperty::StaticClass() ) )		{ return sizeof ( FName ); }
+    else if ( pProperty->IsA ( UNameProperty::StaticClass() ) )
+    {
+        return sizeof ( FName );
+    }
     #endif
 
     #ifdef CCP_UDELEGATE
-    else if ( pProperty->IsA ( UDelegateProperty::StaticClass() ) )	{ return sizeof ( FScriptDelegate ); }
+    else if ( pProperty->IsA ( UDelegateProperty::StaticClass() ) )
+    {
+        return sizeof ( FScriptDelegate );
+    }
     #endif
 
     #ifdef CCP_UOBJECT
-    else if ( pProperty->IsA ( UObjectProperty::StaticClass() ) )	{ return sizeof ( void* ); }
+    else if ( pProperty->IsA ( UObjectProperty::StaticClass() ) )
+    {
+        return sizeof ( void* );
+    }
     #endif
 
     #ifdef CCP_UCLASS
-    else if ( pProperty->IsA ( UClassProperty::StaticClass() ) )		{ return sizeof ( void* ); }
+    else if ( pProperty->IsA ( UClassProperty::StaticClass() ) )
+    {
+        return sizeof ( void* );
+    }
     #endif
 
     #ifdef CCP_UINTERFACE
-    else if ( pProperty->IsA ( UInterfaceProperty::StaticClass() ) )	{ return sizeof ( void* ); }
+    else if ( pProperty->IsA ( UInterfaceProperty::StaticClass() ) )
+    {
+        return sizeof ( void* );
+    }
     #endif
 
     #ifdef CCP_USTRUCT
-    else if ( pProperty->IsA ( UStructProperty::StaticClass() ) )	{ return pProperty->ElementSize; } // NOT SAFE !!!
+    else if ( pProperty->IsA ( UStructProperty::StaticClass() ) )
+    {
+        // NOT SAFE !!!
+        return pProperty->ElementSize;
+    }
     #endif
 
     #ifdef CCP_UARRAY
-    else if ( pProperty->IsA ( UArrayProperty::StaticClass() ) )		{ return sizeof ( TArray< void* > ); }
+    else if ( pProperty->IsA ( UArrayProperty::StaticClass() ) )
+    {
+        return 0x10;
+    }
     #endif
 
     #ifdef CCP_UMAP
-    else if ( pProperty->IsA ( UMapProperty::StaticClass() ) )		{ return 0x3C; }
+    else if ( pProperty->IsA ( UMapProperty::StaticClass() ) )
+    {
+        return 0x48;
+    }
     #endif
 
     else
