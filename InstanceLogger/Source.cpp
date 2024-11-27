@@ -1,10 +1,9 @@
+#include <cassert>
 #include <Windows.h>
 #include <stdio.h>
 
 #include "../Common.h"
 
-
-#pragma region SFXName stuff
 
 #pragma pack(4)
 template <typename T>
@@ -14,10 +13,58 @@ struct TArray
     int Count;
     int Max;
 };
+
 typedef TArray<wchar_t> FString;
 
-/** Packed index DWORD as seen in FNameEntry. */
-struct PackedIndex
+
+#pragma region FName stuff
+
+struct FNameEntry
+{
+    UINT64          Flags;
+    UINT32          HashIndex : 31;
+    UINT32          bUnicode : 1;
+    FNameEntry*     HashNext;
+
+    union
+    {
+        char        AnsiName[1];
+        wchar_t     UnicodeName[1];
+    };
+};
+
+struct FName
+{
+    UINT32          Index;
+    INT32           Number;
+
+    __forceinline FNameEntry const* Entry() const noexcept
+    {
+        return GNameArray->Data[Index];
+    }
+
+    __forceinline bool IsUnicode() const noexcept
+    {
+        return Entry()->bUnicode;
+    }
+
+    __forceinline char const* Name() const noexcept
+    {
+        FNameEntry const* const entry = Entry();
+        return entry->AnsiName;
+    }
+
+    static TArray<FNameEntry*>* GNameArray;
+};
+TArray<FNameEntry*>* FName::GNameArray = nullptr;
+
+#pragma endregion
+
+
+#pragma region SFXName stuff
+
+/** Packed index DWORD as seen in SFXNameEntry. */
+struct SFXPackedIndex
 {
     DWORD			Offset : 20;	// The actual index, I guess???
     DWORD			Length : 9;		// Length of the AnsiName or WideName in symbols \wo null-terminator.
@@ -26,49 +73,48 @@ struct PackedIndex
 
 #pragma pack(1)
 /** Name as seen in some kind of name pool. */
-struct FNameEntry
+struct SFXNameEntry
 {
-    PackedIndex		Index;			// 0x00
-    FNameEntry*		HashNext;		// 0x04  Some pointer, often NULL.
+    SFXPackedIndex  Index;			// 0x00
+    SFXNameEntry*   HashNext;		// 0x04  Some pointer, often NULL.
     char			AnsiName[1];	// 0x0C  This *potentially* can be a widechar.
 };
 
 #pragma pack(1)
 /** Name reference as seen in individual UObjects. */
-struct FName
+struct SFXName
 {
     DWORD			Offset : 29;	// Binary offset into an individual chunk.
     DWORD			Chunk : 3;		// Index of the chunk, I've only seen 0 or 1.
     signed long		Number;			// ?= InstanceIndex
 
-    __forceinline
-    char* Name() const noexcept
+    __forceinline char const* Name() const noexcept
     {
         auto chunk = GBioNamePools[Chunk];
-        auto entry = (FNameEntry*)((BYTE*)chunk + Offset);
+        auto entry = (SFXNameEntry const*)((BYTE*)chunk + Offset);
         return entry->AnsiName;
     }
 
-    static FNameEntry** GBioNamePools;
+    static SFXNameEntry** GBioNamePools;
 };
-FNameEntry** FName::GBioNamePools;
+SFXNameEntry** SFXName::GBioNamePools = nullptr;
 
 void NameDump()
 {
     FILE* logFile = NULL;
     fopen_s(&logFile, "NameDump.txt", "w+");
     if (!logFile) return;
-    writeln(L"NameDump starting, addr = %p", FName::GBioNamePools);
+    writeln(L"NameDump starting, addr = %p", SFXName::GBioNamePools);
 
     int poolCounter = 0;
-    for (FNameEntry** namePool = reinterpret_cast<FNameEntry**>(FName::GBioNamePools);
+    for (SFXNameEntry** namePool = reinterpret_cast<SFXNameEntry**>(SFXName::GBioNamePools);
         *namePool != nullptr;
         namePool++)
     {
         int entryCounter = 0;
-        for (FNameEntry* nameEntry = *namePool;
+        for (SFXNameEntry* nameEntry = *namePool;
             nameEntry->Index.Length != 0;
-            nameEntry = reinterpret_cast<FNameEntry*>(reinterpret_cast<BYTE*>(nameEntry) + sizeof FNameEntry + nameEntry->Index.Length))
+            nameEntry = reinterpret_cast<SFXNameEntry*>(reinterpret_cast<BYTE*>(nameEntry) + sizeof SFXNameEntry + nameEntry->Index.Length))
         {
             fwriteln(logFile, L"Name[%02d][%06d] %S", poolCounter, entryCounter, nameEntry->AnsiName);
             entryCounter++;
@@ -100,7 +146,7 @@ struct UObject
     void*				LinkerIndex;           // 0x34
     signed long			NetIndex;              // 0x3C
     UObject*			Outer;                 // 0x40
-    FName				Name;                  // 0x48
+    SFXName             Name;                  // 0x48
     UObject*			Class;                 // 0x50
     UObject*			ObjectArchetype;       // 0x58
 
@@ -116,7 +162,7 @@ struct UObject
     void*				LinkerIndex;           // 0x34
     signed long			NetIndex;              // 0x3C
     UObject*			Outer;                 // 0x40
-    FName				Name;                  // 0x48
+    SFXName             Name;                  // 0x48
     UObject*			Class;                 // 0x50
     UObject*			ObjectArchetype;       // 0x58
 
@@ -132,9 +178,25 @@ struct UObject
     void*				LinkerIndex;           // 0x34
     signed long			NetIndex;              // 0x3C
     UObject*			Outer;                 // 0x40
-    FName				Name;                  // 0x48
+    SFXName             Name;                  // 0x48
     UObject*			Class;                 // 0x50
     UObject*			ObjectArchetype;       // 0x58
+
+#elif LE_GAME_INDEX == 2015
+
+    void*               VfTableObject;
+    UObject*            HashNext;
+    unsigned long long  ObjectFlags;
+    UObject*            HashOuterNext;
+    void*               StateFrame;
+    void*               Linker;
+    void*               LinkerIndex;
+    signed long         ObjectInternalIndex;
+    signed long         NetIndex;
+    UObject*            Outer;
+    FName               Name;
+    UObject*            Class;
+    UObject*            ObjectArchetype;
 
 #else
 
@@ -142,8 +204,7 @@ struct UObject
 
 #endif
 
-    __forceinline
-    char* GetName() const noexcept
+    __forceinline char const* GetName() const noexcept
     {
         return Name.Name();
     }
@@ -183,8 +244,15 @@ void ObjectDump()
 void Initialize()
 {
     BYTE* moduleBase = Common::GetModuleBaseAddress(LEx_MODULE_NAME);
-    FName::GBioNamePools = reinterpret_cast<FNameEntry**>(moduleBase + LEx_NAME_POOLS);
     UObject::GObjObjects = reinterpret_cast<TArray<UObject*>*>(moduleBase + LEx_OBJOBJECTS);
+
+#if LE_GAME_INDEX == 1 || LE_GAME_INDEX == 2 || LE_GAME_INDEX == 3
+    SFXName::GBioNamePools = reinterpret_cast<SFXNameEntry**>(moduleBase + LEx_NAME_POOLS);
+    FName::GNameArray = nullptr;
+#elif LE_GAME_INDEX == 2015
+    SFXName::GBioNamePools = nullptr;
+    FName::GNameArray = reinterpret_cast<TArray<FNameEntry*>*>(moduleBase + LEx_NAME_ARRAY);
+#endif
 }
 void OnAttach()
 {

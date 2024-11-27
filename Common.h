@@ -27,6 +27,12 @@
 #define LEx_NAME_POOLS		0x17B33D0       // RVA of the name pools
 #define LEx_OBJOBJECTS		0x1887E40       // RVA of the UObject::ObjObjects
 
+#elif LE_GAME_INDEX == 2015
+
+#define LEx_MODULE_NAME     L"UDK"
+#define LEx_NAME_ARRAY      0x0000000
+#define LEx_OBJOBJECTS      0x0000000
+
 #else
 
 #error LE_GAME_INDEX not set for Common.h!
