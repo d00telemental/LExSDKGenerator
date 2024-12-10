@@ -18,6 +18,7 @@ typedef TArray<wchar_t> FString;
 
 
 #pragma region FName stuff
+#if LE_GAME_INDEX == 2015
 
 struct FNameEntry
 {
@@ -58,10 +59,12 @@ struct FName
 };
 TArray<FNameEntry*>* FName::GNameArray = nullptr;
 
+#endif
 #pragma endregion
 
 
 #pragma region SFXName stuff
+#if LE_GAME_INDEX != 2015
 
 /** Packed index DWORD as seen in SFXNameEntry. */
 struct SFXPackedIndex
@@ -99,11 +102,36 @@ struct SFXName
 };
 SFXNameEntry** SFXName::GBioNamePools = nullptr;
 
+#endif
+#pragma endregion
+
+
 void NameDump()
 {
     FILE* logFile = NULL;
     fopen_s(&logFile, "NameDump.txt", "w+");
     if (!logFile) return;
+
+#if LE_GAME_INDEX == 2015
+
+    writeln(L"NameDump starting, addr = %p", FName::GNameArray);
+
+    for (int i = 0; i < FName::GNameArray->Count; i++)
+    {
+        if (FName::GNameArray->Data[i] == nullptr) continue;
+
+        if (!FName::GNameArray->Data[i]->bUnicode)
+        {
+            fwriteln(logFile, L"Name[%04d] %S", i, &FName::GNameArray->Data[i]->AnsiName[0]);
+        }
+        else
+        {
+            fwriteln(logFile, L"Name[%04d] %s", i, &FName::GNameArray->Data[i]->UnicodeName[0]);
+        }
+    }
+
+#else
+
     writeln(L"NameDump starting, addr = %p", SFXName::GBioNamePools);
 
     int poolCounter = 0;
@@ -122,11 +150,11 @@ void NameDump()
         poolCounter++;
     }
 
+#endif
+
     writeln(L"NameDump ending");
     fclose(logFile);
 }
-
-#pragma endregion
 
 
 #pragma region Object stuff
@@ -248,9 +276,9 @@ void Initialize()
 
 #if LE_GAME_INDEX == 1 || LE_GAME_INDEX == 2 || LE_GAME_INDEX == 3
     SFXName::GBioNamePools = reinterpret_cast<SFXNameEntry**>(moduleBase + LEx_NAME_POOLS);
-    FName::GNameArray = nullptr;
+    //FName::GNameArray = nullptr;
 #elif LE_GAME_INDEX == 2015
-    SFXName::GBioNamePools = nullptr;
+    //SFXName::GBioNamePools = nullptr;
     FName::GNameArray = reinterpret_cast<TArray<FNameEntry*>*>(moduleBase + LEx_NAME_ARRAY);
 #endif
 }
@@ -258,6 +286,10 @@ void OnAttach()
 {
     Common::OpenConsole();
     Initialize();
+
+    writeln(L"UObject::GObjObjects: Data = %p, Count = %d, Max = %d", UObject::GObjObjects->Data, UObject::GObjObjects->Count, UObject::GObjObjects->Max);
+    writeln(L"FName::GNameArray: Data = %p, Count = %d, Max = %d", FName::GNameArray->Data, FName::GNameArray->Count, FName::GNameArray->Max);
+    std::fflush(stdout);
 
     NameDump();
     ObjectDump();

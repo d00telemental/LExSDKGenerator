@@ -30,8 +30,8 @@
 #elif LE_GAME_INDEX == 2015
 
 #define LEx_MODULE_NAME     L"UDK"
-#define LEx_NAME_ARRAY      0x0000000
-#define LEx_OBJOBJECTS      0x0000000
+#define LEx_NAME_ARRAY      0x3678F50       // RVA of the FName::GNameArray
+#define LEx_OBJOBJECTS      0x3678F98       // RVA of the UObject::GObjObjects
 
 #else
 
