@@ -15,7 +15,7 @@
 
 /*
 # ========================================================================================= #
-# Defines																					
+# Defines
 # ========================================================================================= #
 */
 
@@ -35,7 +35,7 @@
 
 // Function Flags (incomplete)
 #define FUNC_Final				0x00000001
-#define FUNC_Latent				0x00000008				// ???	
+#define FUNC_Latent				0x00000008				// ???
 #define FUNC_Simulated			0x00000100				// ???
 #define FUNC_Exec				0x00000200
 #define FUNC_Native				0x00000400
@@ -98,22 +98,22 @@
 
 template< class T > struct TArray;
 class UObject;
-struct FNameEntry;
-struct FName;
+struct SFXNameEntry;
+struct SFXName;
 
 
 /*
 # ========================================================================================= #
-# Globals																					
+# Globals
 # ========================================================================================= #
 */
 
 TArray<UObject*>* GObjects = NULL;
-FNameEntry** GBioNamePools = NULL;
+SFXNameEntry** GBioNamePools = NULL;
 
 /*
 # ========================================================================================= #
-# Structs																					
+# Structs
 # ========================================================================================= #
 */
 
@@ -143,14 +143,14 @@ public:
     };
 
     const T& operator() ( int i ) const
-    { 
+    {
         return this->Data[ i ];
     };
 };
 struct FString : public TArray<wchar_t> { };
 
 
-/** Packed index DWORD as seen in FNameEntry. */
+/** Packed index DWORD as seen in SFXNameEntry. */
 struct PackedIndex
 {
     DWORD Offset : 20;  // The actual index, I guess???
@@ -160,16 +160,16 @@ struct PackedIndex
 
 #pragma pack(1)
 /** Name as seen in some kind of name pool. */
-struct FNameEntry
+struct SFXNameEntry
 {
     PackedIndex Index;     // 0x00
-    FNameEntry* HashNext;  // 0x04  Some pointer, often NULL.
+    SFXNameEntry* HashNext;  // 0x04  Some pointer, often NULL.
     char AnsiName[1];      // 0x0C  This *potentially* can be a widechar.
 };
 
 #pragma pack(1)
 /** Name reference as seen in individual UObjects. */
-struct FName
+struct SFXName
 {
     DWORD Offset : 29;  // Binary offset into an individual chunk.
     DWORD Chunk : 3;    // Index of the chunk, I've only seen 0 or 1.
@@ -179,29 +179,29 @@ struct FName
     char* GetName() const noexcept
     {
         auto chunk = GBioNamePools[Chunk];
-        auto entry = (FNameEntry*)((BYTE*)chunk + Offset);
+        auto entry = (SFXNameEntry*)((BYTE*)chunk + Offset);
         return entry->AnsiName;
     }
 
-    bool operator==(const FName& A) const noexcept
+    bool operator==(const SFXName& A) const noexcept
     {
         return Offset == A.Offset && Chunk == A.Chunk && Number == A.Number;
     }
 
     /** IDK if this actually works yet. */
-    static bool TryFind(char* lookup, signed long instance, FName* outName)
+    static bool TryFind(char* lookup, signed long instance, SFXName* outName)
     {
-        for (FNameEntry** namePool = reinterpret_cast<FNameEntry**>(GBioNamePools);
+        for (SFXNameEntry** namePool = reinterpret_cast<SFXNameEntry**>(GBioNamePools);
             *namePool != nullptr;
             namePool++)
         {
-            for (FNameEntry* nameEntry = *namePool;
+            for (SFXNameEntry* nameEntry = *namePool;
                 nameEntry->Index.Length != 0;
-                nameEntry = reinterpret_cast<FNameEntry*>(reinterpret_cast<BYTE*>(nameEntry) + sizeof FNameEntry + nameEntry->Index.Length))
+                nameEntry = reinterpret_cast<SFXNameEntry*>(reinterpret_cast<BYTE*>(nameEntry) + sizeof SFXNameEntry + nameEntry->Index.Length))
             {
                 if (!strcmp(lookup, nameEntry->AnsiName))
                 {
-                    FName name{};
+                    SFXName name{};
                     name.Offset = (DWORD)((unsigned long long)nameEntry - (unsigned long long)*namePool);
                     name.Chunk = (DWORD)((unsigned long long)namePool - (unsigned long long)GBioNamePools);
                     name.Number = instance;
@@ -219,7 +219,7 @@ struct FName
 struct FScriptDelegate
 {
     class UObject*		Object;
-    struct FName		FunctionName;
+    struct SFXName		FunctionName;
 };
 
 struct FQWord
@@ -230,7 +230,7 @@ struct FQWord
 
 /*
 # ========================================================================================= #
-# Classes																					
+# Classes
 # ========================================================================================= #
 */
 
@@ -248,7 +248,7 @@ public:
     long long				LinkerIndex;							// 0x0034 (0x08)
     int						NetIndex;                               // 0x003C (0x04)
     class UObject*			Outer;                                  // 0x0040 (0x08)
-    struct FName			Name;                                   // 0x0048 (0x08)
+    struct SFXName			Name;                                   // 0x0048 (0x08)
     class UClass*			Class;                                  // 0x0050 (0x08)
     class UObject*			ObjectArchetype;						// 0x0058 (0x08)
 
@@ -263,7 +263,7 @@ public:
     char* GetFullName();
     char* GetPackageName();
     UObject* GetPackageObj();
-    
+
     template<class T> static T* FindObject(char* ObjectFullName);
     template<class T> static unsigned int CountObject(char* ObjectName);
     static UClass* FindClass (char* ClassFullName);
@@ -303,7 +303,7 @@ public:
         class UEnum : public UField
         {
         public:
-            TArray<FName>			Names;									// 0x0070 (0x10)
+            TArray<SFXName>			Names;									// 0x0070 (0x10)
 
         private:
             static UClass* pClassPointer;
@@ -322,7 +322,7 @@ public:
         class UConst : public UField
         {
         public:
-            struct FString		Value;										// 0x0070 (0x10)													
+            struct FString		Value;										// 0x0070 (0x10)
 
         private:
             static UClass* pClassPointer;
@@ -453,7 +453,7 @@ public:
                 };
 
         // (0x0070 - 0x00D0)
-        class UProperty : public UField 
+        class UProperty : public UField
         {
         public:
             int						ArrayDim;						//0x0070 (0x04)
@@ -461,7 +461,7 @@ public:
             unsigned long long		PropertyFlags;					//0x0078 (0x08)
             unsigned short			RepOffset;						//0x0080 (0x02)
             unsigned short			RepIndex;						//0x0082 (0x02)
-            struct FName			Category;						//0x0084 (0x08)
+            struct SFXName			Category;						//0x0084 (0x08)
             class UEnum*			ArraySizeEnum;					//0x008C (0x08)
             int						Offset;							//0x0094 (0x04)
             UProperty*				PropertyLinkNext;				//0x0098 (0x08)
@@ -486,7 +486,7 @@ public:
         };
 
             // (0x00D0 - 0x00D8)
-            class UByteProperty : public UProperty 
+            class UByteProperty : public UProperty
             {
             public:
                 class UEnum*		Enum;						//0x00D0 (0x08)
@@ -505,7 +505,7 @@ public:
             };
 
             // (0x00D0 - 0x00D0)
-            class UIntProperty : public UProperty 
+            class UIntProperty : public UProperty
             {
             public:
 
@@ -523,7 +523,7 @@ public:
             };
 
             // (0x00D0 - 0x00D0)
-            class UFloatProperty : public UProperty 
+            class UFloatProperty : public UProperty
             {
             public:
 
@@ -541,7 +541,7 @@ public:
             };
 
             // (0x00D0 - 0x00D8)
-            class UBoolProperty : public UProperty 
+            class UBoolProperty : public UProperty
             {
             public:
                 DWORD			BitMask;						// 0x00D0 (0x04)
@@ -561,7 +561,7 @@ public:
             };
 
             // (0x00D0 - 0x00D0)
-            class UStrProperty : public UProperty 
+            class UStrProperty : public UProperty
             {
             public:
 
@@ -579,7 +579,7 @@ public:
             };
 
             // (0x00D0 - 0x00D0)
-            class UStringRefProperty : public UProperty 
+            class UStringRefProperty : public UProperty
             {
             public:
 
@@ -597,7 +597,7 @@ public:
             };
 
             // (0x00D0 - 0x00D0)
-            class UNameProperty : public UProperty 
+            class UNameProperty : public UProperty
             {
             public:
 
@@ -615,7 +615,7 @@ public:
             };
 
             // (0x00D0 - 0x00E0)
-            class UDelegateProperty : public UProperty 
+            class UDelegateProperty : public UProperty
             {
             public:
                 class UFunction*		Function;								//0x00D0 (0x08)
@@ -635,7 +635,7 @@ public:
             };
 
             // (0x00D0 - 0x00D8)
-            class UObjectProperty : public UProperty 
+            class UObjectProperty : public UProperty
             {
             public:
                 class UClass*		PropertyClass;								// 0x00D0 (0x08)
@@ -654,7 +654,7 @@ public:
             };
 
                 // (0x00D8 - 0x00E0)
-                class UClassProperty : public UObjectProperty 
+                class UClassProperty : public UObjectProperty
                 {
                 public:
                     class UClass*			MetaClass;							// 0x00D8 (0x08)
@@ -692,7 +692,7 @@ public:
             };
 
             // (0x00D0 - 0x00D8)
-            class UStructProperty : public UProperty 
+            class UStructProperty : public UProperty
             {
             public:
                 class UStruct*			Struct;									// 0x00D0 (0x08)
@@ -711,7 +711,7 @@ public:
             };
 
             // (0x00D0 - 0x00D8)
-            class UArrayProperty : public UProperty 
+            class UArrayProperty : public UProperty
             {
             public:
                 class UProperty*		Inner;									// 0x00D0 (0x08)
@@ -730,7 +730,7 @@ public:
             };
 
             // (0x00D0 - 0x00E0)
-            class UMapProperty : public UProperty 
+            class UMapProperty : public UProperty
             {
             public:
                 class UProperty*	Key;										// 0x00D0 (0x08)
@@ -751,7 +751,7 @@ public:
 
 /*
 # ========================================================================================= #
-# Init Core Classes Pointers																
+# Init Core Classes Pointers
 # ========================================================================================= #
 */
 

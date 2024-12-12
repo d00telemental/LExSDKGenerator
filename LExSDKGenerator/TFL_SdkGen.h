@@ -61,6 +61,13 @@ using namespace std;
 #include "UE3BasicCore\LE3\PiecesOfCode.h"
 #define LE_SHORTHAND        "LE3"
 
+#elif LE_GAME_INDEX == 2015
+
+#include "UE3BasicCore\UDK\GameDefines.h"
+#include "UE3BasicCore\UDK\ObjectFunctions.h"
+#include "UE3BasicCore\UDK\PiecesOfCode.h"
+#define LE_SHORTHAND        "UDK"
+
 #else
 
 #error LE_GAME_INDEX not set for TFL_SdkGen!

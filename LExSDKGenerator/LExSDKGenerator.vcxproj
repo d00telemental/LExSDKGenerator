@@ -162,6 +162,10 @@
     <ClInclude Include="UE3BasicCore\LE3\ObjectFunctions.h" />
     <ClInclude Include="UE3BasicCore\LE3\PiecesOfCode.h" />
     <ClInclude Include="UE3BasicCore\LE3\SdkInitializer.h" />
+    <ClInclude Include="UE3BasicCore\UDK\GameDefines.h" />
+    <ClInclude Include="UE3BasicCore\UDK\ObjectFunctions.h" />
+    <ClInclude Include="UE3BasicCore\UDK\PiecesOfCode.h" />
+    <ClInclude Include="UE3BasicCore\UDK\SdkInitializer.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

@@ -9,9 +9,9 @@ struct SFXNameEntry;
 class UObject;
 
 
-#define LEx_MODULE_NAME		L"MassEffect3"
-#define LEx_NAME_POOLS		0x17B33D0       // RVA of the name pools
-#define LEx_OBJOBJECTS		0x1887E40       // RVA of the UObject::ObjObjects
+#define LEx_MODULE_NAME     L"UDK"
+#define LEx_NAME_ARRAY      0x3678F50       // RVA of the SFXName::GNameArray
+#define LEx_OBJOBJECTS      0x3678F98       // RVA of the UObject::GObjObjects
 
 
 class SDKInitializer
@@ -55,9 +55,9 @@ private:
 
 public:
 
-    inline SFXNameEntry** GetBioNamePools() const noexcept
+    inline struct TArray<struct FNameEntry*>* GetBioNameArray() const noexcept
     {
-        return &*(SFXNameEntry**)(ModuleBase + LEx_NAME_POOLS);
+        return (struct TArray<struct FNameEntry*>*)(ModuleBase + LEx_NAME_ARRAY);
     }
     inline struct TArray<class UObject*>* GetObjects() const noexcept
     {

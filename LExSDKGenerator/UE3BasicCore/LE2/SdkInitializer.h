@@ -5,7 +5,7 @@
 #pragma once
 
 template<typename T> struct TArray;
-struct FNameEntry;
+struct SFXNameEntry;
 class UObject;
 
 
@@ -55,9 +55,9 @@ private:
 
 public:
 
-    inline FNameEntry** GetBioNamePools() const noexcept
+    inline SFXNameEntry** GetBioNamePools() const noexcept
     {
-        return &*(FNameEntry**)(ModuleBase + LEx_NAME_POOLS);
+        return &*(SFXNameEntry**)(ModuleBase + LEx_NAME_POOLS);
     }
     inline struct TArray<class UObject*>* GetObjects() const noexcept
     {

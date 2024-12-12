@@ -2,25 +2,25 @@
 #############################################################################################
 # TheFeckless UE3 SDK Generator v1.4_Beta-Rev.53-MELE
 # ========================================================================================= #
-# File: TFL_SdkGen.cpp																		
+# File: TFL_SdkGen.cpp
 # ========================================================================================= #
-# Credits: uNrEaL, Tamimego, SystemFiles, R00T88, _silencer, the1domo, K@N@VEL				
-# Thanks: HOOAH07, lowHertz																	
-# Forums: www.uc-forum.com, www.gamedeception.net											
+# Credits: uNrEaL, Tamimego, SystemFiles, R00T88, _silencer, the1domo, K@N@VEL
+# Thanks: HOOAH07, lowHertz
+# Forums: www.uc-forum.com, www.gamedeception.net
 # ========================================================================================= #
-# This work is licensed under the															
-# Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.				
-# To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/3.0/	
-# or send a letter to Creative Commons, 444 Castro Street, Suite 900, Mountain View,		
-# California, 94041, USA.																	
-############################################################################################# 
+# This work is licensed under the
+# Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.
+# To view a copy of this license, visit http://creativecommons.org/licenses/by-nc-sa/3.0/
+# or send a letter to Creative Commons, 444 Castro Street, Suite 900, Mountain View,
+# California, 94041, USA.
+#############################################################################################
 */
 
 #include "TFL_SdkGen.h"
 
 /*
 # ========================================================================================= #
-# Print Code														
+# Print Code
 # ========================================================================================= #
 */
 
@@ -91,7 +91,7 @@ void PrintSectionHeader ( char* cSectionName )
 
 /*
 # ========================================================================================= #
-# Generate Flags												
+# Generate Flags
 # ========================================================================================= #
 */
 
@@ -150,7 +150,7 @@ void GetAllFunctionFlags ( unsigned long FunctionFlags, ostringstream& ssStreamB
 
 /*
 # ========================================================================================= #
-# String Utils														
+# String Utils
 # ========================================================================================= #
 */
 
@@ -161,7 +161,7 @@ string GetValidName ( const string& sName )
     for ( unsigned int i = 0; i < sBuffer.length(); i++ )
     {
         if
-        ( 
+        (
                 sBuffer[ i ] == ' '
             ||	sBuffer[ i ] == '?'
             ||	sBuffer[ i ] == '-'
@@ -171,7 +171,7 @@ string GetValidName ( const string& sName )
             sBuffer[ i ] = '_';
         }
     }
-    
+
     return sBuffer;
 }
 
@@ -181,7 +181,7 @@ string ToS ( const wchar_t* wcOrig )
 
     sprintf_s ( sBuffer0, "%S", wcOrig );
 
-    return string ( sBuffer0 ); 
+    return string ( sBuffer0 );
 }
 
 string ToS ( const char* cOrig )
@@ -190,14 +190,14 @@ string ToS ( const char* cOrig )
 
     sprintf_s ( sBuffer0, "%s", cOrig );
 
-    return string ( sBuffer0 ); 
+    return string ( sBuffer0 );
 }
 
 bool StrStrMm_Exist ( StrStrMm_t& StrStrMm, string sKey, string sValue )
 {
     pair< StrStrMm_t::iterator, StrStrMm_t::iterator > prRange;
 
-    prRange = StrStrMm.equal_range ( sKey ); 
+    prRange = StrStrMm.equal_range ( sKey );
 
     for ( StrStrMm_t::iterator it = prRange.first; it != prRange.second; ++it )
     {
@@ -210,7 +210,7 @@ bool StrStrMm_Exist ( StrStrMm_t& StrStrMm, string sKey, string sValue )
 
 /*
 # ========================================================================================= #
-# Property Utils														
+# Property Utils
 # ========================================================================================= #
 */
 
@@ -251,7 +251,7 @@ bool SortPropertyPair ( pair< UProperty*, string > pPropertyA, pair< UProperty*,
 int GetPropertyType ( UProperty* pProperty, string& sPropertyType, ETypeContext const Context )
 {
     if ( ! pProperty ) // necessary because this function is recursive
-        return 0; 
+        return 0;
 
 
     if ( false ) {}
@@ -262,7 +262,7 @@ int GetPropertyType ( UProperty* pProperty, string& sPropertyType, ETypeContext 
         sPropertyType = "unsigned char";
         return 1;
     }
-    #endif	
+    #endif
 
     #ifdef CCP_UINT
     else if ( pProperty->IsA ( UIntProperty::StaticClass() ) )
@@ -271,7 +271,7 @@ int GetPropertyType ( UProperty* pProperty, string& sPropertyType, ETypeContext 
         return 1;
     }
     #endif
-    
+
     #ifdef CCP_UFLOAT
     else if ( pProperty->IsA ( UFloatProperty::StaticClass() ) )
     {
@@ -279,7 +279,7 @@ int GetPropertyType ( UProperty* pProperty, string& sPropertyType, ETypeContext 
         return 1;
     }
     #endif
-    
+
     #ifdef CCP_UBOOL
     else if ( pProperty->IsA ( UBoolProperty::StaticClass() ) )
     {
@@ -321,14 +321,14 @@ int GetPropertyType ( UProperty* pProperty, string& sPropertyType, ETypeContext 
         return 1;
     }
     #endif
-    
+
     #ifdef CCP_UNAME
     else if ( pProperty->IsA ( UNameProperty::StaticClass() ) )
     {
         sPropertyType = "struct SFXName";
         return 2;
     }
-    #endif	
+    #endif
 
     #ifdef CCP_UDELEGATE
     else if ( pProperty->IsA ( UDelegateProperty::StaticClass() ) )
@@ -345,7 +345,7 @@ int GetPropertyType ( UProperty* pProperty, string& sPropertyType, ETypeContext 
         return 1;
     }
     #endif
-    
+
     #ifdef CCP_UCLASS
     else if ( pProperty->IsA ( UClassProperty::StaticClass() ) )
     {
@@ -353,7 +353,7 @@ int GetPropertyType ( UProperty* pProperty, string& sPropertyType, ETypeContext 
         return 1;
     }
     #endif
-    
+
     #ifdef CCP_UINTERFACE
     else if ( pProperty->IsA ( UInterfaceProperty::StaticClass() ) )
     {
@@ -363,7 +363,7 @@ int GetPropertyType ( UProperty* pProperty, string& sPropertyType, ETypeContext 
     #endif
 
     #ifdef CCP_USTRUCT
-    else if ( pProperty->IsA ( UStructProperty::StaticClass() ) )		
+    else if ( pProperty->IsA ( UStructProperty::StaticClass() ) )
     {
         // do not prefix "FPointer" with "struct" because it is now a typedef ...
         if ( string ( ( (UStructProperty*) pProperty )->Struct->GetNameCPP() ) == "FPointer" ) {
@@ -382,8 +382,8 @@ int GetPropertyType ( UProperty* pProperty, string& sPropertyType, ETypeContext 
 
         if ( Context == ETC_Param && pProperty->ArrayDim <= 1 )
             sPropertyType += " const&";
-        
-        return 3; 
+
+        return 3;
     }
     #endif
 
@@ -419,9 +419,9 @@ int GetPropertyType ( UProperty* pProperty, string& sPropertyType, ETypeContext 
         //fprintf(pLog, "!!! DEBUG MAP PROPERTY: %s => %s\n", KeyName.c_str(), ValueName.c_str());
 
         if
-        ( 
+        (
                 GetPropertyType ( ( (UMapProperty*) pProperty )-> Key, sPropertyTypeKey, Context )
-            &&	GetPropertyType ( ( (UMapProperty*) pProperty )-> Value, sPropertyTypeValue, Context ) 
+            &&	GetPropertyType ( ( (UMapProperty*) pProperty )-> Value, sPropertyTypeValue, Context )
         )
         {
             sPropertyType = "TMap< " + sPropertyTypeKey + ", " + sPropertyTypeValue + " >";
@@ -447,21 +447,21 @@ int GetPropertyType ( UProperty* pProperty, string& sPropertyType, ETypeContext 
 unsigned long GetPropertySize ( UProperty* pProperty )
 {
     if ( false ) {}
-    
+
     #ifdef CCP_UBYTE
     else if	( pProperty->IsA ( UByteProperty::StaticClass() ) )
     {
         return sizeof ( unsigned char );
     }
     #endif
-    
+
     #ifdef CCP_UINT
     else if ( pProperty->IsA ( UIntProperty::StaticClass() ) )
     {
         return sizeof ( int );
     }
     #endif
-    
+
     #ifdef CCP_UFLOAT
     else if ( pProperty->IsA ( UFloatProperty::StaticClass() ) )
     {
@@ -493,7 +493,11 @@ unsigned long GetPropertySize ( UProperty* pProperty )
     #ifdef CCP_UNAME
     else if ( pProperty->IsA ( UNameProperty::StaticClass() ) )
     {
+#if LE_GAME_INDEX != 2015
+        return sizeof ( SFXName );
+#else
         return sizeof ( FName );
+#endif
     }
     #endif
 
@@ -553,7 +557,7 @@ unsigned long GetPropertySize ( UProperty* pProperty )
 
 /*
 # ========================================================================================= #
-# Object Utils														
+# Object Utils
 # ========================================================================================= #
 */
 
@@ -592,7 +596,7 @@ UScriptStruct* FindBiggestScriptStruct ( string ScriptStructFullName )
 
 /*
 # ========================================================================================= #
-# Generate Code															
+# Generate Code
 # ========================================================================================= #
 */
 
@@ -603,11 +607,11 @@ void GenerateConst ( UConst* pConst )
     ostringstream ssStreamBuffer0; // main stream buffer
     ostringstream ssStreamBuffer1; // support stream buffer
     ostringstream ssStreamBuffer2; // support stream buffer
-    
+
     // maps
     static StrStrMm_t mmNameValues;
-    
-    // get const name 
+
+    // get const name
     string sConstName = GetValidName ( string ( pConst->GetName() ) );
 
     // remove default const
@@ -628,7 +632,7 @@ void GenerateConst ( UConst* pConst )
 
         // stream to main buffer
         ssStreamBuffer0 << "#define CONST_" << SDKMC_SSCOL ( sConstName, SDK_COL1 ) << " " << sConstValue << "\n";
-        
+
         // print main stream buffer to file
         SDKFN_PRINT ( pFile, ssStreamBuffer0 );
     }
@@ -642,23 +646,23 @@ void GenerateConst ( UConst* pConst )
 
         // print const
         ssStreamBuffer0 << "#define CONST_" << SDKMC_SSCOL ( ssStreamBuffer1.str(), SDK_COL1 ) << " " << sConstValue << "\n";
-        
+
         // print main stream buffer to file
         SDKFN_PRINT ( pFile, ssStreamBuffer0 );
 
         // empty support stream buffer
-        SDKFN_EMPTY ( ssStreamBuffer1 );	
+        SDKFN_EMPTY ( ssStreamBuffer1 );
     }
 }
 
 // enums
 void GenerateEnum ( UEnum* pEnum )
-{	
+{
     // stream buffers
     ostringstream ssStreamBuffer0; // main stream buffer
     ostringstream ssStreamBuffer1; // support stream buffer
     ostringstream ssStreamBuffer2; // support stream buffer
-    
+
     // get enum names
     string sEnumName = GetValidName ( string ( pEnum->GetName() ) );
     string sEnumOuterNameCPP = GetValidName ( string ( pEnum->Outer->GetNameCPP() ) );
@@ -678,9 +682,9 @@ void GenerateEnum ( UEnum* pEnum )
 
     // loop enum members
     for ( int i = 0; i < pEnum->Names.Num(); i++ )
-    {		
-        string sPropertyName = GetValidName ( ToS ( pEnum->Names.Data[ i ].GetName() ) ); 
-        
+    {
+        string sPropertyName = GetValidName ( ToS ( pEnum->Names.Data[ i ].GetName() ) );
+
         // check unique var name
         if ( mPropertyName.count ( sPropertyName ) == 0 ) // not exist
         {
@@ -696,7 +700,7 @@ void GenerateEnum ( UEnum* pEnum )
             // stream to support buffer (name + index)
             //ssStreamBuffer1 << sEnumOuterNameCPP << "_" << sEnumName << "_" << sPropertyName << SDKMC_SSDEC ( mPropertyName[ sPropertyName ], 2 );
             ssStreamBuffer1 << sPropertyName << SDKMC_SSDEC ( mPropertyName[ sPropertyName ], 2 );
-                    
+
             // incremente name usage count
             mPropertyName[ sPropertyName ]++;
         }
@@ -716,7 +720,7 @@ void GenerateEnum ( UEnum* pEnum )
     }
 
     // stream to main buffer (close enum)
-    ssStreamBuffer0 << "};*/\n\n"; 
+    ssStreamBuffer0 << "};*/\n\n";
 
     // print main stream buffer to file
     SDKFN_PRINT ( pFile, ssStreamBuffer0 );
@@ -749,14 +753,14 @@ void GenerateScriptStruct ( UScriptStruct* pScriptStruct )
         SDKFN_PRINT(pFile, ssStreamBuffer0);
         return;
     }
-    
+
     // vars
     signed long dwSize = 0;
     signed long dwLastOffset = 0;
     signed long dwMissedOffset = 0;
 
     // get superfield
-    UScriptStruct* pSuperField = ( UScriptStruct* ) pScriptStruct->SuperField;
+    UScriptStruct* pSuperField = ( UScriptStruct* ) pScriptStruct->GetSuper();
 
     // count name
     strcpy_s ( cBuffer, sSStructName.c_str() );
@@ -800,7 +804,7 @@ void GenerateScriptStruct ( UScriptStruct* pScriptStruct )
 
         // stream to main buffer
         ssStreamBuffer0 << "// " << SDKMC_SSHEX ( dwSize, 4 ) << "\n";
-        
+
         if ( nCounterF > 1)
             ssStreamBuffer0	<< "struct " << sSStructOuterNameCPP << "_" << sSStructNameCPP << "\n";
         else
@@ -840,13 +844,13 @@ void GenerateScriptStruct ( UScriptStruct* pScriptStruct )
             dwMissedOffset = pProperty->Offset - dwLastOffset;
 
             // fix only if missed offset >= CLASS_ALIGN
-            if ( dwMissedOffset >= CLASS_ALIGN ) 
+            if ( dwMissedOffset >= CLASS_ALIGN )
             {
                 // stream to support buffer
                 ssStreamBuffer1 << "UnknownData" << SDKMC_SSDEC ( UnknownDataIndex, 2 ) << "[ " << SDKMC_SSHEX ( dwMissedOffset, 0 ) << " ];";
 
                 // stream to main buffer
-                ssStreamBuffer0 << "\t" << SDKMC_SSCOL ( "unsigned char", SDK_COL1 ) << " " << SDKMC_SSCOL ( ssStreamBuffer1.str(), SDK_COL2 ) 
+                ssStreamBuffer0 << "\t" << SDKMC_SSCOL ( "unsigned char", SDK_COL1 ) << " " << SDKMC_SSCOL ( ssStreamBuffer1.str(), SDK_COL2 )
                                 << "\t\t// " << SDKMC_SSHEX ( dwLastOffset, 4 ) << " (" << SDKMC_SSHEX ( dwMissedOffset, 4 ) << ") MISSED OFFSET\n";
 
                 // empty support buffer
@@ -881,7 +885,7 @@ void GenerateScriptStruct ( UScriptStruct* pScriptStruct )
             {
                 // stream to support buffer (name + index)
                 ssStreamBuffer1 << sPropertyName << SDKMC_SSDEC ( mPropertyName[ sPropertyName ], 2 );
-                    
+
                 // incremente name usage count
                 mPropertyName[ sPropertyName ]++;
             }
@@ -894,7 +898,7 @@ void GenerateScriptStruct ( UScriptStruct* pScriptStruct )
             }
 
             // special case bool
-            if ( pProperty->IsA ( UBoolProperty::StaticClass() ) ) 
+            if ( pProperty->IsA ( UBoolProperty::StaticClass() ) )
             {
                 // stream to support buffer
                 ssStreamBuffer1 << " : 1";
@@ -902,16 +906,16 @@ void GenerateScriptStruct ( UScriptStruct* pScriptStruct )
 
             // stream to support buffer
             ssStreamBuffer1 << ";";
-            
+
             // stream property flags to support stream
             GetAllPropertyFlags ( pProperty->PropertyFlags, ssStreamBuffer2 );
 
             // stream to main buffer
-            ssStreamBuffer0 << "\t" << SDKMC_SSCOL ( sPropertyType, SDK_COL1 ) << " " << SDKMC_SSCOL ( ssStreamBuffer1.str(), SDK_COL2 ) 
+            ssStreamBuffer0 << "\t" << SDKMC_SSCOL ( sPropertyType, SDK_COL1 ) << " " << SDKMC_SSCOL ( ssStreamBuffer1.str(), SDK_COL2 )
                             << "\t\t// " << SDKMC_SSHEX ( pProperty->Offset, 4 ) << " (" << SDKMC_SSHEX ( ( pProperty->ElementSize * pProperty->ArrayDim ), 4 ) << ") [" << SDKMC_SSHEX ( pProperty->PropertyFlags, 16 ) << "]";
 
             // stream to main buffer (bitmask)
-            if ( pProperty->IsA ( UBoolProperty::StaticClass() ) ) 
+            if ( pProperty->IsA ( UBoolProperty::StaticClass() ) )
             {
                 // stream to support buffer
                 ssStreamBuffer0 << " [" << SDKMC_SSHEX ( ( (UBoolProperty*) pProperty )->BitMask, 8 ) << "] ";
@@ -925,7 +929,7 @@ void GenerateScriptStruct ( UScriptStruct* pScriptStruct )
 
             // empty support buffers
             SDKFN_EMPTY ( ssStreamBuffer1 );
-            SDKFN_EMPTY ( ssStreamBuffer2 );	
+            SDKFN_EMPTY ( ssStreamBuffer2 );
 
             // check if property size and type size are equal otherwise add pad data
             int nOffserError = ( pProperty->ElementSize * pProperty->ArrayDim ) - ( dwCorrectElementSize * pProperty->ArrayDim );
@@ -937,12 +941,12 @@ void GenerateScriptStruct ( UScriptStruct* pScriptStruct )
                 ssStreamBuffer1 << "UnknownData" << SDKMC_SSDEC ( UnknownDataIndex, 2 ) << "[ " << SDKMC_SSHEX ( nOffserError, 0 ) << " ];";
 
                 // stream to main buffer
-                ssStreamBuffer0 << "\t" << SDKMC_SSCOL ( "unsigned char", SDK_COL1 ) << " " << SDKMC_SSCOL ( ssStreamBuffer1.str(), SDK_COL2 ) 
+                ssStreamBuffer0 << "\t" << SDKMC_SSCOL ( "unsigned char", SDK_COL1 ) << " " << SDKMC_SSCOL ( ssStreamBuffer1.str(), SDK_COL2 )
                                 << "\t\t// " << SDKMC_SSHEX ( ( pProperty->Offset + nOffserError ), 4 ) << " (" << SDKMC_SSHEX ( nOffserError, 4 ) << ") FIX WRONG TYPE SIZE OF PREVIUS PROPERTY\n";
 
                 // empty support buffers
                 SDKFN_EMPTY ( ssStreamBuffer1 );
-                
+
                 UnknownDataIndex++;
             }
         }
@@ -952,7 +956,7 @@ void GenerateScriptStruct ( UScriptStruct* pScriptStruct )
             ssStreamBuffer1 << "UnknownData" << SDKMC_SSDEC ( UnknownDataIndex, 2 ) << "[ " << SDKMC_SSHEX ( ( pProperty->ElementSize * pProperty->ArrayDim ), 0 ) << " ];";
 
             // stream to main buffer
-            ssStreamBuffer0 << "\t" << SDKMC_SSCOL ( "unsigned char", SDK_COL1 ) << " " << SDKMC_SSCOL( ssStreamBuffer1.str(), SDK_COL2 ) 
+            ssStreamBuffer0 << "\t" << SDKMC_SSCOL ( "unsigned char", SDK_COL1 ) << " " << SDKMC_SSCOL( ssStreamBuffer1.str(), SDK_COL2 )
                             << "\t\t// " << SDKMC_SSHEX ( pProperty->Offset, 4 ) << " (" << SDKMC_SSHEX ( ( pProperty->ElementSize * pProperty->ArrayDim ), 4 ) << ") UNKNOWN PROPERTY: " << string ( pProperty->GetFullName() ) << "\n";
 
             // empty support buffer
@@ -971,13 +975,13 @@ void GenerateScriptStruct ( UScriptStruct* pScriptStruct )
         dwMissedOffset = pScriptStruct->PropertySize - dwLastOffset;
 
         // fix only if missed offset >= CLASS_ALIGN
-        if ( dwMissedOffset >= CLASS_ALIGN ) 
+        if ( dwMissedOffset >= CLASS_ALIGN )
         {
             // stream to support buffer
             ssStreamBuffer1 << "UnknownData" << SDKMC_SSDEC ( UnknownDataIndex, 2 ) << "[ " << SDKMC_SSHEX ( dwMissedOffset, 0 ) << " ];";
 
             // stream to main buffer
-            ssStreamBuffer0 << "\t" << SDKMC_SSCOL ( "unsigned char", SDK_COL1 ) << " " << SDKMC_SSCOL( ssStreamBuffer1.str(), SDK_COL2 ) 
+            ssStreamBuffer0 << "\t" << SDKMC_SSCOL ( "unsigned char", SDK_COL1 ) << " " << SDKMC_SSCOL( ssStreamBuffer1.str(), SDK_COL2 )
                             << "\t\t// " << SDKMC_SSHEX ( dwLastOffset, 4 ) << " (" << SDKMC_SSHEX ( dwMissedOffset, 4 ) << ") MISSED OFFSET\n";
 
             // empty support buffer
@@ -1023,47 +1027,47 @@ void GenerateScriptStructPre ( UScriptStruct* pScriptStruct, UObject* pPackageTo
 
     // check if already generated
     if ( find ( vGenScriptStructs.begin(), vGenScriptStructs.end(), sScriptStructFullName ) == vGenScriptStructs.end() ) // not generated
-    {	
+    {
         // check if scriptstruct is duplicated, if it is get the biggest
         pScriptStruct = FindBiggestScriptStruct ( sScriptStructFullName );
 
         // check superfield prerequisites
-        if 
-        ( 
-                pScriptStruct->SuperField 
-            &&	pScriptStruct->SuperField != pScriptStruct
-            &&  find ( vGenScriptStructs.begin(), vGenScriptStructs.end(), string ( ( (UScriptStruct*) ( pScriptStruct->SuperField ) )->GetFullName() ) ) == vGenScriptStructs.end() // not generated
+        if
+        (
+                pScriptStruct->GetSuper()
+            &&	pScriptStruct->GetSuper() != pScriptStruct
+            &&  find ( vGenScriptStructs.begin(), vGenScriptStructs.end(), string ( ( (UScriptStruct*) ( pScriptStruct->GetSuper() ) )->GetFullName() ) ) == vGenScriptStructs.end() // not generated
         )
         {
             // generate superfield struct
-            GenerateScriptStructPre ( (UScriptStruct*) ( pScriptStruct->SuperField ), pPackageToProcess );
+            GenerateScriptStructPre ( (UScriptStruct*) ( pScriptStruct->GetSuper() ), pPackageToProcess );
         }
 
         // check properties prerequisites
         for ( UProperty* pStructProperty = (UProperty*) pScriptStruct->Children; pStructProperty; pStructProperty = (UProperty*) pStructProperty->Next )
         {
             int iTypeResult = GetPropertyType ( pStructProperty, sPropertyType, ETC_ScriptStruct );
-            
+
             // check structs
             if
-            ( 
+            (
                     iTypeResult == 3 // struct
                 &&	(UScriptStruct*) ( ( (UStructProperty*) pStructProperty )->Struct ) != pScriptStruct // the prerequisite is not itself
                 &&	find ( vGenScriptStructs.begin(), vGenScriptStructs.end(), string ( ( (UScriptStruct*) ( ( (UStructProperty*) pStructProperty )->Struct ) )->GetFullName() ) ) == vGenScriptStructs.end()	// not generated
-            ) 
+            )
             {
                 // generate property struct
-                GenerateScriptStructPre ( (UScriptStruct*) ( ( (UStructProperty*) pStructProperty )->Struct ), pPackageToProcess );	
+                GenerateScriptStructPre ( (UScriptStruct*) ( ( (UStructProperty*) pStructProperty )->Struct ), pPackageToProcess );
             }
 
             // check array of struct
             if
-            ( 
+            (
                     iTypeResult == 4 // tarray
                 &&	GetPropertyType ( ( (UArrayProperty*) pStructProperty )->Inner, sPropertyType, ETC_ScriptStruct ) == 3 // struct
                 &&  (UScriptStruct*) ( ( (UStructProperty*) ( (UArrayProperty*) pStructProperty )->Inner )->Struct ) != pScriptStruct // the prerequisite is not itself
                 &&	find ( vGenScriptStructs.begin(), vGenScriptStructs.end(), string ( ( (UScriptStruct*) ( ( (UStructProperty*) ( (UArrayProperty*) pStructProperty )->Inner )->Struct ) )->GetFullName() ) ) == vGenScriptStructs.end() // not generated
-            ) 
+            )
             {
                 // generate property struct
                 GenerateScriptStructPre ( (UScriptStruct*) ( ( (UStructProperty*) ( (UArrayProperty*) pStructProperty )->Inner )->Struct ), pPackageToProcess );
@@ -1085,10 +1089,10 @@ void GenerateFuncStruct ( UClass* pClass )
     ostringstream ssStreamBuffer0; // main stream buffer
     ostringstream ssStreamBuffer1; // support stream buffer
     ostringstream ssStreamBuffer2; // support stream buffer
-    
+
     // function array
     vector< UFunction* > vFunction;
-    
+
     // get functions
     for ( UProperty* pProperty = (UProperty*) pClass->Children; pProperty; pProperty = (UProperty*) pProperty->Next )
     {
@@ -1104,7 +1108,7 @@ void GenerateFuncStruct ( UClass* pClass )
         UFunction* pFunction = vFunction[ i ];
 
         // get function names
-        string sFunctionFullName = string ( pFunction->GetFullName() ); 
+        string sFunctionFullName = string ( pFunction->GetFullName() );
         string sFunctionName = GetValidName ( string ( pFunction->GetName() ) );
         string sClassNameCPP = GetValidName ( string ( pClass->GetNameCPP() ) );
 
@@ -1114,17 +1118,17 @@ void GenerateFuncStruct ( UClass* pClass )
         // stream to main buffer (function infos + function flags)
         ssStreamBuffer0 << "// " << sFunctionFullName << "\n"
                         << "// [" << SDKMC_SSHEX ( pFunction->FunctionFlags, 8 ) << "] "
-                        << ssStreamBuffer1.str(); 
+                        << ssStreamBuffer1.str();
 
         // empty support buffers
         SDKFN_EMPTY ( ssStreamBuffer1 );
-        
+
         // stream to main buffer (iNative index)
         if ( ( pFunction->FunctionFlags & FUNC_Native ) && pFunction->iNative )
-        { 
+        {
             ssStreamBuffer0 << " iNative [" << SDKMC_SSHEX ( pFunction->iNative, 4 ) << "]";
-        } 
-        
+        }
+
         // stream to support buffer (struct name)
         if		( pFunction->FunctionFlags & FUNC_Exec )		{ ssStreamBuffer1 << "exec"; }
         else if	( pFunction->FunctionFlags & FUNC_Event )	{ ssStreamBuffer1 << "event"; }
@@ -1138,7 +1142,7 @@ void GenerateFuncStruct ( UClass* pClass )
         ssStreamBuffer0 << "\n"
                         << "struct " << ssStreamBufferName.str() << "\n"
                         << "{\n";
-        
+
         // empty support buffers
         SDKFN_EMPTY ( ssStreamBuffer1 );
 
@@ -1178,7 +1182,7 @@ void GenerateFuncStruct ( UClass* pClass )
 
                 // get property name
                 string sPropertyName = GetValidName ( string ( pProperty->GetName() ) );
-                     
+
                 // check unique var name
                 if ( mPropertyName.count ( sPropertyName ) == 0 ) // not exist
                 {
@@ -1192,7 +1196,7 @@ void GenerateFuncStruct ( UClass* pClass )
                 {
                     // stream to support buffer (name + index)
                     ssStreamBuffer1 << sPropertyName << SDKMC_SSDEC ( mPropertyName[ sPropertyName ], 2 );
-                    
+
                     // incremente name usage count
                     mPropertyName[ sPropertyName ]++;
                 }
@@ -1205,7 +1209,7 @@ void GenerateFuncStruct ( UClass* pClass )
                 }
 
                 //// special case bool
-                //if ( pProperty->IsA ( UBoolProperty::StaticClass() ) ) 
+                //if ( pProperty->IsA ( UBoolProperty::StaticClass() ) )
                 //{
                 //	// stream to support buffer
                 //	ssStreamBuffer1 << " : 1";
@@ -1223,17 +1227,17 @@ void GenerateFuncStruct ( UClass* pClass )
                 // stream to main buffer ( comment not params )
                 if ( pProperty->PropertyFlags & CPF_Parm ) // only function parms
                 {
-                    ssStreamBuffer0 << "\t" << SDKMC_SSCOL ( sPropertyType, SDK_COL1 ) << " " << SDKMC_SSCOL ( ssStreamBuffer1.str(), SDK_COL2 ) 
+                    ssStreamBuffer0 << "\t" << SDKMC_SSCOL ( sPropertyType, SDK_COL1 ) << " " << SDKMC_SSCOL ( ssStreamBuffer1.str(), SDK_COL2 )
                                     << "\t\t// " << SDKMC_SSHEX ( pProperty->Offset, 4 ) << " (" << SDKMC_SSHEX ( ( pProperty->ElementSize * pProperty->ArrayDim ), 4 ) << ") [" << SDKMC_SSHEX ( pProperty->PropertyFlags, 16 ) << "]";
                 }
                 else
                 {
-                    ssStreamBuffer0 << "\t// " << SDKMC_SSCOL ( sPropertyType, ( SDK_COL1 - 3 ) ) << " " << SDKMC_SSCOL ( ssStreamBuffer1.str(), SDK_COL2 ) 
+                    ssStreamBuffer0 << "\t// " << SDKMC_SSCOL ( sPropertyType, ( SDK_COL1 - 3 ) ) << " " << SDKMC_SSCOL ( ssStreamBuffer1.str(), SDK_COL2 )
                                     << "\t\t// " << SDKMC_SSHEX ( pProperty->Offset, 4 ) << " (" << SDKMC_SSHEX ( ( pProperty->ElementSize * pProperty->ArrayDim ), 4 ) << ") [" << SDKMC_SSHEX ( pProperty->PropertyFlags, 16 ) << "]";
                 }
-                                    
+
                 //// stream to main buffer (bitmask)
-                //if ( pProperty->IsA ( UBoolProperty::StaticClass() ) ) 
+                //if ( pProperty->IsA ( UBoolProperty::StaticClass() ) )
                 //{
                 //	// stream to support buffer
                 //	ssStreamBuffer0 << " [" << SDKMC_SSHEX ( ( (UBoolProperty*) pProperty )->BitMask, 8 ) << "] ";
@@ -1247,15 +1251,15 @@ void GenerateFuncStruct ( UClass* pClass )
 
                 // empty support buffers
                 SDKFN_EMPTY ( ssStreamBuffer1 );
-                SDKFN_EMPTY ( ssStreamBuffer2 );	
-            } 
+                SDKFN_EMPTY ( ssStreamBuffer2 );
+            }
             else
-            { 
+            {
                 // get property full name
                 string sPropertyFullName = string ( pProperty->GetFullName() );
 
                 // stream to main buffer
-                ssStreamBuffer0 << "\t// UNKNOWN PROPERTY: " << sPropertyFullName << "\n";			
+                ssStreamBuffer0 << "\t// UNKNOWN PROPERTY: " << sPropertyFullName << "\n";
             }
         }
 
@@ -1280,7 +1284,7 @@ void GenerateFuncDef ( UClass* pClass )
 
     // function array
     vector< UFunction* > vFunction;
-    
+
     // get functions
     for ( UProperty* pProperty = (UProperty*) pClass->Children; pProperty; pProperty = (UProperty*) pProperty->Next )
     {
@@ -1330,7 +1334,7 @@ void GenerateFuncDef ( UClass* pClass )
         UFunction* pFunction = vFunction[ i ];
 
         // get function names
-        string sFunctionFullName = string ( pFunction->GetFullName() ); 
+        string sFunctionFullName = string ( pFunction->GetFullName() );
         string sFunctionName = GetValidName ( string ( pFunction->GetName() ) );
         string sClassNameCPP = GetValidName ( string ( pClass->GetNameCPP() ) );
 
@@ -1340,17 +1344,17 @@ void GenerateFuncDef ( UClass* pClass )
         // stream to main buffer (function infos + function flags)
         ssStreamBuffer0 << "// " << sFunctionFullName << "\n"
                         << "// [" << SDKMC_SSHEX ( pFunction->FunctionFlags, 8 ) << "] "
-                        << ssStreamBuffer1.str(); 
+                        << ssStreamBuffer1.str();
 
         // empty support buffers
         SDKFN_EMPTY ( ssStreamBuffer1 );
-        
+
         // stream to main buffer (iNative index)
         if ( ( pFunction->FunctionFlags & FUNC_Native ) && pFunction->iNative )
-        { 
+        {
             ssStreamBuffer0 << " iNative [" << SDKMC_SSHEX ( pFunction->iNative, 4 ) << "]";
         }
-        
+
         // funtion property "Parms" array
         vector< pair< UProperty*, string > > vProperty_Parms;
 
@@ -1368,7 +1372,7 @@ void GenerateFuncDef ( UClass* pClass )
         {
             if ( pProperty->ElementSize == 0 )
                 continue;
-            
+
             // get property name
             string sPropertyNameBuffer = GetValidName ( string ( pProperty->GetName() ) );
             string sPropertyNameUnique;
@@ -1386,7 +1390,7 @@ void GenerateFuncDef ( UClass* pClass )
             {
                 // stream to support buffer (name + index)
                 ssStreamBuffer1 << sPropertyNameBuffer << SDKMC_SSDEC ( mPropertyName[ sPropertyNameBuffer ], 2 );
-                
+
                 // assign unique property name
                 sPropertyNameUnique = ssStreamBuffer1.str();
 
@@ -1396,9 +1400,9 @@ void GenerateFuncDef ( UClass* pClass )
                 // incremente name usage count
                 mPropertyName[ sPropertyNameBuffer ]++;
             }
-            
+
             if		( pProperty->PropertyFlags & CPF_ReturnParm )	{ pProperty_ReturnParm = make_pair ( pProperty, sPropertyNameUnique ); }			// property is the return param
-            else if ( pProperty->PropertyFlags & CPF_OutParm )		{ vProperty_OutParms.push_back ( make_pair ( pProperty, sPropertyNameUnique ) ); }	// property is a out param			
+            else if ( pProperty->PropertyFlags & CPF_OutParm )		{ vProperty_OutParms.push_back ( make_pair ( pProperty, sPropertyNameUnique ) ); }	// property is a out param
             else if ( pProperty->PropertyFlags & CPF_Parm )		{ vProperty_Parms.push_back ( make_pair ( pProperty, sPropertyNameUnique ) ); }		// property is a in param
         }
 
@@ -1408,13 +1412,13 @@ void GenerateFuncDef ( UClass* pClass )
 
         // stream to main buffer
         ssStreamBuffer0 << "\n// Parameters infos:\n";
-        
+
         // property type
         string sPropertyType;
 
         // stream to main buffer properties infos ( CPF_ReturnParm )
-        if ( pProperty_ReturnParm.first && GetPropertyType ( pProperty_ReturnParm.first, sPropertyType, ETC_Return ) ) 
-        { 
+        if ( pProperty_ReturnParm.first && GetPropertyType ( pProperty_ReturnParm.first, sPropertyType, ETC_Return ) )
+        {
             // stram to support buffer (property flags)
             GetAllPropertyFlags ( pProperty_ReturnParm.first->PropertyFlags, ssStreamBuffer1 );
 
@@ -1462,8 +1466,8 @@ void GenerateFuncDef ( UClass* pClass )
         }
 
         // stream to main buffer return type
-        if ( pProperty_ReturnParm.first && GetPropertyType ( pProperty_ReturnParm.first, sPropertyType, ETC_Return ) ) 
-        { 
+        if ( pProperty_ReturnParm.first && GetPropertyType ( pProperty_ReturnParm.first, sPropertyType, ETC_Return ) )
+        {
             ssStreamBuffer0 << "\n" << sPropertyType;
         }
         else
@@ -1475,7 +1479,7 @@ void GenerateFuncDef ( UClass* pClass )
         if		( pFunction->FunctionFlags & FUNC_Exec )		{ ssStreamBuffer0 << " " << sClassNameCPP << "::" << sFunctionName << " ("; }
         else if ( pFunction -> FunctionFlags & FUNC_Event ) { ssStreamBuffer0 << " " << sClassNameCPP << "::event" << sFunctionName << " ("; }
         else												{ ssStreamBuffer0 << " " << sClassNameCPP << "::" << sFunctionName << " ("; }
-        
+
         // init comma flag
         bool bPrintComma = false;
 
@@ -1540,7 +1544,7 @@ void GenerateFuncDef ( UClass* pClass )
                             << "\tif ( ! pFn" << sFunctionName << " )\n"																											// init function static pointer
                             << "\t\tpFn" << sFunctionName << " = UObject::FindObject< UFunction > ( L\"" << sFunctionFullName << "\" );\n\n"
                             << "\t" << sClassNameCPP << "_";																														// params struct
-        }																													
+        }
 
         // params struct
         if		( pFunction->FunctionFlags & FUNC_Exec )		{ ssStreamBuffer0 << "exec"; }
@@ -1552,7 +1556,7 @@ void GenerateFuncDef ( UClass* pClass )
 
         // stream to main buffer (populate parms struct) ( CPF_Parm )
         for ( unsigned int i = 0; i < vProperty_Parms.size(); i++ )
-        {		
+        {
             pair< UProperty*, string > pProperty ( vProperty_Parms[ i ] );
 
             int iTypeResult = GetPropertyType ( pProperty.first, sPropertyType, ETC_FuncStruct );
@@ -1598,7 +1602,7 @@ void GenerateFuncDef ( UClass* pClass )
         // stream to main buffer (function native tricks)
         if ( pFunction->FunctionFlags & FUNC_Native )
         {
-            ssStreamBuffer0 << "\n\tpFn" << sFunctionName << "->FunctionFlags |= ~" << SDKMC_SSHEX ( FUNC_Native, 0 ) << ";\n";  
+            ssStreamBuffer0 << "\n\tpFn" << sFunctionName << "->FunctionFlags |= ~" << SDKMC_SSHEX ( FUNC_Native, 0 ) << ";\n";
         }
 
         // stream to main buffer (call process event)
@@ -1622,7 +1626,7 @@ void GenerateFuncDef ( UClass* pClass )
             pair< UProperty*, string > pProperty ( vProperty_OutParms[ i ] );
 
             // stream to main buffer (if outparm)
-            ssStreamBuffer0 << "\n\tif ( " << pProperty.second << " )\n"; 
+            ssStreamBuffer0 << "\n\tif ( " << pProperty.second << " )\n";
 
             int iTypeResult = GetPropertyType ( pProperty.first, sPropertyType, ETC_FuncStruct );
 
@@ -1659,7 +1663,7 @@ void GenerateFuncDec ( UClass* pClass )
 
     // function array
     vector< UFunction* > vFunction;
-    
+
     // get functions
     for ( UProperty* pProperty = (UProperty*) pClass->Children; pProperty; pProperty = (UProperty*) pProperty->Next )
     {
@@ -1675,7 +1679,7 @@ void GenerateFuncDec ( UClass* pClass )
         UFunction* pFunction = vFunction[ i ];
 
         //get function names
-        string sFunctionName = GetValidName ( string ( pFunction->GetName() ) );	
+        string sFunctionName = GetValidName ( string ( pFunction->GetName() ) );
 
         // funtion property "Parms" array
         vector< pair< UProperty*, string > > vProperty_Parms;
@@ -1694,7 +1698,7 @@ void GenerateFuncDec ( UClass* pClass )
         {
             if ( pProperty->ElementSize == 0 )
                 continue;
-            
+
             // get property name
             string sPropertyNameBuffer = GetValidName ( string ( pProperty->GetName() ) );
             string sPropertyNameUnique;
@@ -1712,7 +1716,7 @@ void GenerateFuncDec ( UClass* pClass )
             {
                 // stream to support buffer (name + index)
                 ssStreamBuffer1 << sPropertyNameBuffer << SDKMC_SSDEC ( mPropertyName[ sPropertyNameBuffer ], 2 );
-                
+
                 // assign unique property name
                 sPropertyNameUnique = ssStreamBuffer1.str();
 
@@ -1722,9 +1726,9 @@ void GenerateFuncDec ( UClass* pClass )
                 // incremente name usage count
                 mPropertyName[ sPropertyNameBuffer ]++;
             }
-            
+
             if		( pProperty->PropertyFlags & CPF_ReturnParm )	{ pProperty_ReturnParm = make_pair ( pProperty, sPropertyNameUnique ); }			// property is the return param
-            else if ( pProperty->PropertyFlags & CPF_OutParm )		{ vProperty_OutParms.push_back ( make_pair ( pProperty, sPropertyNameUnique ) ); }	// property is a out param			
+            else if ( pProperty->PropertyFlags & CPF_OutParm )		{ vProperty_OutParms.push_back ( make_pair ( pProperty, sPropertyNameUnique ) ); }	// property is a out param
             else if ( pProperty->PropertyFlags & CPF_Parm )		{ vProperty_Parms.push_back ( make_pair ( pProperty, sPropertyNameUnique ) ); }		// property is a in param
         }
 
@@ -1736,8 +1740,8 @@ void GenerateFuncDec ( UClass* pClass )
         string sPropertyType;
 
         // stream to main buffer return type
-        if ( pProperty_ReturnParm.first && GetPropertyType ( pProperty_ReturnParm.first, sPropertyType, ETC_Return ) ) 
-        { 
+        if ( pProperty_ReturnParm.first && GetPropertyType ( pProperty_ReturnParm.first, sPropertyType, ETC_Return ) )
+        {
             ssStreamBuffer0 << "\t" << sPropertyType;
         }
         else
@@ -1749,7 +1753,7 @@ void GenerateFuncDec ( UClass* pClass )
         if		( pFunction->FunctionFlags & FUNC_Exec )		{ ssStreamBuffer0 << " " << sFunctionName << " ("; }
         else if ( pFunction->FunctionFlags & FUNC_Event ) { ssStreamBuffer0 << " event" << sFunctionName << " ("; }
         else												{ ssStreamBuffer0 << " " << sFunctionName << " ("; }
-            
+
         // init comma flag
         bool bPrintComma = false;
 
@@ -1825,7 +1829,7 @@ void GenerateVirtualFunc ( UClass* pClass )
         {
             // stream to main buffer (virtual function ProcessEvent)
             ssStreamBuffer0 << "\tvirtual void ProcessEvent ( class UFunction* pFunction, void* pParms, void* pResult = NULL );\t\t\t\t// " << SDKMC_SSHEX((*(unsigned long long*)(VfTable + i)), 8) << " (" << SDKMC_SSHEX(i, 2) << ")\n";
-        
+
             break;
         }
         else
@@ -1854,8 +1858,8 @@ void GenerateClass ( UClass* pClass )
     static bool bUObjectVfTableCommented = false;
 
     // get suoerfield
-    UClass* pSuperClass = ( UClass* ) pClass->SuperField;
-    
+    UClass* pSuperClass = ( UClass* ) pClass->GetSuper();
+
     // get class names
     string sClassName = GetValidName ( string ( pClass->GetName() ) );
     string sClassNameCPP = GetValidName ( string ( pClass->GetNameCPP() ) );
@@ -1866,30 +1870,30 @@ void GenerateClass ( UClass* pClass )
 
     // property array
     vector< UProperty* > vProperty;
-    
+
     // get class properties
     for ( UProperty* pProperty = (UProperty*) pClass->Children; pProperty; pProperty = (UProperty*) pProperty->Next )
     {
         if
-        ( 
-                ! pProperty->IsA ( UFunction::StaticClass() ) 
+        (
+                ! pProperty->IsA ( UFunction::StaticClass() )
             &&	! pProperty->IsA ( UConst::StaticClass() )
             &&	! pProperty->IsA ( UEnum::StaticClass() )
             &&	! pProperty->IsA ( UScriptStruct::StaticClass() )
             &&	pProperty->ElementSize > 0
             && // additional checks for ME3
-            (		
+            (
                     ! pSuperClass
                 ||
                 (
                     pSuperClass
                 &&	pSuperClass != pClass
                 &&  pProperty->Offset >= pSuperClass->PropertySize
-                )	
+                )
             )
         )
-        {			
-            vProperty.push_back ( pProperty );	
+        {
+            vProperty.push_back ( pProperty );
         }
     }
 
@@ -2028,7 +2032,7 @@ void GenerateClass ( UClass* pClass )
     else																	        // normal classes
     {
         // property unique name array
-        StrIntM_t mPropertyName;		
+        StrIntM_t mPropertyName;
 
         // unknown data unique name index
         int UnknownDataIndex = 0;
@@ -2044,18 +2048,18 @@ void GenerateClass ( UClass* pClass )
                 dwMissedOffset = pProperty->Offset - dwLastOffset;
 
                 // fix only if missed offset >= CLASS_ALIGN
-                if ( dwMissedOffset >= CLASS_ALIGN ) 
+                if ( dwMissedOffset >= CLASS_ALIGN )
                 {
                     // stream to support buffer
                     ssStreamBuffer1 << "UnknownData" << SDKMC_SSDEC ( UnknownDataIndex, 2 ) << "[ " << SDKMC_SSHEX ( dwMissedOffset, 0 ) << " ];";
-                    
+
                     // stream to main buffer
-                    ssStreamBuffer0 << "\t" << SDKMC_SSCOL ( "unsigned char", SDK_COL1 ) << " " << SDKMC_SSCOL ( ssStreamBuffer1.str(), SDK_COL2 ) 
+                    ssStreamBuffer0 << "\t" << SDKMC_SSCOL ( "unsigned char", SDK_COL1 ) << " " << SDKMC_SSCOL ( ssStreamBuffer1.str(), SDK_COL2 )
                                     << "\t\t// " << SDKMC_SSHEX ( dwLastOffset, 4 ) << " (" << SDKMC_SSHEX ( dwMissedOffset, 4 ) << ") MISSED OFFSET\n";
 
                     // empty support buffer
                     SDKFN_EMPTY ( ssStreamBuffer1 );
-                
+
                     UnknownDataIndex++;
                 }
             }
@@ -2068,7 +2072,7 @@ void GenerateClass ( UClass* pClass )
             {
                 // get correct element size
                 unsigned long dwCorrectElementSize = GetPropertySize ( pProperty );
-                
+
                 // get property name
                 string sPropertyName = GetValidName ( string ( pProperty->GetName() ) );
 
@@ -2085,7 +2089,7 @@ void GenerateClass ( UClass* pClass )
                 {
                     // stream to support buffer (name + index)
                     ssStreamBuffer1 << sPropertyName << SDKMC_SSDEC ( mPropertyName[ sPropertyName ], 2 );
-                    
+
                     // incremente name usage count
                     mPropertyName[ sPropertyName ]++;
                 }
@@ -2098,7 +2102,7 @@ void GenerateClass ( UClass* pClass )
                 }
 
                 // special case bool
-                if ( pProperty->IsA ( UBoolProperty::StaticClass() ) ) 
+                if ( pProperty->IsA ( UBoolProperty::StaticClass() ) )
                 {
                     // stream to support buffer
                     ssStreamBuffer1 << " : 1";
@@ -2120,11 +2124,11 @@ void GenerateClass ( UClass* pClass )
                 }
 
                 // stream to main buffer
-                ssStreamBuffer0 << "\t" << SDKMC_SSCOL ( sPropertyType, SDK_COL1 ) << " " << SDKMC_SSCOL ( ssStreamBuffer1.str(), SDK_COL2 ) 
+                ssStreamBuffer0 << "\t" << SDKMC_SSCOL ( sPropertyType, SDK_COL1 ) << " " << SDKMC_SSCOL ( ssStreamBuffer1.str(), SDK_COL2 )
                                 << "\t\t// " << SDKMC_SSHEX ( pProperty->Offset, 4 ) << " (" << SDKMC_SSHEX ( ( pProperty->ElementSize * pProperty->ArrayDim ), 4 ) << ") [" << SDKMC_SSHEX ( pProperty->PropertyFlags, 16 ) << "]";
 
                 // stream to main buffer (bitmask)
-                if ( pProperty->IsA ( UBoolProperty::StaticClass() ) ) 
+                if ( pProperty->IsA ( UBoolProperty::StaticClass() ) )
                 {
                     // stream to support buffer
                     ssStreamBuffer0 << " [" << SDKMC_SSHEX ( ( (UBoolProperty*) pProperty )->BitMask, 8 ) << "] ";
@@ -2135,10 +2139,10 @@ void GenerateClass ( UClass* pClass )
                 }
 
                 ssStreamBuffer0 << ssStreamBuffer2.str() << "\n";
-                
+
                 // empty support buffers
                 SDKFN_EMPTY( ssStreamBuffer1 );
-                SDKFN_EMPTY( ssStreamBuffer2 );	
+                SDKFN_EMPTY( ssStreamBuffer2 );
 
                 // check if property size and type size are egual otherwise add pad data
                 int nOffserError = ( pProperty->ElementSize * pProperty->ArrayDim ) - ( dwCorrectElementSize * pProperty->ArrayDim );
@@ -2150,12 +2154,12 @@ void GenerateClass ( UClass* pClass )
                     ssStreamBuffer1 << "UnknownData" << SDKMC_SSDEC ( UnknownDataIndex, 2 ) << "[ " << SDKMC_SSHEX ( nOffserError, 0 ) << " ];";
 
                     // stream to main buffer
-                    ssStreamBuffer0 << "\t" << SDKMC_SSCOL ( "unsigned char", SDK_COL1 ) << " " << SDKMC_SSCOL ( ssStreamBuffer1.str(), SDK_COL2 ) 
+                    ssStreamBuffer0 << "\t" << SDKMC_SSCOL ( "unsigned char", SDK_COL1 ) << " " << SDKMC_SSCOL ( ssStreamBuffer1.str(), SDK_COL2 )
                                     << "\t\t// " << SDKMC_SSHEX ( ( pProperty->Offset + nOffserError ), 4 ) << " (" << SDKMC_SSHEX ( nOffserError, 4 ) << ") FIX WRONG TYPE SIZE OF PREVIUS PROPERTY\n";
 
                     // empty support buffers
                     SDKFN_EMPTY ( ssStreamBuffer1 );
-                
+
                     UnknownDataIndex++;
                 }
             }
@@ -2165,7 +2169,7 @@ void GenerateClass ( UClass* pClass )
                 ssStreamBuffer1 << "UnknownData" << SDKMC_SSDEC ( UnknownDataIndex, 2 ) << "[ " << SDKMC_SSHEX ( ( pProperty->ElementSize * pProperty->ArrayDim ), 0 ) << " ];";
 
                 // stream to main buffer
-                ssStreamBuffer0 << "\t" << SDKMC_SSCOL( "unsigned char", SDK_COL1 ) << " " << SDKMC_SSCOL ( ssStreamBuffer1.str(), SDK_COL2 ) 
+                ssStreamBuffer0 << "\t" << SDKMC_SSCOL( "unsigned char", SDK_COL1 ) << " " << SDKMC_SSCOL ( ssStreamBuffer1.str(), SDK_COL2 )
                                 << "\t\t// " << SDKMC_SSHEX ( pProperty->Offset, 4 ) << " (" << SDKMC_SSHEX ( ( pProperty->ElementSize * pProperty->ArrayDim ), 4 ) << ") UNKNOWN PROPERTY: " << string ( pProperty->GetFullName() ) << "\n";
 
                 // empty support buffer
@@ -2184,13 +2188,13 @@ void GenerateClass ( UClass* pClass )
             dwMissedOffset = pClass->PropertySize - dwLastOffset;
 
             // fix only if missed offset >= CLASS_ALIGN
-            if ( dwMissedOffset >= CLASS_ALIGN ) 
+            if ( dwMissedOffset >= CLASS_ALIGN )
             {
                 // stream to support buffer
                 ssStreamBuffer1 << "UnknownData" << SDKMC_SSDEC ( UnknownDataIndex, 2 ) << "[ " << SDKMC_SSHEX ( dwMissedOffset, 0 ) << " ];";
 
                 // stream to main buffer
-                ssStreamBuffer0 << "\t" << SDKMC_SSCOL ( "unsigned char", SDK_COL1 ) << " " << SDKMC_SSCOL ( ssStreamBuffer1.str(), SDK_COL2 ) 
+                ssStreamBuffer0 << "\t" << SDKMC_SSCOL ( "unsigned char", SDK_COL1 ) << " " << SDKMC_SSCOL ( ssStreamBuffer1.str(), SDK_COL2 )
                                 << "\t\t// " << SDKMC_SSHEX ( dwLastOffset, 4 ) << " (" << SDKMC_SSHEX ( dwMissedOffset, 4 ) << ") MISSED OFFSET\n";
 
                 // empty support buffer
@@ -2202,8 +2206,8 @@ void GenerateClass ( UClass* pClass )
     // stream to main buffer
     ssStreamBuffer0 << "\nprivate:\n"
                     << "\tstatic UClass* pClassPointer;\n\n"	// static class pointer
-                    << "public:\n"; 
-    
+                    << "public:\n";
+
     // print basic functions declaretion
     if ( pClass == UObject::FindClass ( "Class Core.Object" ) )
         ssStreamBuffer0 << BASIC_FUNCTIONS_DEC;
@@ -2220,7 +2224,7 @@ void GenerateClass ( UClass* pClass )
 
     // print main stream buffer to file
     SDKFN_PRINT ( pFile, ssStreamBuffer0 );
-    
+
     // print functions declaration
     GenerateFuncDec ( pClass );
 
@@ -2238,7 +2242,7 @@ void GenerateClass ( UClass* pClass )
 void GenerateClassPre ( UClass* pClass, UObject* pPackageToProcess )
 {
     UObject* pPackageObject = pClass->GetPackageObj();
-    
+
     if ( ! pPackageObject )	// check package object (needed 'cause this function is recursive)
         return;
 
@@ -2252,7 +2256,7 @@ void GenerateClassPre ( UClass* pClass, UObject* pPackageToProcess )
         // check if pPackageObject exist and is already before pPackageToProcess
         vector< UObject* >::iterator itPO = find ( vIncludes.begin(), vIncludes.end(), pPackageObject );
         vector< UObject* >::iterator itPTP = find ( vIncludes.begin(), vIncludes.end(), pPackageToProcess );
-    
+
         if ( itPO == vIncludes.end() )	// required class package not present
         {
             // insert pPackageObject before pPackageToProcess
@@ -2276,24 +2280,24 @@ void GenerateClassPre ( UClass* pClass, UObject* pPackageToProcess )
     // init property names
     string sClassName = GetValidName ( string ( pClass->GetName() ) );
     string sClassFullName = string ( pClass->GetFullName() );
-    
+
     // remove default class
     if ( sClassName.find ( "Default__" ) != string::npos )
         return;
 
     // check if already generated
     if ( find ( vGenClass.begin(), vGenClass.end(), string ( pClass->GetFullName() ) ) == vGenClass.end() ) // not generated
-    {	
+    {
         // check superfield prerequisites
-        if 
-        ( 
-                pClass->SuperField 
-            &&	pClass->SuperField != pClass
-            &&  find ( vGenClass.begin(), vGenClass.end(), string ( pClass->SuperField->GetFullName() ) ) == vGenClass.end() // not generated
+        if
+        (
+                pClass->GetSuper()
+            &&	pClass->GetSuper() != pClass
+            &&  find ( vGenClass.begin(), vGenClass.end(), string ( pClass->GetSuper()->GetFullName() ) ) == vGenClass.end() // not generated
         )
         {
             // generate superfield class
-            GenerateClassPre ( (UClass*) ( pClass->SuperField ), pPackageToProcess );
+            GenerateClassPre ( (UClass*) ( pClass->GetSuper() ), pPackageToProcess );
         }
 
         // prerequisites ended
@@ -2304,7 +2308,7 @@ void GenerateClassPre ( UClass* pClass, UObject* pPackageToProcess )
 
 /*
 # ========================================================================================= #
-# Process Objects by Package															
+# Process Objects by Package
 # ========================================================================================= #
 */
 
@@ -2314,7 +2318,7 @@ void ProcessScriptStructsByPackage ( UObject* pPackageToProcess )
     {
         // get object
         UObject* pObject = UObject::GObjObjects()->Data[ i ];
-        
+
         if ( ! pObject )
             continue;
 
@@ -2337,12 +2341,12 @@ void ProcessScriptStructsByPackage ( UObject* pPackageToProcess )
 }
 
 void ProcessConstsByPackage ( UObject* pPackageToProcess )
-{	
+{
     for ( int i = 0; i < UObject::GObjObjects()->Num(); i++ )
     {
         // get object
         UObject* pObject = UObject::GObjObjects()->Data[ i ];
-        
+
         if ( ! pObject )
             continue;
 
@@ -2370,7 +2374,7 @@ void ProcessEnumsByPackage ( UObject* pPackageToProcess )
     {
         // get object
         UObject* pObject = UObject::GObjObjects()->Data[ i ];
-        
+
         if ( ! pObject )
             continue;
 
@@ -2398,13 +2402,13 @@ void ProcessClassesByPackage ( UObject* pPackageToProcess )
     {
         // get object
         UObject* pObject = UObject::GObjObjects()->Data[ i ];
-        
+
         if ( ! pObject )
             continue;
 
         // get package object
         UObject* pPackageObject = pObject->GetPackageObj();
-        
+
         if ( ! pPackageObject )
             continue;
 
@@ -2426,7 +2430,7 @@ void ProcessFuncStructsByPackage ( UObject* pPackageToProcess )
     {
         // get object
         UObject* pObject = UObject::GObjObjects()->Data[ i ];
-        
+
         if ( ! pObject )
             continue;
 
@@ -2454,13 +2458,13 @@ void ProcessFuncsByPackage ( UObject* pPackageToProcess )
     {
         // get object
         UObject* pObject = UObject::GObjObjects()->Data[ i ];
-        
+
         if ( ! pObject )
             continue;
 
         // get package object
         UObject* pPackageObject = pObject->GetPackageObj();
-        
+
         if ( ! pPackageObject )
             continue;
 
@@ -2480,13 +2484,13 @@ void ProcessPackages()
 {
     // create packages array
     vector< UObject* > vPackages;
-    
+
     // loop objects and process packages
     for ( int i = 0; i < UObject::GObjObjects()->Num(); i++ )
     {
         // get object
         UObject* pObject = UObject::GObjObjects()->Data[ i ];
-        
+
         if ( ! pObject )
             continue;
 
@@ -2494,9 +2498,20 @@ void ProcessPackages()
         {
             // get package object
             UObject* pPackageObject = pObject->GetPackageObj();
-            
+
             if ( ! pPackageObject )
                 continue;
+
+        #if LE_GAME_INDEX == 2015
+
+            // only dump "core" and "engine" packages for udk
+            if ( 0 != std::strcmp ( pPackageObject->GetName(), "Core" )
+                && 0 != std::strcmp ( pPackageObject->GetName(), "Engine" ) )
+            {
+                continue;
+            }
+
+        #endif
 
             // process package if not
             if ( find ( vPackages.begin(), vPackages.end(), pPackageObject ) == vPackages.end() ) // not found
@@ -2506,7 +2521,7 @@ void ProcessPackages()
                 // create new structs package header file
                 sprintf_s ( cBuffer, "%s\\%s\\SDK_HEADERS\\%s_structs.hpp", sOutputDir, GAME_NAME_S, pPackageObject->GetName() );
                 fopen_s ( &pFile, cBuffer, "w+" );
-            
+
                 sprintf_s ( cBuffer, "%s_structs", pPackageObject->GetName() );
                 PrintFileHeder ( cBuffer, "hpp", true, false );
 
@@ -2519,10 +2534,10 @@ void ProcessPackages()
                 // create new classes package header file
                 sprintf_s ( cBuffer, "%s\\%s\\SDK_HEADERS\\%s_classes.hpp", sOutputDir, GAME_NAME_S, pPackageObject->GetName() );
                 fopen_s ( &pFile, cBuffer, "w+" );
-            
+
                 sprintf_s ( cBuffer, "%s_classes", pPackageObject->GetName() );
                 PrintFileHeder ( cBuffer, "hpp", true, false);
-            
+
                 PrintSectionHeader ( "Constants" );
                 ProcessConstsByPackage ( pPackageObject );
 
@@ -2538,10 +2553,10 @@ void ProcessPackages()
                 // create new function structs package header file
                 sprintf_s ( cBuffer, "%s\\%s\\SDK_HEADERS\\%s_f_structs.hpp", sOutputDir, GAME_NAME_S, pPackageObject->GetName() );
                 fopen_s ( &pFile, cBuffer, "w+" );
-            
+
                 sprintf_s ( cBuffer, "%s_f_structs", pPackageObject->GetName() );
                 PrintFileHeder ( cBuffer, "hpp", true, false);
-            
+
                 PrintSectionHeader ( "Function Structs" );
                 ProcessFuncStructsByPackage ( pPackageObject );
 
@@ -2551,15 +2566,15 @@ void ProcessPackages()
                 // create new function package header file
                 sprintf_s ( cBuffer, "%s\\%s\\SDK_HEADERS\\%s_functions.cpp", sOutputDir, GAME_NAME_S, pPackageObject->GetName() );
                 fopen_s ( &pFile, cBuffer, "w+" );
-            
+
                 sprintf_s ( cBuffer, "%s_functions", pPackageObject->GetName() );
                 PrintFileHeder ( cBuffer, "cpp", true, true );
-            
+
                 // print basic functions
                 if ( pPackageObject == UObject::FindClass ( "Class Core.Object" )->GetPackageObj() )
-                { 
+                {
                     PrintSectionHeader ( "Basic Functions" );
-                    fprintf ( pFile, BASIC_FUNCTIONS_DEF ); 
+                    fprintf ( pFile, BASIC_FUNCTIONS_DEF );
                 }
 
                 PrintSectionHeader ( "Functions" );
@@ -2574,7 +2589,7 @@ void ProcessPackages()
 
 /*
 # ========================================================================================= #
-# Initialization														
+# Initialization
 # ========================================================================================= #
 */
 
@@ -2583,9 +2598,18 @@ void Init_Core()
     auto const moduleBase = Common::GetModuleBaseAddress(LEx_MODULE_NAME);
     //auto const moduleBase = Common::GetFirstModuleBaseAddress();
 
-    GBioNamePools = &*(FNameEntry**)(moduleBase + LEx_NAME_POOLS);
+#if LE_GAME_INDEX != 2015
+
+    GBioNamePools = &*(SFXNameEntry**)(moduleBase + LEx_NAME_POOLS);
     fprintf(pLog, "GBioNamePools: 0x%p\n", GBioNamePools);
-    
+
+#else
+
+    FName::GNameArray = (TArray<FNameEntry*>*)(moduleBase + LEx_NAME_ARRAY);
+    fprintf(pLog, "FName::GNameArray: 0x%p\n", FName::GNameArray);
+
+#endif
+
     GObjects = &*(TArray<UObject*>*)(moduleBase + LEx_OBJOBJECTS);
     fprintf(pLog, "GObjects: 0x%p\n", GObjects);
 
@@ -2594,7 +2618,7 @@ void Init_Core()
 
 /*
 # ========================================================================================= #
-# Finalization														
+# Finalization
 # ========================================================================================= #
 */
 
@@ -2606,12 +2630,12 @@ void Final_SdkHeaders()
 
     PrintFileHeder ( "SdkHeaders", "hpp" );
     PrintSectionHeader ( "Includes" );
-    
+
     for ( unsigned int i = 0; i < vIncludes.size(); i++ )
     {
         fprintf ( pFile, "#include \"%s\\%s_structs.hpp\"\n",       LE_SHORTHAND, vIncludes[i]->GetName() );
-        fprintf ( pFile, "#include \"%s\\%s_classes.hpp\"\n",       LE_SHORTHAND, vIncludes[i]->GetName() );		
-        fprintf ( pFile, "#include \"%s\\%s_f_structs.hpp\"\n",     LE_SHORTHAND, vIncludes[i]->GetName() );		
+        fprintf ( pFile, "#include \"%s\\%s_classes.hpp\"\n",       LE_SHORTHAND, vIncludes[i]->GetName() );
+        fprintf ( pFile, "#include \"%s\\%s_f_structs.hpp\"\n",     LE_SHORTHAND, vIncludes[i]->GetName() );
         fprintf ( pFile, "// #include \"%s\\%s_functions.cpp\"\n",  LE_SHORTHAND, vIncludes[i]->GetName() );
     }
 
@@ -2620,33 +2644,43 @@ void Final_SdkHeaders()
 
 /*
 # ========================================================================================= #
-# DllMain														
+# DllMain
 # ========================================================================================= #
 */
 
 void OnAttach()
 {
     FILE* pConfigFile = nullptr;
-    fopen_s ( &pConfigFile, SDK_CONFIG_PATH, "r" );
+    if ( 0 != fopen_s ( &pConfigFile, SDK_CONFIG_PATH, "r" ) )
+    {
+        OutputDebugStringA ( "Failed to open configuration" );
+        if ( IsDebuggerPresent() ) DebugBreak();
+        return;
+    }
+
     fread ( sOutputDir, 1, sizeof ( sOutputDir ), pConfigFile );
     fclose ( pConfigFile );
 
     OutputDebugStringA ( "Configured output directory:" );
     OutputDebugStringA ( sOutputDir );
 
+#if LE_GAME_INDEX != 2015
+
     Sleep ( 40000 );
+
+#endif
 
     if (bAbortRun)
     {
         // Attach thread was aborted by process termination.
         return;
     }
-    
+
     // times
     SYSTEMTIME stST, stET;
     FILETIME ftST, ftET;
     ULARGE_INTEGER nST, nET;
-    
+
     float fDiff;
 
     // mkdir base dir
@@ -2662,7 +2696,12 @@ void OnAttach()
 
     // open log
     sprintf_s ( cBuffer, "%s\\%s\\UE3SdkGenerator.log", sOutputDir, GAME_NAME_S );
-    fopen_s ( &pLog, cBuffer, "w+" );
+    if ( 0 != fopen_s ( &pLog, cBuffer, "w+" ) )
+    {
+        OutputDebugStringA("Failed to open log file.");
+        if (IsDebuggerPresent()) DebugBreak();
+        return;
+    }
 
     // get start time
     GetSystemTime ( &stST );
@@ -2689,7 +2728,7 @@ void OnAttach()
     SystemTimeToFileTime ( &stST, &ftST );
     nST.HighPart = ftST.dwHighDateTime;
     nST.LowPart = ftST.dwLowDateTime;
-    
+
     SystemTimeToFileTime ( &stET, &ftET );
     nET.HighPart = ftET.dwHighDateTime;
     nET.LowPart = ftET.dwLowDateTime;

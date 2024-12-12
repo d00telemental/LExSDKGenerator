@@ -19,6 +19,9 @@
     <Filter Include="Shared">
       <UniqueIdentifier>{0b8e943f-b3c2-4fd2-af3f-c4b8ca180514}</UniqueIdentifier>
     </Filter>
+    <Filter Include="UE3BasicCore\UDK">
+      <UniqueIdentifier>{b9ab8790-8321-483d-a378-dd9eb56ccb35}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="TFL_HT.cpp">
@@ -79,6 +82,18 @@
     </ClInclude>
     <ClInclude Include="UE3BasicCore\CommonPiecesOfCode.h">
       <Filter>UE3BasicCore</Filter>
+    </ClInclude>
+    <ClInclude Include="UE3BasicCore\UDK\GameDefines.h">
+      <Filter>UE3BasicCore\UDK</Filter>
+    </ClInclude>
+    <ClInclude Include="UE3BasicCore\UDK\ObjectFunctions.h">
+      <Filter>UE3BasicCore\UDK</Filter>
+    </ClInclude>
+    <ClInclude Include="UE3BasicCore\UDK\PiecesOfCode.h">
+      <Filter>UE3BasicCore\UDK</Filter>
+    </ClInclude>
+    <ClInclude Include="UE3BasicCore\UDK\SdkInitializer.h">
+      <Filter>UE3BasicCore\UDK</Filter>
     </ClInclude>
   </ItemGroup>
 </Project>
