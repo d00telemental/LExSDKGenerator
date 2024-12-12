@@ -59,24 +59,41 @@ void PrintFileHeder ( char* cFileName, char* cFileExt, bool setPP = false, bool 
     if ( setPP )
     {
         fprintf ( pFile, "#ifdef _MSC_VER\n" );
-        fprintf ( pFile, "\t#pragma pack ( push, 0x%X )\n",  CLASS_ALIGN );
+        fprintf ( pFile, "    #pragma pack ( push, 0x%X )\n",  CLASS_ALIGN );
         fprintf ( pFile, "#endif\n" );
     }
 
+#if LE_GAME_INDEX != 2015
+
     fprintf ( pFile, "#define LESDK_IN_GENERATED\n" );
     fprintf ( pFile, "\n" );
+
+#else
+
+    fprintf(pFile, "#define UGHSDK_IN_GENERATED\n");
+    fprintf(pFile, "\n");
+
+#endif
 }
 
 void PrintFileFooter()
 {
     fprintf ( pFile, "\n\n" );
 
-    fprintf ( pFile, "#undef LESDK_IN_GENERATED\n" );
+#if LE_GAME_INDEX != 2015
 
+    fprintf ( pFile, "#undef LESDK_IN_GENERATED\n" );
     fprintf ( pFile, "\n" );
 
+#else
+
+    fprintf(pFile, "#undef UGHSDK_IN_GENERATED\n");
+    fprintf(pFile, "\n");
+
+#endif
+
     fprintf ( pFile, "#ifdef _MSC_VER\n" );
-    fprintf ( pFile, "\t#pragma pack ( pop )\n" );
+    fprintf ( pFile, "    #pragma pack ( pop )\n" );
     fprintf ( pFile, "#endif\n" );
 }
 
@@ -325,7 +342,11 @@ int GetPropertyType ( UProperty* pProperty, string& sPropertyType, ETypeContext 
     #ifdef CCP_UNAME
     else if ( pProperty->IsA ( UNameProperty::StaticClass() ) )
     {
+    #if LE_GAME_INDEX != 2015
         sPropertyType = "struct SFXName";
+    #else
+        sPropertyType = "struct FName";
+    #endif
         return 2;
     }
     #endif

@@ -82,7 +82,7 @@ using namespace std;
 */
 
 // Generator
-#define SDK_GEN_VER				"v1.5_Beta-Rev.60-MELE"
+#define SDK_GEN_VER				"v1.5_Beta-Rev.61-UDK"
 #define SDK_GEN_CREDITS			"uNrEaL, Tamimego, SystemFiles, R00T88, _silencer, the1domo, K@N@VEL, SirCxyrtyx"
 #define SDK_GEN_STHANKS			"HOOAH07, lowHertz"
 #define SDK_CONFIG_PATH         "LExSdkGen.cfg"

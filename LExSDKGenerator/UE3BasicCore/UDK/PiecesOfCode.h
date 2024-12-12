@@ -194,70 +194,76 @@ bool UObject::IsA ( UClass* pClass ) const \n\
 
 
 #define CLASS_PROPERTIES_UFUNCTION "\
-     DWORD                          FunctionFlags;                      // 0x00D0 (0x04)\n\
-     WORD                           iNative;                            // 0x00D4 (0x02)\n\
-     WORD                           RepOffset;                          // 0x00D6 (0x02)\n\
-     FName                          FriendlyName;                       // 0x00D8 (0x08)\n\
-     void*                          DllImportFunction;                  // 0x00E0 (0x08)\n\
-     BYTE                           OperPrecedence;                     // 0x00E8 (0x01)\n\
-     BYTE                           NumParms;                           // 0x00E9 (0x01)\n\
-     WORD                           ParmsSize;                          // 0x00EA (0x02)\n\
-     WORD                           ReturnValueOffset;                  // 0x00EC (0x02)\n\
-     unsigned char                  Padding_EE[2];                      // 0x00EE (0x02)\n\
-     UProperty*                     FirstStructWithDefaults;            // 0x00F0 (0x08)\n\
-     void*                          Func;                               // 0x00F8 (0x08)\n\
+    DWORD                           FunctionFlags;                      // 0x00D0 (0x04)\n\
+    WORD                            iNative;                            // 0x00D4 (0x02)\n\
+    WORD                            RepOffset;                          // 0x00D6 (0x02)\n\
+    FName                           FriendlyName;                       // 0x00D8 (0x08)\n\
+    void*                           DllImportFunction;                  // 0x00E0 (0x08)\n\
+    BYTE                            OperPrecedence;                     // 0x00E8 (0x01)\n\
+    BYTE                            NumParms;                           // 0x00E9 (0x01)\n\
+    WORD                            ParmsSize;                          // 0x00EA (0x02)\n\
+    WORD                            ReturnValueOffset;                  // 0x00EC (0x02)\n\
+    unsigned char                   Padding_EE[2];                      // 0x00EE (0x02)\n\
+    UProperty*                      FirstStructWithDefaults;            // 0x00F0 (0x08)\n\
+    void*                           Func;                               // 0x00F8 (0x08)\n\
 "
 
 #define CLASS_PROPERTIES_USTATE "\
-     DWORD                          ProbeMask;                          // 0x00D0 (0x04)\n\
-     DWORD                          StateFlags;                         // 0x00D4 (0x04)\n\
-     WORD                           LabelTableOffset;                   // 0x00D8 (0x00)\n\
-     unsigned char                  Padding[0x02];                      // 0x00DA (0x02)\n\
-     TMap<FName, UFunction*>        FuncMap;                            // 0x00DC (0x48)\n\
+    DWORD                           ProbeMask;                          // 0x00D0 (0x04)\n\
+    DWORD                           StateFlags;                         // 0x00D4 (0x04)\n\
+    WORD                            LabelTableOffset;                   // 0x00D8 (0x00)\n\
+    unsigned char                   Padding[0x02];                      // 0x00DA (0x02)\n\
+    TMap<FName, UFunction*>         FuncMap;                            // 0x00DC (0x48)\n\
 "
 
 #define CLASS_PROPERTIES_UCLASS "\
 \n\
-     DWORD                          ClassFlags;                         // 0x0124 (0x04)\n\
-     DWORD                          ClassCastFlags;                     // 0x0128 (0x04)\n\
-     INT                            ClassUnique;                        // 0x012C (0x04)\n\
-     UClass*                        ClassWithin;                        // 0x0130 (0x08)\n\
-     FName                          ClassConfigName;                    // 0x0138 (0x08)\n\
-     TArray<void*>                  ClassReps;                          // 0x0140 (0x10)\n\
-     TArray<UField*>                NetFields;                          // 0x0150 (0x10)\n\
-     TArray<FName>                  HideCategories;                     // 0x0160 (0x10)\n\
-     TArray<FName>                  AutoExpandCategories;               // 0x0170 (0x10)\n\
-     TArray<FName>                  AutoCollapseCategories;             // 0x0180 (0x10)\n\
-     TArray<FName>                  DontSortCategories;                 // 0x0190 (0x10)\n\
-     TArray<FName>                  DependentOn;                        // 0x01A0 (0x10)\n\
-     TArray<FName>                  ClassGroupNames;                    // 0x01B0 (0x10)\n\
-     UINT                           bForceScriptOrder;                  // 0x01C0 (0x04)\n\
-     FString                        ClassHeaderName;                    // 0x01C4 (0x10)\n\
-     FName                          DllBindName;                        // 0x01D4 (0x08)\n\
-     void*                          DllBindHandle;                      // 0x01DC (0x08)\n\
-     UObject*                       ClassDefaultObject;                 // 0x01E4 (0x08)\n\
-     void*                          ClassConstructor;                   // 0x01EC (0x08)\n\
-     void*                          ClassStaticConstructor;             // 0x01F4 (0x08)\n\
-     void*                          ClassStaticInitializer;             // 0x01FC (0x08)\n\
-     TMap<FName, UObject*>          ComponentNameToDefaultObjectMap;    // 0x0204 (0x48)\n\
-     TArray<void*>                  ImplementedInterfaces;              // 0x024C (0x10)\n\
-     FString                        DefaultPropText;                    // 0x025C (0x10)\n\
-     UINT                           bNeedsPropertiesLinked;             // 0x026C (0x04)\n\
-     TArray<DWORD>                  ReferenceTokenStream;               // 0x0270 (0x10)\n\
+    struct FImplementedInterface\n\
+    {\n\
+        UClass*                     Class;\n\
+        UProperty*                  PointerProperty;\n\
+    };\n\
+\n\
+    DWORD                           ClassFlags;                         // 0x0124 (0x04)\n\
+    DWORD                           ClassCastFlags;                     // 0x0128 (0x04)\n\
+    INT                             ClassUnique;                        // 0x012C (0x04)\n\
+    UClass*                         ClassWithin;                        // 0x0130 (0x08)\n\
+    FName                           ClassConfigName;                    // 0x0138 (0x08)\n\
+    TArray<FRepRecord>              ClassReps;                          // 0x0140 (0x10)\n\
+    TArray<UField*>                 NetFields;                          // 0x0150 (0x10)\n\
+    TArray<FName>                   HideCategories;                     // 0x0160 (0x10)\n\
+    TArray<FName>                   AutoExpandCategories;               // 0x0170 (0x10)\n\
+    TArray<FName>                   AutoCollapseCategories;             // 0x0180 (0x10)\n\
+    TArray<FName>                   DontSortCategories;                 // 0x0190 (0x10)\n\
+    TArray<FName>                   DependentOn;                        // 0x01A0 (0x10)\n\
+    TArray<FName>                   ClassGroupNames;                    // 0x01B0 (0x10)\n\
+    UINT                            bForceScriptOrder;                  // 0x01C0 (0x04)\n\
+    FString                         ClassHeaderName;                    // 0x01C4 (0x10)\n\
+    FName                           DllBindName;                        // 0x01D4 (0x08)\n\
+    void*                           DllBindHandle;                      // 0x01DC (0x08)\n\
+    UObject*                        ClassDefaultObject;                 // 0x01E4 (0x08)\n\
+    void*                           ClassConstructor;                   // 0x01EC (0x08)\n\
+    void*                           ClassStaticConstructor;             // 0x01F4 (0x08)\n\
+    void*                           ClassStaticInitializer;             // 0x01FC (0x08)\n\
+    TMap<FName, UObject*>           ComponentNameToDefaultObjectMap;    // 0x0204 (0x48)\n\
+    TArray<FImplementedInterface>   ImplementedInterfaces;              // 0x024C (0x10)\n\
+    FString                         DefaultPropText;                    // 0x025C (0x10)\n\
+    UINT                            bNeedsPropertiesLinked;             // 0x026C (0x04)\n\
+    TArray<DWORD>                   ReferenceTokenStream;               // 0x0270 (0x10)\n\
 "
 
 #define CLASS_PROPERTIES_UPROPERTY "\
-     int                            ArrayDim;                           // 0x0068 (0x04)\n\
-     int                            ElementSize;                        // 0x006C (0x04)\n\
-     unsigned long long             PropertyFlags;                      // 0x0070 (0x08)\n\
-     unsigned short                 RepOffset;                          // 0x0078 (0x02)\n\
-     unsigned short                 RepIndex;                           // 0x007A (0x02)\n\
-     FName                          Category;                           // 0x007C (0x08)\n\
-     UEnum*                         ArraySizeEnum;                      // 0x0084 (0x08)\n\
-     int                            Offset;                             // 0x008C (0x04)\n\
-     UProperty*                     PropertyLinkNext;                   // 0x0090 (0x08)\n\
-     UProperty*                     ConstructorLinkNext;                // 0x0098 (0x08)\n\
-     UProperty*                     NextRef;                            // 0x00A0 (0x08)\n\
+    int                             ArrayDim;                           // 0x0068 (0x04)\n\
+    int                             ElementSize;                        // 0x006C (0x04)\n\
+    unsigned long long              PropertyFlags;                      // 0x0070 (0x08)\n\
+    unsigned short                  RepOffset;                          // 0x0078 (0x02)\n\
+    unsigned short                  RepIndex;                           // 0x007A (0x02)\n\
+    FName                           Category;                           // 0x007C (0x08)\n\
+    UEnum*                          ArraySizeEnum;                      // 0x0084 (0x08)\n\
+    int                             Offset;                             // 0x008C (0x04)\n\
+    UProperty*                      PropertyLinkNext;                   // 0x0090 (0x08)\n\
+    UProperty*                      ConstructorLinkNext;                // 0x0098 (0x08)\n\
+    UProperty*                      NextRef;                            // 0x00A0 (0x08)\n\
 "
 
 
