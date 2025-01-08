@@ -52,7 +52,7 @@ void PrintFileHeder ( char* cFileName, char* cFileExt, bool setPP = false, bool 
             fprintf ( pFile, "\n" );
         }
 
-        fprintf ( pFile, "#include \"../Includes.%s.hpp\"\n", LE_SHORTHAND );
+        fprintf ( pFile, "#include \"LESDK/Includes.%s.hpp\"\n", LE_SHORTHAND );
     }
     fprintf ( pFile, "\n\n" );
 
@@ -2609,10 +2609,10 @@ void Final_SdkHeaders()
     
     for ( unsigned int i = 0; i < vIncludes.size(); i++ )
     {
-        fprintf ( pFile, "#include \"%s\\%s_structs.hpp\"\n",       LE_SHORTHAND, vIncludes[i]->GetName() );
-        fprintf ( pFile, "#include \"%s\\%s_classes.hpp\"\n",       LE_SHORTHAND, vIncludes[i]->GetName() );		
-        fprintf ( pFile, "#include \"%s\\%s_f_structs.hpp\"\n",     LE_SHORTHAND, vIncludes[i]->GetName() );		
-        fprintf ( pFile, "// #include \"%s\\%s_functions.cpp\"\n",  LE_SHORTHAND, vIncludes[i]->GetName() );
+        fprintf ( pFile, "#include \"LESDK\\%s\\%s_structs.hpp\"\n",       LE_SHORTHAND, vIncludes[i]->GetName() );
+        fprintf ( pFile, "#include \"LESDK\\%s\\%s_classes.hpp\"\n",       LE_SHORTHAND, vIncludes[i]->GetName() );		
+        fprintf ( pFile, "#include \"LESDK\\%s\\%s_f_structs.hpp\"\n",     LE_SHORTHAND, vIncludes[i]->GetName() );		
+        fprintf ( pFile, "// #include \"LESDK\\%s\\%s_functions.cpp\"\n",  LE_SHORTHAND, vIncludes[i]->GetName() );
     }
 
     fclose ( pFile );
